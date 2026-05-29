@@ -76,8 +76,3 @@ To publish changes to GitHub Pages under the provided URL:
    * Select the `main` branch and the `/ (root)` folder, then click **Save**.
 2. Any subsequent commits pushed to the `main` branch will automatically build and update the live dashboard!
 
----
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
