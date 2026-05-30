@@ -2009,6 +2009,111 @@
             // Dynamically calculate and render Chronological Milestone Roadmap
             const milestones = calculateMilestones(baseData, actData, inputs);
             renderMilestonesUI(milestones);
+
+            // Auto-persist settings on any successful calculation
+            saveSettings();
+        };
+
+        /*
+         * AUTO-PERSISTENCE STATE MANAGEMENT (LOCAL STORAGE)
+         * Saves and restores all inputs, active mode, complexity, theme,
+         * and custom refinancing terms to ensure seamless session persistence.
+         */
+        const saveSettings = () => {
+            try {
+                const settings = {
+                    currentMode: state.currentMode,
+                    complexity: state.complexity,
+                    isDark: state.isDark,
+                    termRates: state.termRates,
+                    customizedYears: state.customizedYears,
+                    inputs: {}
+                };
+                
+                Object.entries(els.inputs).forEach(([key, el]) => {
+                    if (el) {
+                        settings.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
+                    }
+                });
+                
+                localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+            } catch (err) {
+                console.error("Error saving settings to localStorage:", err);
+            }
+        };
+
+        const loadSettings = () => {
+            try {
+                const data = localStorage.getItem('mtg_calculator_settings');
+                if (!data) return;
+                
+                const settings = JSON.parse(data);
+                if (!settings) return;
+                
+                if (settings.currentMode) state.currentMode = settings.currentMode;
+                if (settings.complexity) state.complexity = settings.complexity;
+                if (settings.isDark !== undefined) state.isDark = settings.isDark;
+                if (settings.termRates) state.termRates = settings.termRates;
+                if (settings.customizedYears) state.customizedYears = settings.customizedYears;
+                
+                if (settings.inputs) {
+                    Object.entries(settings.inputs).forEach(([key, val]) => {
+                        const el = els.inputs[key];
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = val;
+                            } else {
+                                el.value = val;
+                            }
+                        }
+                    });
+                }
+                
+                // Sync classes and buttons based on loaded settings
+                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                
+                // Update mode switch checkbox
+                if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
+                
+                // Update Mode buttons (.mode-btn) active state
+                els.masterBtns.forEach(btn => {
+                    if (btn.getAttribute('data-mode') === state.currentMode) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Update Complexity buttons (.complexity-btn) active state
+                const complexityBtns = document.querySelectorAll('.complexity-btn');
+                complexityBtns.forEach(btn => {
+                    if (btn.getAttribute('data-complexity') === state.complexity) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Update inner circle label depending on the restored mode
+                if (document.getElementById('inner-circle-label')) {
+                    document.getElementById('inner-circle-label').textContent = 
+                        state.currentMode === 'cc' ? 'CC Balance' : 'Principal';
+                }
+                
+                // Update display status of conditional sections
+                if (els.containers.pitiSection) {
+                    els.containers.pitiSection.style.display = els.inputs.pitiToggle.checked ? 'block' : 'none';
+                }
+                if (els.containers.oppCostSection) {
+                    els.containers.oppCostSection.style.display = els.inputs.oppCostToggle.checked ? 'block' : 'none';
+                }
+                if (els.containers.rateShockSection) {
+                    els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
+                }
+                
+            } catch (err) {
+                console.error("Error loading settings from localStorage:", err);
+            }
         };
 
         const setupTouchTooltips = () => {
@@ -2642,8 +2747,15 @@
         });
         
         document.getElementById('clearBtn').addEventListener('click', () => {
+            try {
+                localStorage.removeItem('mtg_calculator_settings');
+            } catch (err) {
+                console.error("Error clearing settings from localStorage:", err);
+            }
             els.form.reset();
             els.inputs.countrySelect.value = 'semi'; // Reset up-top country select to Canada
+            state.termRates = {};
+            state.customizedYears = {};
             calculate();
         });
         els.form.addEventListener('submit', calculate);
@@ -2718,6 +2830,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
             if (!els.inputs.date.value) {
                 const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
                 els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
