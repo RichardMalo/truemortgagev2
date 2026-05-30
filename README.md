@@ -33,6 +33,9 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 * **High-Fidelity Amortization Table:** Interactive schedules outlining breakdown changes per period.
 * **One-Click PDF Reports (html2pdf.js):** Generate clean, professional financial planning brochures directly in the browser.
 
+### 🔒 Private Session Persistence
+* **Automatic LocalStorage Cache:** Safely caches your exact calculation parameters, active modes, themes, complexity levels, and custom rate shock inputs on your local browser. Calculations resume instantly upon revisiting the page without sending any private financial data to a web server. Includes a dedicated "Reset" feature to purge the browser cache instantly.
+
 ---
 
 ## 🛠️ Technology Stack
