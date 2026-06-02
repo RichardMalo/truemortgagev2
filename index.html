@@ -59,6 +59,11 @@
 
         .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; position: relative; z-index: 99999;}
+        .header-selectors, .header-tools { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        @media (min-width: 1024px) {
+            header { flex-wrap: nowrap !important; gap: 15px !important; }
+            .header-selectors, .header-tools { flex-wrap: nowrap !important; flex-shrink: 0; }
+        }
         h1, h2, h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; }
         .section-title { margin: 0 0 15px 0; color: var(--primary-color); font-size: 1.15rem; display: flex; align-items: center;}
 
@@ -1069,7 +1074,7 @@
                 <h1 style="margin: 0;">Debt Strategy Engine</h1>
             </div>
             
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <div class="header-selectors">
                 <div class="master-mode-selector">
                     <button class="mode-btn active" data-mode="mortgage">Mortgage</button>
                     <button class="mode-btn" data-mode="cc">Credit Card</button>
@@ -1081,7 +1086,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+            <div class="header-tools">
                 <button type="button" class="dropdown-trigger settings-trigger" id="sandboxTrigger" title="Scenario Sandbox" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer; margin-right: 8px;">
                     <span style="font-size: 1.15rem;">📂</span>
                 </button>
