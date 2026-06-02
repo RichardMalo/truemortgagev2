@@ -3193,6 +3193,9 @@
                 console.error("Error clearing settings from localStorage:", err);
             }
             els.form.reset();
+            // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
+            const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+            els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             els.inputs.countrySelect.value = 'semi'; // Reset up-top country select to Canada
             state.termRates = {};
             state.customizedYears = {};
@@ -3350,6 +3353,9 @@
                         console.error("Error clearing settings from localStorage:", err);
                     }
                     els.form.reset();
+                    // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
+                    const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+                    els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
                     els.inputs.countrySelect.value = 'semi'; // Reset to Canada
                     state.termRates = {};
                     state.customizedYears = {};
