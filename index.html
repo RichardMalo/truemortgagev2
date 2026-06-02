@@ -137,6 +137,17 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* Elevate parent containers when tooltip is active to prevent z-index layering issues under the header */
+        .column:has(.help-tip:hover),
+        .column:has(.help-tip.touch-active),
+        .column.has-active-tooltip,
+        .full-width-section:has(.help-tip:hover),
+        .full-width-section:has(.help-tip.touch-active),
+        .full-width-section.has-active-tooltip {
+            z-index: 1000000 !important;
+            position: relative;
+        }
+
         .master-mode-selector {
             display: flex; background: var(--card-bg); border-radius: 20px; padding: 6px; box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
@@ -2520,19 +2531,40 @@
             let activeTip = null;
             let touchTimeout;
 
+            const getParentContainer = (element) => {
+                return element.closest('.column, .full-width-section');
+            };
+
             tips.forEach(tip => {
+                // Hover event listeners for desktop z-index elevation backup
+                tip.addEventListener('mouseenter', () => {
+                    const parent = getParentContainer(tip);
+                    if (parent) parent.classList.add('has-active-tooltip');
+                });
+
+                tip.addEventListener('mouseleave', () => {
+                    const parent = getParentContainer(tip);
+                    if (parent) parent.classList.remove('has-active-tooltip');
+                });
+
                 tip.addEventListener('touchstart', () => {
                     clearTimeout(touchTimeout);
                     if (activeTip && activeTip !== tip) {
                         activeTip.classList.remove('touch-active');
+                        const oldParent = getParentContainer(activeTip);
+                        if (oldParent) oldParent.classList.remove('has-active-tooltip');
                     }
                     tip.classList.add('touch-active');
+                    const newParent = getParentContainer(tip);
+                    if (newParent) newParent.classList.add('has-active-tooltip');
                     activeTip = tip;
                 }, { passive: true });
 
                 tip.addEventListener('touchend', () => {
                     touchTimeout = setTimeout(() => {
                         tip.classList.remove('touch-active');
+                        const parent = getParentContainer(tip);
+                        if (parent) parent.classList.remove('has-active-tooltip');
                         if (activeTip === tip) activeTip = null;
                     }, 1200);
                 }, { passive: true });
@@ -2541,6 +2573,8 @@
             document.addEventListener('touchstart', (e) => {
                 if (activeTip && !e.target.closest('.help-tip')) {
                     activeTip.classList.remove('touch-active');
+                    const parent = getParentContainer(activeTip);
+                    if (parent) parent.classList.remove('has-active-tooltip');
                     activeTip = null;
                 }
             }, { passive: true });
