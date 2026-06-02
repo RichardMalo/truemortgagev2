@@ -588,6 +588,96 @@
             color: var(--primary-color);
             font-weight: 700;
         }
+
+        /* Secure Sync & Portability Styles */
+        .blueprint-dropzone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            background-color: var(--input-bg);
+            cursor: pointer;
+            transition: all 0.3s var(--spring-easing);
+            text-align: center;
+            margin-top: 15px;
+            position: relative;
+        }
+        .blueprint-dropzone:hover, .blueprint-dropzone.drag-over {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.15);
+            transform: scale(1.01);
+        }
+        .blueprint-dropzone .dropzone-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            transition: transform 0.3s var(--spring-easing);
+        }
+        .blueprint-dropzone:hover .dropzone-icon, .blueprint-dropzone.drag-over .dropzone-icon {
+            transform: translateY(-4px) scale(1.1);
+        }
+        .blueprint-dropzone p {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.8;
+            color: var(--text-color);
+        }
+        .blueprint-dropzone span {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+        .passcode-wrapper {
+            max-height: 0px;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s var(--spring-easing);
+            margin-top: 0px;
+        }
+        .passcode-wrapper.active {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+        .format-btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            border: none;
+            background: none;
+            border-radius: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: all 0.3s var(--spring-easing);
+        }
+        .format-btn:hover {
+            opacity: 1;
+        }
+        .format-btn.active {
+            background: var(--primary-color);
+            color: white !important;
+            opacity: 1;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .dropzone-feedback {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 8px;
+            display: none;
+            animation: pulseFeedback 1.5s infinite;
+        }
+        @keyframes pulseFeedback {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body class="mode-mortgage complexity-simple">
@@ -889,6 +979,48 @@
                                     <span style="opacity: 0.8;">Discretionary Payment</span>
                                     <strong style="color: var(--primary-color);">Non-negative (&ge; $0)</strong>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Bento Card: Secure Sync & Portability -->
+                <div class="bento-card" style="margin-top: 24px;">
+                    <h3 class="section-title" style="margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">🔑</span> Secure Sync & Portability
+                    </h3>
+                    <p style="font-size: 0.78rem; opacity: 0.8; line-height: 1.4; margin-top: 0; margin-bottom: 15px;">
+                        Export or restore your strategy blueprint as a secure JSON file to back up your custom scenarios and sync easily across your phone, tablet, or PC.
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Security Mode</label>
+                            <div class="master-mode-selector" style="display: flex; width: 100%; box-sizing: border-box;">
+                                <button type="button" class="format-btn active" data-format="plain">Plain JSON</button>
+                                <button type="button" class="format-btn" data-format="encrypted">Encrypted 🔒</button>
+                            </div>
+                        </div>
+                        
+                        <div id="passcodeWrapper" class="passcode-wrapper">
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label style="font-size: 0.75rem; font-weight: 700;">Blueprint Encryption Passcode</label>
+                                <input type="password" id="blueprintPasscode" placeholder="Enter a secure passcode" style="font-size: 0.85rem; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); width: 100%; box-sizing: border-box;">
+                            </div>
+                        </div>
+
+                        <button type="button" id="exportBlueprintBtn" class="squishy-btn primary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; padding: 12px; font-size: 0.85rem; border-radius: 14px; border: none; cursor: pointer; transition: all 0.3s var(--spring-easing);">
+                            <span>📤</span> Export Strategy Blueprint
+                        </button>
+
+                        <div style="border-top: 1px dashed var(--border-color); margin-top: 10px; padding-top: 15px;">
+                            <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Restore Strategy Blueprint</label>
+                            <div class="blueprint-dropzone" id="blueprintDropzone">
+                                <input type="file" id="blueprintFileInput" accept=".json" style="display: none;">
+                                <div class="dropzone-icon">📥</div>
+                                <p>Drag & drop blueprint file here</p>
+                                <span>or click to browse local files</span>
+                                <div id="dropzoneFeedback" class="dropzone-feedback"></div>
                             </div>
                         </div>
                     </div>
@@ -2015,6 +2147,102 @@
         };
 
         /*
+         * PRODUCTION-GRADE CRYPTOGRAPHIC SYMMETRIC ENGINE (AES-GCM 256-bit)
+         * Provides top-tier security for exported strategy blueprints using Web Crypto APIs.
+         * Derives key using PBKDF2 with SHA-256 and 100,000 iterations to protect passcodes.
+         */
+        const encryptData = async (plainText, passcode) => {
+            const enc = new TextEncoder();
+            const salt = window.crypto.getRandomValues(new Uint8Array(16));
+            
+            const passwordKey = await window.crypto.subtle.importKey(
+                "raw",
+                enc.encode(passcode),
+                { name: "PBKDF2" },
+                false,
+                ["deriveKey"]
+            );
+            
+            const key = await window.crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: salt,
+                    iterations: 100000,
+                    hash: "SHA-256"
+                },
+                passwordKey,
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt"]
+            );
+            
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await window.crypto.subtle.encrypt(
+                { name: "AES-GCM", iv: iv },
+                key,
+                enc.encode(plainText)
+            );
+            
+            const combined = new Uint8Array(salt.byteLength + iv.byteLength + encrypted.byteLength);
+            combined.set(salt, 0);
+            combined.set(iv, salt.byteLength);
+            combined.set(new Uint8Array(encrypted), salt.byteLength + iv.byteLength);
+            
+            let binary = '';
+            for (let i = 0; i < combined.length; i++) {
+                binary += String.fromCharCode(combined[i]);
+            }
+            return btoa(binary);
+        };
+
+        const decryptData = async (cipherTextBase64, passcode) => {
+            try {
+                const binaryStr = atob(cipherTextBase64);
+                const combined = new Uint8Array(binaryStr.length);
+                for (let i = 0; i < binaryStr.length; i++) {
+                    combined[i] = binaryStr.charCodeAt(i);
+                }
+                
+                const salt = combined.slice(0, 16);
+                const iv = combined.slice(16, 28);
+                const ciphertext = combined.slice(28);
+                
+                const enc = new TextEncoder();
+                const passwordKey = await window.crypto.subtle.importKey(
+                    "raw",
+                    enc.encode(passcode),
+                    { name: "PBKDF2" },
+                    false,
+                    ["deriveKey"]
+                );
+                
+                const key = await window.crypto.subtle.deriveKey(
+                    {
+                        name: "PBKDF2",
+                        salt: salt,
+                        iterations: 100000,
+                        hash: "SHA-256"
+                    },
+                    passwordKey,
+                    { name: "AES-GCM", length: 256 },
+                    false,
+                    ["decrypt"]
+                );
+                
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    ciphertext
+                );
+                
+                const dec = new TextDecoder();
+                return dec.decode(decrypted);
+            } catch (e) {
+                throw new Error("Invalid passcode or corrupted file");
+            }
+        };
+
+        /*
          * AUTO-PERSISTENCE STATE MANAGEMENT (LOCAL STORAGE)
          * Saves and restores all inputs, active mode, complexity, theme,
          * and custom refinancing terms to ensure seamless session persistence.
@@ -2889,6 +3117,191 @@
             syncDropdownVisuals();
         };
 
+        /*
+         * SECURE SYNC & PORTABILITY CONTROLLER (JSON STRATEGY BACKUPS)
+         * Connects event bindings to the premium drag-and-drop dropzone, toggles security format modes,
+         * triggers browser download actions, and decodes/restores the full page state seamlessly.
+         */
+        const setupBlueprintSync = () => {
+            const formatBtns = document.querySelectorAll('.format-btn');
+            const passcodeWrapper = document.getElementById('passcodeWrapper');
+            const passcodeInput = document.getElementById('blueprintPasscode');
+            const exportBtn = document.getElementById('exportBlueprintBtn');
+            const fileInput = document.getElementById('blueprintFileInput');
+            const dropzone = document.getElementById('blueprintDropzone');
+            const feedback = document.getElementById('dropzoneFeedback');
+            let activeFormat = 'plain';
+
+            // Toggle active security mode format
+            formatBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    formatBtns.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    activeFormat = e.target.getAttribute('data-format');
+                    
+                    if (activeFormat === 'encrypted') {
+                        passcodeWrapper.classList.add('active');
+                    } else {
+                        passcodeWrapper.classList.remove('active');
+                        passcodeInput.value = '';
+                    }
+                });
+            });
+
+            const showFeedback = (text, isError = false) => {
+                feedback.textContent = text;
+                feedback.style.display = 'block';
+                feedback.style.color = isError ? 'var(--danger-color)' : '#10b981'; // Green for success
+                if (isError) {
+                    dropzone.style.borderColor = 'var(--danger-color)';
+                    gsap.fromTo(dropzone, { x: -6 }, { x: 0, duration: 0.1, repeat: 5, yoyo: true });
+                } else {
+                    dropzone.style.borderColor = '#10b981';
+                    gsap.fromTo(dropzone, { scale: 0.98 }, { scale: 1, duration: 0.5, ease: "elastic.out(1.5)" });
+                }
+                
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                    dropzone.style.borderColor = '';
+                }, 4500);
+            };
+
+            // Trigger export downloads
+            exportBtn.addEventListener('click', async () => {
+                // Ensure latest settings are saved first
+                saveSettings();
+                
+                const data = localStorage.getItem('mtg_calculator_settings');
+                if (!data) {
+                    showFeedback("No settings found to export! Please calculate first.", true);
+                    return;
+                }
+
+                let outputText = data;
+                let filename = 'mtg_strategy_blueprint.json';
+
+                if (activeFormat === 'encrypted') {
+                    const passcode = passcodeInput.value.trim();
+                    if (!passcode) {
+                        showFeedback("Passcode is required for encryption!", true);
+                        passcodeInput.focus();
+                        return;
+                    }
+                    try {
+                        exportBtn.disabled = true;
+                        exportBtn.textContent = 'Encrypting...';
+                        outputText = await encryptData(data, passcode);
+                        filename = 'mtg_strategy_blueprint.enc.json';
+                    } catch (err) {
+                        console.error(err);
+                        showFeedback("Encryption failed!", true);
+                        return;
+                    } finally {
+                        exportBtn.disabled = false;
+                        exportBtn.innerHTML = '<span>📤</span> Export Strategy Blueprint';
+                    }
+                }
+
+                // Trigger browser file download
+                const blob = new Blob([outputText], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Trigger file dialog on dropzone click
+            dropzone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Drag and Drop handlers
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('drag-over');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('drag-over');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('drag-over');
+                const file = e.dataTransfer.files[0];
+                if (file) handleFileImport(file);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleFileImport(file);
+                fileInput.value = ''; // Reset input to allow re-uploading same file
+            });
+
+            const handleFileImport = (file) => {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const rawText = e.target.result.trim();
+                    let parsedSettings = null;
+
+                    // Automatically detect format style
+                    if (rawText.startsWith('{')) {
+                        // Plain JSON
+                        try {
+                            parsedSettings = JSON.parse(rawText);
+                        } catch (err) {
+                            showFeedback("Corrupted or invalid JSON file!", true);
+                            return;
+                        }
+                    } else {
+                        // Attempt Encrypted JSON decrypt
+                        const passcode = passcodeInput.value.trim();
+                        if (!passcode) {
+                            showFeedback("Encrypted file detected! Enter passcode below to unlock.", true);
+                            passcodeWrapper.classList.add('active');
+                            formatBtns.forEach(b => b.classList.remove('active'));
+                            const encBtn = document.querySelector('.format-btn[data-format="encrypted"]');
+                            if (encBtn) encBtn.classList.add('active');
+                            activeFormat = 'encrypted';
+                            passcodeInput.focus();
+                            return;
+                        }
+                        
+                        try {
+                            const decryptedText = await decryptData(rawText, passcode);
+                            parsedSettings = JSON.parse(decryptedText);
+                        } catch (err) {
+                            console.error(err);
+                            showFeedback("Incorrect passcode or corrupted file!", true);
+                            return;
+                        }
+                    }
+
+                    // Validate settings signature keys
+                    if (!parsedSettings || !parsedSettings.currentMode || !parsedSettings.inputs) {
+                        showFeedback("Invalid Strategy Blueprint file structure!", true);
+                        return;
+                    }
+
+                    // Restore to local storage and refresh state
+                    try {
+                        localStorage.setItem('mtg_calculator_settings', JSON.stringify(parsedSettings));
+                        loadSettings();
+                        calculate();
+                        showFeedback("Strategy Blueprint Restored Successfully! 🎉");
+                    } catch (err) {
+                        console.error(err);
+                        showFeedback("Restoration failed!", true);
+                    }
+                };
+                reader.readAsText(file);
+            };
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             loadSettings();
             if (!els.inputs.date.value) {
@@ -2903,6 +3316,7 @@
             setupLimitsToggle();
             setupComplexityToggle();
             setupCustomDropdown();
+            setupBlueprintSync();
 
 
 
