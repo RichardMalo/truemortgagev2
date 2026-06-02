@@ -3988,6 +3988,7 @@
             });
 
             createBtn.addEventListener('click', () => {
+                saveSettings(); // Save current active inputs first
                 const name = newNameInput.value.trim() || `Scenario ${Object.keys(state.profiles).length + 1}`;
                 const newId = 'profile-' + Date.now();
                 
@@ -4046,6 +4047,18 @@
                 state.activeProfileId = newId;
                 newNameInput.value = '';
                 
+                // Persist the new active profile ID and new profiles registry to localStorage
+                const settings = {
+                    activeProfileId: state.activeProfileId,
+                    comparisonProfileId: state.comparisonProfileId,
+                    compareModeActive: state.compareModeActive,
+                    profiles: state.profiles,
+                    isDark: state.isDark,
+                    complexity: state.complexity,
+                    labelFormat: state.labelFormat || 'date'
+                };
+                localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+
                 loadSettings();
                 calculate();
                 showFeedback(`Scenario "${name}" Created Successfully! 🎉`);
@@ -4119,7 +4132,7 @@
                         return;
                     }
 
-                    saveSettings(); // Save old profile form inputs
+                    saveSettings(); // Save old profile form inputs first
                     state.activeProfileId = p.id;
                     
                     if (state.comparisonProfileId === p.id) {
@@ -4127,8 +4140,20 @@
                         state.compareModeActive = false;
                     }
 
+                    // Save the activeProfileId update directly to localStorage so loadSettings() reads the correct active ID!
+                    const data = localStorage.getItem('mtg_calculator_settings');
+                    if (data) {
+                        try {
+                            const settings = JSON.parse(data);
+                            settings.activeProfileId = state.activeProfileId;
+                            localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    }
+
                     loadSettings(); // Load new profile inputs into DOM
-                    calculate(); // Recalculate (which will auto-save)
+                    calculate(); // Recalculate (which will safely auto-save)
                 });
 
                 card.querySelector('.clone-btn').addEventListener('click', (e) => {
@@ -4156,6 +4181,19 @@
                             
                             if (wasActive) {
                                 state.activeProfileId = Object.keys(state.profiles)[0];
+                                
+                                // Save the updated activeProfileId and profiles registry to localStorage so loadSettings() reads it!
+                                const settings = {
+                                    activeProfileId: state.activeProfileId,
+                                    comparisonProfileId: state.comparisonProfileId,
+                                    compareModeActive: state.compareModeActive,
+                                    profiles: state.profiles,
+                                    isDark: state.isDark,
+                                    complexity: state.complexity,
+                                    labelFormat: state.labelFormat || 'date'
+                                };
+                                localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+
                                 loadSettings(); // Switch active profile in DOM
                             } else {
                                 saveSettings(); // Safe to save registry structure deletion
