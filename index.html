@@ -3991,12 +3991,46 @@
                 const name = newNameInput.value.trim() || `Scenario ${Object.keys(state.profiles).length + 1}`;
                 const newId = 'profile-' + Date.now();
                 
-                const currentInputs = {};
-                Object.entries(els.inputs).forEach(([key, el]) => {
-                    if (el) {
-                        currentInputs[key] = el.type === 'checkbox' ? el.checked : el.value;
-                    }
-                });
+                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+
+                const defaultInputs = {
+                    homePrice: "800000",
+                    downPayment: "160000",
+                    interestRate: "2.62",
+                    rate: "2.62",
+                    amortization: "30",
+                    term: "5",
+                    frequency: "monthly",
+                    paymentFrequency: "monthly",
+                    ccBalance: "15000",
+                    interestRateCC: "19.99",
+                    province: "ON",
+                    compounding: "semi",
+                    countrySelect: "semi",
+                    extra: "0",
+                    extraPayment: "0",
+                    date: prefilledDate,
+                    firstPaymentDate: prefilledDate,
+                    pitiToggle: false,
+                    includePitiToggle: false,
+                    tax: "0.5",
+                    propertyTax: "0.5",
+                    ins: "1000",
+                    homeInsurance: "1000",
+                    hoa: "0",
+                    hoaFees: "0",
+                    pmi: "0.5",
+                    pmiRate: "0.5",
+                    oppCostToggle: false,
+                    investRate: "7.0",
+                    rateShockToggle: false,
+                    renewalRateShock: "6.0",
+                    shockAmortization: "25",
+                    amortizationPeriodShock: "5",
+                    refinanceFrequency: "yearly",
+                    refinanceTerm: "5"
+                };
 
                 state.profiles[newId] = {
                     id: newId,
@@ -4004,9 +4038,9 @@
                     currentMode: state.currentMode,
                     complexity: state.complexity,
                     isDark: state.isDark,
-                    termRates: JSON.parse(JSON.stringify(state.termRates || {})),
-                    customizedYears: JSON.parse(JSON.stringify(state.customizedYears || {})),
-                    inputs: currentInputs
+                    termRates: {},
+                    customizedYears: {},
+                    inputs: defaultInputs
                 };
 
                 state.activeProfileId = newId;
