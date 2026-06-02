@@ -711,8 +711,8 @@
             display: inline-block;
         }
         .settings-menu {
-            right: 0 !important;
-            left: auto !important;
+            left: 0 !important;
+            right: auto !important;
             min-width: 250px;
         }
         .settings-menu-header {
@@ -771,7 +771,30 @@
 <body class="mode-mortgage complexity-simple">
     <div class="container">
         <header class="gsap-fade-in">
-            <h1>Debt Strategy Engine</h1>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown" style="margin-left: 0; margin-right: 4px;">
+                    <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings">
+                        <span class="gear-icon">⚙️</span>
+                    </button>
+                    <div class="dropdown-menu settings-menu" id="settingsMenu">
+                        <div class="settings-menu-header">Portability & Sync</div>
+                        <div class="settings-item" id="settingsOptSync">
+                            <span>🔑</span> Secure Sync & Portability
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">Engine Logic</div>
+                        <div class="settings-item" id="settingsOptLimits">
+                            <span>⚙️</span> Constraints & Limits
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">System Operations</div>
+                        <div class="settings-item danger-action" id="settingsOptReset">
+                            <span>🔄</span> Reset Application Data
+                        </div>
+                    </div>
+                </div>
+                <h1 style="margin: 0;">Debt Strategy Engine</h1>
+            </div>
             
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <div class="master-mode-selector">
@@ -836,28 +859,6 @@
                         <input type="checkbox" id="mode-switch" checked>
                         <span class="slider"></span>
                     </label>
-                </div>
-
-                <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown">
-                    <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings">
-                        <span class="gear-icon">⚙️</span>
-                    </button>
-                    <div class="dropdown-menu settings-menu" id="settingsMenu">
-                        <div class="settings-menu-header">Portability & Sync</div>
-                        <div class="settings-item" id="settingsOptSync">
-                            <span>🔑</span> Secure Sync & Portability
-                        </div>
-                        <div class="settings-menu-divider"></div>
-                        <div class="settings-menu-header">Engine Logic</div>
-                        <div class="settings-item" id="settingsOptLimits">
-                            <span>⚙️</span> Constraints & Limits
-                        </div>
-                        <div class="settings-menu-divider"></div>
-                        <div class="settings-menu-header">System Operations</div>
-                        <div class="settings-item danger-action" id="settingsOptReset">
-                            <span>🔄</span> Reset Application Data
-                        </div>
-                    </div>
                 </div>
             </div>
         </header>
