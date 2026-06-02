@@ -4046,7 +4046,6 @@
                 state.activeProfileId = newId;
                 newNameInput.value = '';
                 
-                saveSettings();
                 loadSettings();
                 calculate();
                 showFeedback(`Scenario "${name}" Created Successfully! 🎉`);
@@ -4120,7 +4119,7 @@
                         return;
                     }
 
-                    saveSettings();
+                    saveSettings(); // Save old profile form inputs
                     state.activeProfileId = p.id;
                     
                     if (state.comparisonProfileId === p.id) {
@@ -4128,9 +4127,8 @@
                         state.compareModeActive = false;
                     }
 
-                    saveSettings();
-                    loadSettings();
-                    calculate();
+                    loadSettings(); // Load new profile inputs into DOM
+                    calculate(); // Recalculate (which will auto-save)
                 });
 
                 card.querySelector('.clone-btn').addEventListener('click', (e) => {
@@ -4153,18 +4151,21 @@
                         
                         const confirmDel = confirm(`Are you sure you want to delete scenario "${p.name}"?`);
                         if (confirmDel) {
+                            const wasActive = state.activeProfileId === p.id;
                             delete state.profiles[p.id];
                             
-                            if (state.activeProfileId === p.id) {
+                            if (wasActive) {
                                 state.activeProfileId = Object.keys(state.profiles)[0];
+                                loadSettings(); // Switch active profile in DOM
+                            } else {
+                                saveSettings(); // Safe to save registry structure deletion
                             }
+                            
                             if (state.comparisonProfileId === p.id) {
                                 state.comparisonProfileId = null;
                                 state.compareModeActive = false;
                             }
 
-                            saveSettings();
-                            loadSettings();
                             calculate();
                         }
                     });
