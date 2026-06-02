@@ -34,6 +34,13 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 * **Table Label Selector (DATE vs PERIOD):** A segmented pill control allowing users to toggle table row headers between chronological calendar dates (e.g., `Jun 1, 2026`) and numerical cycle periods (e.g., `P1`, `P2`, `P3...`), fully supported in both Simple and Advanced Modes.
 * **One-Click PDF Reports (html2pdf.js):** Generate clean, professional financial planning brochures directly in the browser.
 
+### 📂 Multi-Scenario Sandbox (Profile Manager)
+* **Named Financial Blueprints:** Save, clone, rename, and delete multiple distinct financial profiles (e.g., "30-Year Baseline", "Aggressive 15-Year Payoff", "Refinance at 4.5%").
+* **Side-by-Side Compare Mode:** Compute parallel amortization schedules in the background, rendering solid active lines alongside dashed purple comparative traces on Plotly charts simultaneously.
+* **Row-by-Row Delta Badges:** Displays floating, sub-pixel savings indicators (e.g., `-$35,200` in green if ahead, or `+$12,400` in red if trailing) directly underneath amortization ledger outstanding balance columns.
+* **Glassmorphic Sliding Panel:** Features a premium right-sliding management sheet triggered by a folder icon `📂` next to the country selector in the main header, complete with responsive mobile full-bleed designs and spring GSAP transitions.
+* **Session Persistence & Backwards Compatibility:** Automatically preserves the entire profile registry inside `localStorage` across page loads and blueprint syncs, including a legacy data-migration pipeline for returning users.
+
 ### 🔒 Private Session Persistence & Operations
 * **Automatic LocalStorage Cache:** Safely caches your exact calculation parameters, active modes, themes, complexity levels, customized drag-and-drop card layouts, and custom rate shock inputs on your local browser. Calculations resume instantly upon revisiting the page without sending any private financial data to a web server.
 * **Deep Cleanse Reset:** Wipes all custom values inside local storage, resets all form input controls and dynamically edited renewal rate shock timelines, reorders visual bento grid modules in the DOM back to their exact system defaults, and immediately re-renders default calculations.

@@ -788,6 +788,257 @@
                 transform: translateY(0) scale(1) !important;
             }
         }
+
+        /* 📂 SCENARIO SANDBOX SIDEBAR & DELTA STYLES */
+        .scenario-sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 380px;
+            z-index: 1000001;
+            transform: translateX(100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            background: rgba(15, 23, 42, 0.75);
+            border-left: 1px solid var(--border-color);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+        }
+        body:not(.dark-mode) .scenario-sidebar {
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            padding: 0;
+            line-height: 1;
+        }
+        .sidebar-close-btn:hover {
+            opacity: 1;
+        }
+        .create-profile-group {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+        .create-profile-group input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            min-height: 42px;
+            height: 42px;
+        }
+        .create-profile-btn {
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border-radius: 14px;
+            flex-shrink: 0;
+        }
+        .profiles-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 4px;
+        }
+        .profiles-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .profiles-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .profiles-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        .profile-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s var(--spring-easing);
+            position: relative;
+        }
+        .profile-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+        .profile-card.active {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+        }
+        .profile-card.active-mortgage {
+            border-left: 4px solid var(--primary-color);
+        }
+        .profile-card.active-cc {
+            border-left: 4px solid #ef4444;
+        }
+        .profile-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-card-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+        .profile-card-title input {
+            font-size: 0.92rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            height: auto;
+            min-height: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            width: 100%;
+        }
+        .profile-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .profile-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-btn:hover {
+            opacity: 1;
+            background: var(--border-color);
+        }
+        .profile-btn.delete-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .profile-card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+        .profile-card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .profile-tag {
+            background: var(--border-color);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .compare-toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+        }
+        .compare-toggle-label input {
+            cursor: pointer;
+        }
+        .delta-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-top: 4px;
+            display: block;
+        }
+        .delta-badge.better {
+            color: #10b981;
+        }
+        .delta-badge.worse {
+            color: #f59e0b;
+        }
+
+        /* Mobile Viewport Optimization for Scenario Sidebar */
+        @media (max-width: 768px) {
+            .scenario-sidebar {
+                width: calc(100vw - 32px);
+                right: 16px;
+                top: 16px;
+                bottom: 16px;
+                border-radius: 24px;
+                transform: translateX(120%);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+        }
     </style>
 </head>
 <body class="mode-mortgage complexity-simple">
@@ -831,6 +1082,9 @@
             </div>
 
             <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <button type="button" class="dropdown-trigger settings-trigger" id="sandboxTrigger" title="Scenario Sandbox" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer; margin-right: 8px;">
+                    <span style="font-size: 1.15rem;">📂</span>
+                </button>
                 <div class="master-mode-selector country-select-wrapper" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 20px;">
                     <label style="font-weight: 700; font-size: 0.85rem; opacity: 0.8;">Region</label>
                     
@@ -1402,7 +1656,7 @@
          * Houses active variables, dynamic modes, compounding profiles,
          * and customizable rate-shock arrays.
          */
-         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date' };
+         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date', activeProfileId: null, comparisonProfileId: null, compareModeActive: false, profiles: {} };
 
         const els = {
             form: document.getElementById('mortgageForm'),
@@ -1747,7 +2001,7 @@
             };
         };
 
-        const renderCharts = (baseData, actualData, inputs, hasStrat) => {
+        const renderCharts = (baseData, actualData, inputs, hasStrat, compData = null) => {
             const xKey = 'year'; 
             let termX = (state.currentMode === 'mortgage') ? inputs.termYears : null;
             
@@ -1785,6 +2039,18 @@
             if(document.getElementById('chart3')) {
                 const t3 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.balance), name: 'Bal (Baseline)', type: 'scatter', fill: 'tozeroy', line: { color: CONFIG.colors.principal } }];
                 if(hasStrat) t3.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.balance), name: 'Bal (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
+                
+                if (compData && compData.schedule) {
+                    const compName = (state.profiles[state.comparisonProfileId] && state.profiles[state.comparisonProfileId].name) || 'Comparison';
+                    t3.push({
+                        x: compData.schedule.map(d=>d[xKey]),
+                        y: compData.schedule.map(d=>d.balance),
+                        name: `${compName} (Compare)`,
+                        type: 'scatter',
+                        line: { color: '#a855f7', width: 2.5, dash: 'dash' }
+                    });
+                }
+                
                 const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$'); if(termLine) l3.shapes = [termLine];
                 Plotly.react('chart3', t3, l3, PLOT_CONFIG);
             }
@@ -1853,7 +2119,34 @@
                         const annBud = p1PIEx * p1PY, annBase = p2PI * p2PY; const p2InvPer = Math.max(0, annBud - annBase) / p2PY;
                         baseData.schedule.forEach(d => { p2Inv = (p2Inv + p2InvPer) * (1 + p2Rate); p2X.push(d.year); p2Y.push(hp - d.balance + p2Inv); });
                         
-                        Plotly.react('chartOppCost', [ { x: p1X, y: p1Y, name: 'Pay Debt Fast', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } }, { x: p2X, y: p2Y, name: 'Invest Surplus', type: 'scatter', line: { color: CONFIG.colors.investLine, width: 3, dash: 'dot' } } ], getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)'), PLOT_CONFIG);
+                        const tOpp = [
+                            { x: p1X, y: p1Y, name: 'Pay Debt Fast', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } },
+                            { x: p2X, y: p2Y, name: 'Invest Surplus', type: 'scatter', line: { color: CONFIG.colors.investLine, width: 3, dash: 'dot' } }
+                        ];
+
+                        if (compData && compData.schedule) {
+                            const compName = (state.profiles[state.comparisonProfileId] && state.profiles[state.comparisonProfileId].name) || 'Comparison';
+                            const compX=[], compY=[]; let compInv=0;
+                            const cSched = compData.schedule;
+                            if (cSched.length > 0) {
+                                const cPIEx = cSched[0].principal + cSched[0].interest + cSched[0].extra;
+                                const cPY = compData.summary.periodsPerYear;
+                                const cRate = Math.pow(1 + ir, 1 / cPY) - 1;
+                                cSched.forEach(d => { compX.push(d.year); compY.push(hp - d.balance); });
+                                let ccY = compX[compX.length - 1];
+                                while (ccY < mY) { ccY += (1 / cPY); compInv = (compInv + cPIEx) * (1 + cRate); compX.push(ccY); compY.push(hp + compInv); }
+                                
+                                tOpp.push({
+                                    x: compX,
+                                    y: compY,
+                                    name: `${compName} Net Worth`,
+                                    type: 'scatter',
+                                    line: { color: '#a855f7', width: 2.5, dash: 'dash' }
+                                });
+                            }
+                        }
+
+                        Plotly.react('chartOppCost', tOpp, getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)'), PLOT_CONFIG);
                     }
                 } else {
                     els.containers.oppCost.style.display = 'none';
@@ -1891,17 +2184,31 @@
             });
         };
 
-        const updateTable = (schedule, usePiti) => {
+        const updateTable = (schedule, usePiti, compSchedule = null) => {
             const tbody = document.querySelector('#amortization-table tbody');
             els.containers.escrowTh.style.display = usePiti ? '' : 'none';
             tbody.innerHTML = '';
             const frag = document.createDocumentFragment();
             const isPeriod = state.labelFormat === 'period';
-            schedule.forEach(row => {
+            schedule.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 const eTd = usePiti ? `<td style="color: #8b5cf6">${formatCurrency(row.escrow)}</td>` : '';
                 const label = isPeriod ? `P${row.period}` : row.dateLabel;
-                tr.innerHTML = `<td>${label}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong></td>`;
+                
+                let deltaHtml = '';
+                if (compSchedule && compSchedule[index]) {
+                    const diff = row.balance - compSchedule[index].balance;
+                    if (Math.abs(diff) >= 1) {
+                        const isBetter = diff < 0;
+                        const diffText = formatCurrency(Math.abs(diff));
+                        deltaHtml = `<div class="delta-badge ${isBetter ? 'better' : 'worse'}">${isBetter ? '↓' : '↑'} ${diffText}</div>`;
+                    }
+                } else if (compSchedule && !compSchedule[index] && row.balance > 0) {
+                    const diffText = formatCurrency(row.balance);
+                    deltaHtml = `<div class="delta-badge worse">↑ ${diffText}</div>`;
+                }
+
+                tr.innerHTML = `<td>${label}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong>${deltaHtml}</td>`;
                 frag.appendChild(tr);
             });
             tbody.appendChild(frag);
@@ -2256,6 +2563,32 @@
 
             const baseData = isMortgage ? generateMortgageSchedule(inputs, true) : generateCCSchedule(inputs, true);
             const actData = isMortgage ? generateMortgageSchedule(inputs, false) : generateCCSchedule(inputs, false);
+
+            let compData = null;
+            if (state.compareModeActive && state.comparisonProfileId && state.profiles[state.comparisonProfileId]) {
+                const compProfile = state.profiles[state.comparisonProfileId];
+                const compInputs = {
+                    homePrice: parseFloat(compProfile.inputs.homePrice) || 0, downPayment: parseFloat(compProfile.inputs.downPayment) || 0,
+                    ccBalance: parseFloat(compProfile.inputs.ccBalance) || 0, province: compProfile.inputs.province,
+                    annualRate: parseFloat(compProfile.inputs.interestRate) || parseFloat(compProfile.inputs.rate) || 0,
+                    amortizationYears: parseFloat(compProfile.inputs.amortization) || 0,
+                    termYears: parseFloat(compProfile.inputs.term) || 0, compounding: compProfile.inputs.compounding,
+                    frequency: compProfile.inputs.paymentFrequency || compProfile.inputs.frequency,
+                    usePiti: compProfile.currentMode === 'mortgage' && compProfile.inputs.includePitiToggle === true,
+                    taxRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.propertyTax) || 0) : 0,
+                    insRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.homeInsurance) || 0) : 0,
+                    hoaRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.hoaFees) || 0) : 0,
+                    pmiRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.pmiRate) || 0) : 0,
+                    useOppCost: compProfile.inputs.oppCostToggle === true,
+                    investRate: compProfile.inputs.oppCostToggle === true ? (parseFloat(compProfile.inputs.investRate) || 7.0) : 7.0,
+                    extraPayment: parseFloat(compProfile.inputs.extraPayment) || parseFloat(compProfile.inputs.extra) || 0,
+                    startDate: compProfile.inputs.firstPaymentDate || compProfile.inputs.date,
+                    rateShockEnabled: compProfile.currentMode === 'mortgage' && compProfile.inputs.rateShockToggle === true,
+                    termRates: compProfile.termRates || {}
+                };
+                const isCompMortgage = compProfile.currentMode === 'mortgage';
+                compData = isCompMortgage ? generateMortgageSchedule(compInputs, false) : generateCCSchedule(compInputs, false);
+            }
             
             const totalActualLifetimePaidToBank = actData.summary.totalInterest + principalBorrowAmount;
             
@@ -2286,8 +2619,8 @@
             
             updateKineticText(els.results.saved, (baseData.summary.totalInterest) - (actData.summary.totalInterest));
 
-            renderCharts(baseData, actData, inputs, hasStrat);
-            updateTable(actData.schedule, (isMortgage && inputs.usePiti));
+            renderCharts(baseData, actData, inputs, hasStrat, compData);
+            updateTable(actData.schedule, (isMortgage && inputs.usePiti), compData ? compData.schedule : null);
 
             // Dynamically calculate and render Chronological Milestone Roadmap
             const milestones = calculateMilestones(baseData, actData, inputs);
@@ -2400,21 +2733,43 @@
          */
         const saveSettings = () => {
             try {
-                const settings = {
-                    currentMode: state.currentMode,
-                    complexity: state.complexity,
-                    isDark: state.isDark,
-                    labelFormat: state.labelFormat || 'date',
-                    termRates: state.termRates,
-                    customizedYears: state.customizedYears,
-                    inputs: {}
-                };
+                if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
+                    const newId = 'profile-' + Date.now();
+                    state.activeProfileId = newId;
+                    state.profiles[newId] = {
+                        id: newId,
+                        name: "Active Scenario",
+                        currentMode: state.currentMode,
+                        complexity: state.complexity,
+                        isDark: state.isDark,
+                        termRates: JSON.parse(JSON.stringify(state.termRates || {})),
+                        customizedYears: JSON.parse(JSON.stringify(state.customizedYears || {})),
+                        inputs: {}
+                    };
+                }
+
+                const activeProfile = state.profiles[state.activeProfileId];
+                activeProfile.currentMode = state.currentMode;
+                activeProfile.complexity = state.complexity;
+                activeProfile.isDark = state.isDark;
+                activeProfile.termRates = JSON.parse(JSON.stringify(state.termRates || {}));
+                activeProfile.customizedYears = JSON.parse(JSON.stringify(state.customizedYears || {}));
                 
                 Object.entries(els.inputs).forEach(([key, el]) => {
                     if (el) {
-                        settings.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
+                        activeProfile.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
                     }
                 });
+
+                const settings = {
+                    activeProfileId: state.activeProfileId,
+                    comparisonProfileId: state.comparisonProfileId,
+                    compareModeActive: state.compareModeActive,
+                    profiles: state.profiles,
+                    isDark: state.isDark,
+                    complexity: state.complexity,
+                    labelFormat: state.labelFormat || 'date'
+                };
                 
                 // Save draggable cards layout order
                 const chartsContainer = document.getElementById('draggable-charts-container');
@@ -2451,27 +2806,97 @@
 
             try {
                 const data = localStorage.getItem('mtg_calculator_settings');
-                if (!data) {
-                    syncLabelButtons();
-                    return;
+                let settings = null;
+                if (data) {
+                    try {
+                        settings = JSON.parse(data);
+                    } catch (e) {
+                        console.error("JSON parse error on load settings", e);
+                    }
                 }
-                
-                const settings = JSON.parse(data);
+
                 if (!settings) {
-                    syncLabelButtons();
-                    return;
+                    const defaultId = 'profile-default';
+                    state.profiles = {};
+                    state.profiles[defaultId] = {
+                        id: defaultId,
+                        name: "30-Year Baseline",
+                        currentMode: 'mortgage',
+                        complexity: 'simple',
+                        isDark: true,
+                        termRates: {},
+                        customizedYears: {},
+                        inputs: {
+                            homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                            paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                            province: "ON", compounding: "semi", countrySelect: "semi"
+                        }
+                    };
+                    state.activeProfileId = defaultId;
+                    state.comparisonProfileId = null;
+                    state.compareModeActive = false;
+                } else if (settings.inputs) {
+                    const legacyId = 'profile-' + Date.now();
+                    state.profiles = {};
+                    state.profiles[legacyId] = {
+                        id: legacyId,
+                        name: "Active Scenario",
+                        currentMode: settings.currentMode || 'mortgage',
+                        complexity: settings.complexity || 'simple',
+                        isDark: settings.isDark !== undefined ? settings.isDark : true,
+                        termRates: settings.termRates || {},
+                        customizedYears: settings.customizedYears || {},
+                        inputs: settings.inputs || {}
+                    };
+                    state.activeProfileId = legacyId;
+                    state.comparisonProfileId = null;
+                    state.compareModeActive = false;
+                    state.isDark = settings.isDark !== undefined ? settings.isDark : true;
+                    state.complexity = settings.complexity || 'simple';
+                    state.labelFormat = settings.labelFormat || 'date';
+                } else {
+                    state.activeProfileId = settings.activeProfileId;
+                    state.comparisonProfileId = settings.comparisonProfileId;
+                    state.compareModeActive = !!settings.compareModeActive;
+                    state.profiles = settings.profiles || {};
+                    state.isDark = settings.isDark !== undefined ? settings.isDark : true;
+                    state.complexity = settings.complexity || 'simple';
+                    state.labelFormat = settings.labelFormat || 'date';
                 }
-                
-                if (settings.currentMode) state.currentMode = settings.currentMode;
-                if (settings.complexity) state.complexity = settings.complexity;
-                if (settings.isDark !== undefined) state.isDark = settings.isDark;
-                if (settings.labelFormat) state.labelFormat = settings.labelFormat;
-                else state.labelFormat = 'date';
-                if (settings.termRates) state.termRates = settings.termRates;
-                if (settings.customizedYears) state.customizedYears = settings.customizedYears;
-                
-                if (settings.inputs) {
-                    Object.entries(settings.inputs).forEach(([key, val]) => {
+
+                if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
+                    const keys = Object.keys(state.profiles);
+                    if (keys.length > 0) {
+                        state.activeProfileId = keys[0];
+                    } else {
+                        const seedId = 'profile-' + Date.now();
+                        state.profiles[seedId] = {
+                            id: seedId,
+                            name: "Active Scenario",
+                            currentMode: 'mortgage',
+                            complexity: 'simple',
+                            isDark: true,
+                            termRates: {},
+                            customizedYears: {},
+                            inputs: {
+                                homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                                paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                                province: "ON", compounding: "semi", countrySelect: "semi"
+                            }
+                        };
+                        state.activeProfileId = seedId;
+                    }
+                }
+
+                const activeProfile = state.profiles[state.activeProfileId];
+                state.currentMode = activeProfile.currentMode || 'mortgage';
+                state.complexity = activeProfile.complexity || 'simple';
+                state.isDark = activeProfile.isDark !== undefined ? activeProfile.isDark : true;
+                state.termRates = activeProfile.termRates || {};
+                state.customizedYears = activeProfile.customizedYears || {};
+
+                if (activeProfile.inputs) {
+                    Object.entries(activeProfile.inputs).forEach(([key, val]) => {
                         const el = els.inputs[key];
                         if (el) {
                             if (el.type === 'checkbox') {
@@ -2558,6 +2983,9 @@
                 }
                 
                 syncLabelButtons();
+                if (typeof renderSandboxList === 'function') {
+                    renderSandboxList();
+                }
             } catch (err) {
                 console.error("Error loading settings from localStorage:", err);
             }
@@ -3230,14 +3658,39 @@
                 console.error("Error clearing settings from localStorage:", err);
             }
             els.form.reset();
-            // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
             els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-            els.inputs.countrySelect.value = 'semi'; // Reset up-top country select to Canada
+            els.inputs.countrySelect.value = 'semi';
             state.labelFormat = 'date';
             document.querySelectorAll('.label-format-btn').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-format') === 'date');
             });
+
+            const defaultId = 'profile-default';
+            state.profiles = {};
+            state.profiles[defaultId] = {
+                id: defaultId,
+                name: "30-Year Baseline",
+                currentMode: 'mortgage',
+                complexity: 'simple',
+                isDark: true,
+                termRates: {},
+                customizedYears: {},
+                inputs: {
+                    homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                    paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                    province: "ON", compounding: "semi", countrySelect: "semi"
+                }
+            };
+            state.activeProfileId = defaultId;
+            state.comparisonProfileId = null;
+            state.compareModeActive = false;
+
+            const sidebar = document.getElementById('scenarioSidebar');
+            if (sidebar) gsap.to(sidebar, { xPercent: 100, duration: 0.3 });
+            const overlay = document.getElementById('sidebarOverlay');
+            if (overlay) overlay.classList.remove('active');
+
             state.termRates = {};
             state.customizedYears = {};
             calculate();
@@ -3410,14 +3863,39 @@
                         console.error("Error clearing settings from localStorage:", err);
                     }
                     els.form.reset();
-                    // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
                     const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
                     els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-                    els.inputs.countrySelect.value = 'semi'; // Reset to Canada
+                    els.inputs.countrySelect.value = 'semi';
                     state.labelFormat = 'date';
                     document.querySelectorAll('.label-format-btn').forEach(b => {
                         b.classList.toggle('active', b.getAttribute('data-format') === 'date');
                     });
+
+                    const defaultId = 'profile-default';
+                    state.profiles = {};
+                    state.profiles[defaultId] = {
+                        id: defaultId,
+                        name: "30-Year Baseline",
+                        currentMode: 'mortgage',
+                        complexity: 'simple',
+                        isDark: true,
+                        termRates: {},
+                        customizedYears: {},
+                        inputs: {
+                            homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                            paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                            province: "ON", compounding: "semi", countrySelect: "semi"
+                        }
+                    };
+                    state.activeProfileId = defaultId;
+                    state.comparisonProfileId = null;
+                    state.compareModeActive = false;
+
+                    const sidebar = document.getElementById('scenarioSidebar');
+                    if (sidebar) gsap.to(sidebar, { xPercent: 100, duration: 0.3 });
+                    const overlay = document.getElementById('sidebarOverlay');
+                    if (overlay) overlay.classList.remove('active');
+
                     state.termRates = {};
                     state.customizedYears = {};
                     
@@ -3466,6 +3944,212 @@
                     
                     alert("Calculator successfully reset to system defaults! 🎉");
                 }
+            });
+        };
+
+        /*
+         * MULTI-SCENARIO SANDBOX (PROFILE MANAGER) CONTROLLER 📂
+         * Connects folder trigger buttons, manages sliding panels, handles cloning/creation,
+         * coordinates inline renaming, and implements comparison toggles.
+         */
+        const setupScenarioSandbox = () => {
+            const trigger = document.getElementById('sandboxTrigger');
+            const sidebar = document.getElementById('scenarioSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const closeBtn = document.getElementById('closeSidebarBtn');
+            const createBtn = document.getElementById('createProfileBtn');
+            const newNameInput = document.getElementById('newProfileName');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                saveSettings();
+                
+                gsap.fromTo(sidebar, { xPercent: 100 }, { xPercent: 0, duration: 0.4, ease: "power3.out" });
+                overlay.classList.add('active');
+                renderSandboxList();
+            });
+
+            closeBtn.addEventListener('click', () => {
+                gsap.to(sidebar, { xPercent: 100, duration: 0.3, ease: "power3.in" });
+                overlay.classList.remove('active');
+            });
+
+            overlay.addEventListener('click', () => {
+                gsap.to(sidebar, { xPercent: 100, duration: 0.3, ease: "power3.in" });
+                overlay.classList.remove('active');
+            });
+
+            createBtn.addEventListener('click', () => {
+                const name = newNameInput.value.trim() || `Scenario ${Object.keys(state.profiles).length + 1}`;
+                const newId = 'profile-' + Date.now();
+                
+                const currentInputs = {};
+                Object.entries(els.inputs).forEach(([key, el]) => {
+                    if (el) {
+                        currentInputs[key] = el.type === 'checkbox' ? el.checked : el.value;
+                    }
+                });
+
+                state.profiles[newId] = {
+                    id: newId,
+                    name: name,
+                    currentMode: state.currentMode,
+                    complexity: state.complexity,
+                    isDark: state.isDark,
+                    termRates: JSON.parse(JSON.stringify(state.termRates || {})),
+                    customizedYears: JSON.parse(JSON.stringify(state.customizedYears || {})),
+                    inputs: currentInputs
+                };
+
+                state.activeProfileId = newId;
+                newNameInput.value = '';
+                
+                saveSettings();
+                loadSettings();
+                calculate();
+                showFeedback(`Scenario "${name}" Created Successfully! 🎉`);
+            });
+
+            sidebar.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        };
+
+        const renderSandboxList = () => {
+            const container = document.getElementById('profilesScrollContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.values(state.profiles).forEach(p => {
+                const isSelected = p.id === state.activeProfileId;
+                const isCompare = p.id === state.comparisonProfileId && state.compareModeActive;
+
+                const card = document.createElement('div');
+                card.className = `profile-card ${isSelected ? 'active active-' + (p.currentMode || 'mortgage') : ''}`;
+                card.setAttribute('data-id', p.id);
+
+                const modeLabel = p.currentMode === 'cc' ? 'Credit Card' : 'Mortgage';
+                const tagComp = p.complexity === 'advanced' ? 'Advanced' : 'Simple';
+                
+                card.innerHTML = `
+                    <div class="profile-card-header">
+                        <h4 class="profile-card-title" id="title-text-${p.id}">${p.name}</h4>
+                        <div class="profile-card-actions">
+                            <button type="button" class="profile-btn clone-btn" title="Clone Scenario" data-id="${p.id}">📋</button>
+                            <button type="button" class="profile-btn delete-btn" title="Delete Scenario" data-id="${p.id}" style="${Object.keys(state.profiles).length <= 1 ? 'display:none' : ''}">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="profile-card-body">
+                        <div class="profile-card-tags">
+                            <span class="profile-tag">${modeLabel}</span>
+                            <span class="profile-tag">${tagComp}</span>
+                        </div>
+                        <label class="compare-toggle-label" data-id="${p.id}">
+                            <input type="checkbox" class="compare-checkbox" data-id="${p.id}" ${isCompare ? 'checked' : ''} ${isSelected ? 'disabled style="opacity:0.5"' : ''}>
+                            <span>COMPARE</span>
+                        </label>
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.profile-card-actions') || e.target.closest('.compare-toggle-label')) {
+                        return;
+                    }
+                    
+                    const titleText = document.getElementById(`title-text-${p.id}`);
+                    if (e.detail === 2) {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = p.name;
+                        input.addEventListener('blur', () => {
+                            const newName = input.value.trim() || p.name;
+                            p.name = newName;
+                            titleText.textContent = newName;
+                            saveSettings();
+                        });
+                        input.addEventListener('keydown', (evt) => {
+                            if (evt.key === 'Enter') {
+                                input.blur();
+                            }
+                        });
+                        titleText.innerHTML = '';
+                        titleText.appendChild(input);
+                        input.focus();
+                        return;
+                    }
+
+                    saveSettings();
+                    state.activeProfileId = p.id;
+                    
+                    if (state.comparisonProfileId === p.id) {
+                        state.comparisonProfileId = null;
+                        state.compareModeActive = false;
+                    }
+
+                    saveSettings();
+                    loadSettings();
+                    calculate();
+                });
+
+                card.querySelector('.clone-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const newId = 'profile-' + Date.now();
+                    state.profiles[newId] = JSON.parse(JSON.stringify(p));
+                    state.profiles[newId].id = newId;
+                    state.profiles[newId].name = `${p.name} (Copy)`;
+                    
+                    saveSettings();
+                    loadSettings();
+                    calculate();
+                });
+
+                const delBtn = card.querySelector('.delete-btn');
+                if (delBtn) {
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (Object.keys(state.profiles).length <= 1) return;
+                        
+                        const confirmDel = confirm(`Are you sure you want to delete scenario "${p.name}"?`);
+                        if (confirmDel) {
+                            delete state.profiles[p.id];
+                            
+                            if (state.activeProfileId === p.id) {
+                                state.activeProfileId = Object.keys(state.profiles)[0];
+                            }
+                            if (state.comparisonProfileId === p.id) {
+                                state.comparisonProfileId = null;
+                                state.compareModeActive = false;
+                            }
+
+                            saveSettings();
+                            loadSettings();
+                            calculate();
+                        }
+                    });
+                }
+
+                const compCheck = card.querySelector('.compare-checkbox');
+                compCheck.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    if (e.target.checked) {
+                        state.comparisonProfileId = p.id;
+                        state.compareModeActive = true;
+                        
+                        document.querySelectorAll('.compare-checkbox').forEach(cb => {
+                            if (cb.getAttribute('data-id') !== p.id) {
+                                cb.checked = false;
+                            }
+                        });
+                    } else {
+                        state.comparisonProfileId = null;
+                        state.compareModeActive = false;
+                    }
+                    saveSettings();
+                    calculate();
+                    renderSandboxList();
+                });
+
+                container.appendChild(card);
             });
         };
 
@@ -3669,8 +4353,7 @@
             setupCustomDropdown();
             setupBlueprintSync();
             setupSettingsMenu();
-
-
+            setupScenarioSandbox();
 
             calculate();
             
@@ -3678,5 +4361,24 @@
             gsap.from(".gsap-slide-up", { y: 40, opacity: 0, duration: 0.8, stagger: 0.1, ease: "back.out(1.5)" });
         });
     </script>
+
+    <!-- Scenario Sandbox Sidebar & Backdrop -->
+    <div id="scenarioSidebar" class="scenario-sidebar">
+        <div class="sidebar-header">
+            <h3><span>📂</span> Scenario Sandbox</h3>
+            <button type="button" class="sidebar-close-btn" id="closeSidebarBtn" title="Close Panel">&times;</button>
+        </div>
+        <div class="sidebar-content" style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;">
+            <div class="create-profile-group">
+                <input type="text" id="newProfileName" placeholder="New Scenario Name..." autocomplete="off">
+                <button type="button" class="squishy-btn primary-btn create-profile-btn" id="createProfileBtn" title="Save Current Scenario">+</button>
+            </div>
+            
+            <div id="profilesScrollContainer" class="profiles-list">
+                <!-- Profile items will be injected dynamically -->
+            </div>
+        </div>
+    </div>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 </body>
 </html>
