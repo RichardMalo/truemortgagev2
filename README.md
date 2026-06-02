@@ -16,7 +16,7 @@ To explore the live interactive application, **[click here to view the live dash
 ### ⚙️ Multi-Region Jurisdictional Logic
 The engine dynamically adapts to regional banking regulations using an intuitive custom flag selector:
 * **Canada:** Computes fixed mortgages using semi-annual compounding as mandated by Canadian banking law (mitigating effective annual interest yields).
-* **United States, United Kingdom, Australia, & New Zealand:** Calculates interest using standard monthly/daily compounding regimes.
+* **USA, UK, AU, & NZ:** Calculates interest using standard monthly/daily compounding regimes.
 
 ### 🚀 Amortization Compression & Acceleration
 * **Advanced Frequencies:** Models Standard Monthly, Semi-Monthly (24/yr), Bi-Weekly (26/yr), and Accelerated Bi-Weekly structures.
@@ -27,14 +27,25 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 * **Rate Shock Resilience Test:** Allows homeowners to stress-test their active mortgage term against impending rate hikes at renewal, predicting exact payment shocks and budget variances.
 
 ### 🎨 Visual & Analytical Dashboard
-* **Dynamic Bento Grid:** A responsive, gorgeous dashboard utilizing modular glassmorphism, dynamic shadow profiles, and fluid transition states.
+* **Dynamic Bento Grid:** A responsive, gorgeous dashboard utilizing modular glassmorphism, dynamic shadow profiles, and fluid transition states. Bento cards can be grabbed, dragged, and swapped across grid slots to fully customize your analytical workspace.
 * **Visual Blueprint Stack:** Rendered concentric circles and interactive breakdown stacks displaying real-time comparisons of baseline vs. compressed amortization.
 * **Advanced Charting (Plotly.js):** Fluid, interactive linear and bar charts plotting outstanding principal, cumulative interest, and net worth comparisons over time.
-* **High-Fidelity Amortization Table:** Interactive schedules outlining breakdown changes per period.
+* **High-Fidelity Amortization Table:** Interactive schedule mapping principal reduction, absolute interest decay curves, and extra payment efficiency metrics across every active cycle step.
+* **Table Label Selector (DATE vs PERIOD):** A segmented pill control allowing users to toggle table row headers between chronological calendar dates (e.g., `Jun 1, 2026`) and numerical cycle periods (e.g., `P1`, `P2`, `P3...`), fully supported in both Simple and Advanced Modes.
 * **One-Click PDF Reports (html2pdf.js):** Generate clean, professional financial planning brochures directly in the browser.
 
-### 🔒 Private Session Persistence
-* **Automatic LocalStorage Cache:** Safely caches your exact calculation parameters, active modes, themes, complexity levels, and custom rate shock inputs on your local browser. Calculations resume instantly upon revisiting the page without sending any private financial data to a web server. Includes a dedicated "Reset" feature to purge the browser cache instantly.
+### 🔒 Private Session Persistence & Operations
+* **Automatic LocalStorage Cache:** Safely caches your exact calculation parameters, active modes, themes, complexity levels, customized drag-and-drop card layouts, and custom rate shock inputs on your local browser. Calculations resume instantly upon revisiting the page without sending any private financial data to a web server.
+* **Deep Cleanse Reset:** Wipes all custom values inside local storage, resets all form input controls and dynamically edited renewal rate shock timelines, reorders visual bento grid modules in the DOM back to their exact system defaults, and immediately re-renders default calculations.
+
+### 🔑 Secure Sync & Portability (JSON Backups)
+* **JSON Strategy Blueprints:** Export and import your customized debt strategies as standard JSON files to back up your custom scenarios. All data remains 100% private in local storage.
+* **PBKDF2 & AES-GCM 256-bit Encryption:** Protect sensitive financial details by choosing to encrypt files with a custom passcode before downloading. Key derivation (SHA-256, 100,000 iterations) and symmetric encryption are executed fully client-side using browser-native Web Crypto APIs.
+* **Premium Drag-and-Drop Dropzone:** Styled with interactive hover and drag transitions, making importing backups extremely intuitive and visual.
+
+### ⚙️ System Settings Dropdown & Modals
+* **Centrally Centered Settings Gear:** Integrates a smooth, rotating settings gear dropdown `⚙️` next to the main title. This groups sync portability, constraints, and system resets under a single elegant control.
+* **Sleek Overlay Modals:** Consolidates advanced operational explanation guides (Engine Constraints & Limits) and sync dropzones into gorgeous overlay modals utilizing elastic GSAP opening animations.
 
 ---
 
