@@ -678,6 +678,77 @@
             50% { opacity: 1; }
             100% { opacity: 0.7; }
         }
+
+        /* Settings Gear Wheel Styles */
+        .settings-dropdown-wrapper {
+            margin-left: 10px;
+        }
+        .settings-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s var(--spring-easing);
+            color: var(--text-color);
+            padding: 0;
+        }
+        .settings-trigger:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            background-color: var(--card-bg);
+        }
+        .settings-trigger:hover .gear-icon {
+            transform: rotate(45deg);
+        }
+        .settings-trigger .gear-icon {
+            font-size: 1.25rem;
+            transition: transform 0.4s var(--spring-easing);
+            display: inline-block;
+        }
+        .settings-menu {
+            right: 0 !important;
+            left: auto !important;
+            min-width: 250px;
+        }
+        .settings-menu-header {
+            font-size: 0.72rem;
+            font-weight: 800;
+            opacity: 0.5;
+            padding: 8px 12px 4px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-color);
+        }
+        .settings-menu-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 6px 0;
+        }
+        .settings-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+        }
+        .settings-item:hover {
+            background-color: var(--input-bg);
+            color: var(--primary-color);
+        }
+        .settings-item.danger-action:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
     </style>
 </head>
 <body class="mode-mortgage complexity-simple">
@@ -748,6 +819,28 @@
                         <input type="checkbox" id="mode-switch" checked>
                         <span class="slider"></span>
                     </label>
+                </div>
+
+                <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown">
+                    <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings">
+                        <span class="gear-icon">⚙️</span>
+                    </button>
+                    <div class="dropdown-menu settings-menu" id="settingsMenu">
+                        <div class="settings-menu-header">Portability & Sync</div>
+                        <div class="settings-item" id="settingsOptSync">
+                            <span>🔑</span> Secure Sync & Portability
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">Engine Logic</div>
+                        <div class="settings-item" id="settingsOptLimits">
+                            <span>⚙️</span> Constraints & Limits
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">System Operations</div>
+                        <div class="settings-item danger-action" id="settingsOptReset">
+                            <span>🔄</span> Reset Application Data
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -927,104 +1020,6 @@
                     </div>
                 </form>
 
-                <!-- Premium Collapsible: Engine Constraints & Usage Limits -->
-                <div class="bento-card engine-limits-card" style="margin-top: 24px;">
-                    <div class="limits-header" id="toggleLimitsBtn" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none;">
-                        <h3 class="section-title" style="margin: 0; font-size: 0.95rem; display: flex; align-items: center;">
-                            <span style="margin-right: 8px;">⚙️</span> Engine Constraints & Limits
-                        </h3>
-                        <span id="limitsChevron" style="font-weight: 800; font-size: 0.9rem; transition: transform 0.3s ease;">▼</span>
-                    </div>
-                    <div id="limitsContent" style="max-height: 0px; overflow: hidden; transition: max-height 0.4s var(--spring-easing); margin-top: 0px;">
-                        <div style="padding-top: 15px; border-top: 1px dashed var(--border-color); margin-top: 15px;">
-                            <p style="font-size: 0.78rem; opacity: 0.8; line-height: 1.4; margin-top: 0; margin-bottom: 12px;">
-                                The mathematical calculation engine enforces the following validation boundaries to ensure stable calculations, thread protection, and realistic projections.
-                            </p>
-                            <div class="limits-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px; font-size: 0.75rem;">
-                                <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Amortization Span</span>
-                                    <strong style="color: var(--primary-color);">0.1 to 100 Years</strong>
-                                </div>
-                                <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Interest Rate Bounds</span>
-                                    <strong style="color: var(--primary-color);">0.0% to 100.0% APR</strong>
-                                </div>
-                                <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Down Payment Threshold</span>
-                                    <strong style="color: var(--primary-color);">Must be &lt; Home Price</strong>
-                                </div>
-                                <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Refinance Term Bounds</span>
-                                    <strong style="color: var(--primary-color);">Must be &gt; 0 and &le; Amortization</strong>
-                                </div>
-                                <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Rate Shock Density Guard</span>
-                                    <strong style="color: var(--primary-color);">Max 50 Refinance Terms</strong>
-                                </div>
-                                
-                                <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Minimum Starting Balance</span>
-                                    <strong style="color: var(--primary-color);">&gt; $0.00</strong>
-                                </div>
-                                <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Interest Rate Bounds</span>
-                                    <strong style="color: var(--primary-color);">0.0% to 200.0% APR</strong>
-                                </div>
-                                <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
-                                    <span style="opacity: 0.8;">Province Min. Payment Laws</span>
-                                    <strong style="color: var(--primary-color);">Ontario (3%) / Quebec (5%)</strong>
-                                </div>
-                                
-                                <div class="limit-item" style="display: flex; justify-content: space-between; padding: 6px 0;">
-                                    <span style="opacity: 0.8;">Discretionary Payment</span>
-                                    <strong style="color: var(--primary-color);">Non-negative (&ge; $0)</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Premium Bento Card: Secure Sync & Portability -->
-                <div class="bento-card" style="margin-top: 24px;">
-                    <h3 class="section-title" style="margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center;">
-                        <span style="margin-right: 8px;">🔑</span> Secure Sync & Portability
-                    </h3>
-                    <p style="font-size: 0.78rem; opacity: 0.8; line-height: 1.4; margin-top: 0; margin-bottom: 15px;">
-                        Export or restore your strategy blueprint as a secure JSON file to back up your custom scenarios and sync easily across your phone, tablet, or PC.
-                    </p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Security Mode</label>
-                            <div class="master-mode-selector" style="display: flex; width: 100%; box-sizing: border-box;">
-                                <button type="button" class="format-btn active" data-format="plain">Plain JSON</button>
-                                <button type="button" class="format-btn" data-format="encrypted">Encrypted 🔒</button>
-                            </div>
-                        </div>
-                        
-                        <div id="passcodeWrapper" class="passcode-wrapper">
-                            <div class="input-group" style="margin-bottom: 0;">
-                                <label style="font-size: 0.75rem; font-weight: 700;">Blueprint Encryption Passcode</label>
-                                <input type="password" id="blueprintPasscode" placeholder="Enter a secure passcode" style="font-size: 0.85rem; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); width: 100%; box-sizing: border-box;">
-                            </div>
-                        </div>
-
-                        <button type="button" id="exportBlueprintBtn" class="squishy-btn primary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; padding: 12px; font-size: 0.85rem; border-radius: 14px; border: none; cursor: pointer; transition: all 0.3s var(--spring-easing);">
-                            <span>📤</span> Export Strategy Blueprint
-                        </button>
-
-                        <div style="border-top: 1px dashed var(--border-color); margin-top: 10px; padding-top: 15px;">
-                            <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Restore Strategy Blueprint</label>
-                            <div class="blueprint-dropzone" id="blueprintDropzone">
-                                <input type="file" id="blueprintFileInput" accept=".json" style="display: none;">
-                                <div class="dropzone-icon">📥</div>
-                                <p>Drag & drop blueprint file here</p>
-                                <span>or click to browse local files</span>
-                                <div id="dropzoneFeedback" class="dropzone-feedback"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="column gsap-slide-up" style="animation-delay: 0.1s;">
@@ -1227,6 +1222,113 @@
                 </div>
                 
                 <div id="shareStatus" class="share-status" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secure Sync & Portability Modal -->
+    <div id="syncModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 style="margin: 0; display: flex; align-items: center; font-size: 1.1rem;">
+                    <span style="margin-right: 8px;">🔑</span> Secure Sync & Portability
+                </h3>
+                <button id="closeSyncModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.8rem; margin-bottom: 20px; line-height: 1.45;">
+                    Export or restore your strategy blueprint as a secure JSON file to back up your custom scenarios and sync easily across your phone, tablet, or PC. All data remains 100% private in local storage.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Security Mode</label>
+                        <div class="master-mode-selector" style="display: flex; width: 100%; box-sizing: border-box;">
+                            <button type="button" class="format-btn active" data-format="plain">Plain JSON</button>
+                            <button type="button" class="format-btn" data-format="encrypted">Encrypted 🔒</button>
+                        </div>
+                    </div>
+                    
+                    <div id="passcodeWrapper" class="passcode-wrapper">
+                        <div class="input-group" style="margin-bottom: 0;">
+                            <label style="font-size: 0.75rem; font-weight: 700;">Blueprint Encryption Passcode</label>
+                            <input type="password" id="blueprintPasscode" placeholder="Enter a secure passcode" style="font-size: 0.85rem; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <button type="button" id="exportBlueprintBtn" class="squishy-btn primary-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; padding: 12px; font-size: 0.85rem; border-radius: 14px; border: none; cursor: pointer; transition: all 0.3s var(--spring-easing);">
+                        <span>📤</span> Export Strategy Blueprint
+                    </button>
+
+                    <div style="border-top: 1px dashed var(--border-color); margin-top: 10px; padding-top: 15px;">
+                        <label style="font-size: 0.75rem; font-weight: 700; opacity: 0.8;">Restore Strategy Blueprint</label>
+                        <div class="blueprint-dropzone" id="blueprintDropzone">
+                            <input type="file" id="blueprintFileInput" accept=".json" style="display: none;">
+                            <div class="dropzone-icon">📥</div>
+                            <p>Drag & drop blueprint file here</p>
+                            <span>or click to browse local files</span>
+                            <div id="dropzoneFeedback" class="dropzone-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Engine Constraints & Limits Modal -->
+    <div id="limitsModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 style="margin: 0; display: flex; align-items: center; font-size: 1.1rem;">
+                    <span style="margin-right: 8px;">⚙️</span> Constraints & Limits
+                </h3>
+                <button id="closeLimitsModalBtn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.8rem; margin-bottom: 20px; line-height: 1.45;">
+                    The mathematical calculation engine enforces the following validation boundaries to ensure stable calculations, thread protection, and realistic projections.
+                </p>
+                
+                <div class="limits-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px; font-size: 0.8rem;">
+                    <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Amortization Span</span>
+                        <strong style="color: var(--primary-color);">0.1 to 100 Years</strong>
+                    </div>
+                    <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Interest Rate Bounds</span>
+                        <strong style="color: var(--primary-color);">0.0% to 100.0% APR</strong>
+                    </div>
+                    <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Down Payment Threshold</span>
+                        <strong style="color: var(--primary-color);">Must be &lt; Home Price</strong>
+                    </div>
+                    <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Refinance Term Bounds</span>
+                        <strong style="color: var(--primary-color);">Must be &gt; 0 and &le; Amortization</strong>
+                    </div>
+                    <div class="mortgage-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Rate Shock Density Guard</span>
+                        <strong style="color: var(--primary-color);">Max 50 Refinance Terms</strong>
+                    </div>
+                    
+                    <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Minimum Starting Balance</span>
+                        <strong style="color: var(--primary-color);">&gt; $0.00</strong>
+                    </div>
+                    <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Interest Rate Bounds</span>
+                        <strong style="color: var(--primary-color);">0.0% to 200.0% APR</strong>
+                    </div>
+                    <div class="cc-only limit-item" style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="opacity: 0.8;">Province Min. Payment Laws</span>
+                        <strong style="color: var(--primary-color);">Ontario (3%) / Quebec (5%)</strong>
+                    </div>
+                    
+                    <div class="limit-item" style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span style="opacity: 0.8;">Discretionary Payment</span>
+                        <strong style="color: var(--primary-color);">Non-negative (&ge; $0)</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -3118,6 +3220,137 @@
         };
 
         /*
+         * PREMIUM ⚙️ SETTINGS DROP-DOWN GEAR CONTROLLER
+         * Toggles the dropdown settings wheel, coordinates modal displays for Limits and Secure Sync,
+         * and manages the full "Reset Application Data" system operations block.
+         */
+        const setupSettingsMenu = () => {
+            const dropdown = document.getElementById('settings-dropdown');
+            const trigger = document.getElementById('settingsTrigger');
+            
+            const optSync = document.getElementById('settingsOptSync');
+            const optLimits = document.getElementById('settingsOptLimits');
+            const optReset = document.getElementById('settingsOptReset');
+            
+            const syncModal = document.getElementById('syncModal');
+            const limitsModal = document.getElementById('limitsModal');
+            
+            const closeSyncBtn = document.getElementById('closeSyncModalBtn');
+            const closeLimitsBtn = document.getElementById('closeLimitsModalBtn');
+
+            // Open/Close Dropdown Menu
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+            });
+
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            document.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+            });
+
+            // Open Sync & Portability Modal
+            optSync.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+                syncModal.classList.add('active');
+                gsap.fromTo("#syncModal .modal-card", { scale: 0.9, y: 20 }, { scale: 1, y: 0, duration: 0.4, ease: "back.out(1.5)" });
+            });
+
+            closeSyncBtn.addEventListener('click', () => {
+                syncModal.classList.remove('active');
+            });
+
+            // Open Limits Modal
+            optLimits.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+                limitsModal.classList.add('active');
+                gsap.fromTo("#limitsModal .modal-card", { scale: 0.9, y: 20 }, { scale: 1, y: 0, duration: 0.4, ease: "back.out(1.5)" });
+            });
+
+            closeLimitsBtn.addEventListener('click', () => {
+                limitsModal.classList.remove('active');
+            });
+
+            // Click outside modals to close
+            window.addEventListener('click', (e) => {
+                if (e.target === syncModal) {
+                    syncModal.classList.remove('active');
+                }
+                if (e.target === limitsModal) {
+                    limitsModal.classList.remove('active');
+                }
+            });
+
+            // Reset Application Data
+            optReset.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+                const confirmWipe = confirm(
+                    "⚠️ WARNING: Reset Application Data\n\nAre you sure you want to clear all customized data, calculations, and visual grid layouts?\nThis will permanently delete your local session backup and restore everything to default start choices."
+                );
+                
+                if (confirmWipe) {
+                    try {
+                        localStorage.removeItem('mtg_calculator_settings');
+                    } catch (err) {
+                        console.error("Error clearing settings from localStorage:", err);
+                    }
+                    els.form.reset();
+                    els.inputs.countrySelect.value = 'semi'; // Reset to Canada
+                    state.termRates = {};
+                    state.customizedYears = {};
+                    
+                    // Reset bento grid draggable order back to default visual structure
+                    const container = document.getElementById('draggable-charts-container');
+                    if (container) {
+                        const order = ['chart3', 'chart', 'chart4', 'chart2', 'chart11', 'chart6'];
+                        const wrappers = Array.from(container.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        order.forEach(id => {
+                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                        });
+                    }
+                    
+                    const stratContainer = document.getElementById('draggable-strategy-container');
+                    if (stratContainer) {
+                        const order = ['chart9', 'chart12'];
+                        const wrappers = Array.from(stratContainer.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        order.forEach(id => {
+                            if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
+                        });
+                    }
+
+                    // Reset values to defaults
+                    state.currentMode = 'mortgage';
+                    state.complexity = 'simple';
+                    state.isDark = true;
+                    
+                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                    
+                    // Reset inputs
+                    els.inputs.rate.value = 2.62;
+                    els.inputs.extra.value = 0;
+                    
+                    loadSettings(); // fallback restore
+                    calculate();
+                    
+                    alert("Calculator successfully reset to system defaults! 🎉");
+                }
+            });
+        };
+
+        /*
          * SECURE SYNC & PORTABILITY CONTROLLER (JSON STRATEGY BACKUPS)
          * Connects event bindings to the premium drag-and-drop dropzone, toggles security format modes,
          * triggers browser download actions, and decodes/restores the full page state seamlessly.
@@ -3313,10 +3546,10 @@
             setupTouchTooltips(); 
             setupDragAndDrop();
             setupShareFunctionality();
-            setupLimitsToggle();
             setupComplexityToggle();
             setupCustomDropdown();
             setupBlueprintSync();
+            setupSettingsMenu();
 
 
 
