@@ -156,6 +156,17 @@
             padding: 12px 24px; border: none; background: transparent; color: var(--text-color); font-weight: 700;
             border-radius: 14px; cursor: pointer; transition: all 0.3s var(--spring-easing); opacity: 0.6;
         }
+
+        .label-format-btn {
+            flex: 1; height: 100%; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+            border: none; background: transparent; transition: all 0.3s var(--spring-easing); color: var(--text-color);
+            display: flex; align-items: center; justify-content: center; opacity: 0.7;
+        }
+        .label-format-btn:hover { opacity: 1; }
+        .label-format-btn.active {
+            background: var(--primary-color); color: white !important; opacity: 1;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
         .mode-btn.active, .complexity-btn.active { background: var(--primary-color); color: white; opacity: 1; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
 
         .dashboard-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; width: 100%; }
@@ -954,9 +965,16 @@
                             </div>
                         </div>
                         <div class="input-group-row advanced-only">
-                            <div class="input-group">
+                            <div class="input-group" style="flex: 1.5; min-width: 0;">
                                 <label>Start Date</label>
                                 <input type="date" id="firstPaymentDate">
+                            </div>
+                            <div class="input-group" style="flex: 1; min-width: 0;">
+                                <label>Table Label <span class="help-tip">?<span class="tooltip-text">Choose whether the amortization schedule labels each installment by calendar date (e.g. Jun 1, 2026) or by numeric cycle period (e.g. P1, P2, P3).</span></span></label>
+                                <div class="master-mode-selector label-format-selector" style="height: 52px; padding: 4px; border-radius: 14px; display: flex; align-items: center; width: 100%;">
+                                    <button type="button" class="label-format-btn active" id="labelFormatDate" data-format="date">DATE</button>
+                                    <button type="button" class="label-format-btn" id="labelFormatPeriod" data-format="period">PERIOD</button>
+                                </div>
                             </div>
                         </div>
 
@@ -1384,7 +1402,7 @@
          * Houses active variables, dynamic modes, compounding profiles,
          * and customizable rate-shock arrays.
          */
-         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {} };
+         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date' };
 
         const els = {
             form: document.getElementById('mortgageForm'),
@@ -1878,10 +1896,12 @@
             els.containers.escrowTh.style.display = usePiti ? '' : 'none';
             tbody.innerHTML = '';
             const frag = document.createDocumentFragment();
+            const isPeriod = state.labelFormat === 'period';
             schedule.forEach(row => {
                 const tr = document.createElement('tr');
                 const eTd = usePiti ? `<td style="color: #8b5cf6">${formatCurrency(row.escrow)}</td>` : '';
-                tr.innerHTML = `<td>${row.dateLabel}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong></td>`;
+                const label = isPeriod ? `P${row.period}` : row.dateLabel;
+                tr.innerHTML = `<td>${label}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong></td>`;
                 frag.appendChild(tr);
             });
             tbody.appendChild(frag);
@@ -2384,6 +2404,7 @@
                     currentMode: state.currentMode,
                     complexity: state.complexity,
                     isDark: state.isDark,
+                    labelFormat: state.labelFormat || 'date',
                     termRates: state.termRates,
                     customizedYears: state.customizedYears,
                     inputs: {}
@@ -2421,16 +2442,31 @@
         };
 
         const loadSettings = () => {
+            const syncLabelButtons = () => {
+                const formatBtns = document.querySelectorAll('.label-format-btn');
+                formatBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-format') === state.labelFormat);
+                });
+            };
+
             try {
                 const data = localStorage.getItem('mtg_calculator_settings');
-                if (!data) return;
+                if (!data) {
+                    syncLabelButtons();
+                    return;
+                }
                 
                 const settings = JSON.parse(data);
-                if (!settings) return;
+                if (!settings) {
+                    syncLabelButtons();
+                    return;
+                }
                 
                 if (settings.currentMode) state.currentMode = settings.currentMode;
                 if (settings.complexity) state.complexity = settings.complexity;
                 if (settings.isDark !== undefined) state.isDark = settings.isDark;
+                if (settings.labelFormat) state.labelFormat = settings.labelFormat;
+                else state.labelFormat = 'date';
                 if (settings.termRates) state.termRates = settings.termRates;
                 if (settings.customizedYears) state.customizedYears = settings.customizedYears;
                 
@@ -2521,6 +2557,7 @@
                     els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
                 }
                 
+                syncLabelButtons();
             } catch (err) {
                 console.error("Error loading settings from localStorage:", err);
             }
@@ -3197,9 +3234,29 @@
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
             els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             els.inputs.countrySelect.value = 'semi'; // Reset up-top country select to Canada
+            state.labelFormat = 'date';
+            document.querySelectorAll('.label-format-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-format') === 'date');
+            });
             state.termRates = {};
             state.customizedYears = {};
             calculate();
+        });
+
+        // Table label format selectors (DATE vs PERIOD)
+        document.querySelectorAll('.label-format-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const format = e.currentTarget.getAttribute('data-format');
+                state.labelFormat = format;
+                
+                // Toggle active state
+                document.querySelectorAll('.label-format-btn').forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-format') === format);
+                });
+                
+                calculate();
+                saveSettings();
+            });
         });
         els.form.addEventListener('submit', calculate);
         
@@ -3357,6 +3414,10 @@
                     const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
                     els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
                     els.inputs.countrySelect.value = 'semi'; // Reset to Canada
+                    state.labelFormat = 'date';
+                    document.querySelectorAll('.label-format-btn').forEach(b => {
+                        b.classList.toggle('active', b.getAttribute('data-format') === 'date');
+                    });
                     state.termRates = {};
                     state.customizedYears = {};
                     
