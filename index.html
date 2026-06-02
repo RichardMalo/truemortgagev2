@@ -813,7 +813,10 @@
             gap: 20px;
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
             color: var(--text-color);
-            transition: background-color 0.3s ease;
+            transition: transform 0.4s var(--spring-easing), background-color 0.3s ease;
+        }
+        .scenario-sidebar.active {
+            transform: translateX(0) !important;
         }
         body:not(.dark-mode) .scenario-sidebar {
             background: rgba(255, 255, 255, 0.85);
@@ -3692,7 +3695,7 @@
             state.compareModeActive = false;
 
             const sidebar = document.getElementById('scenarioSidebar');
-            if (sidebar) gsap.to(sidebar, { xPercent: 100, duration: 0.3 });
+            if (sidebar) sidebar.classList.remove('active');
             const overlay = document.getElementById('sidebarOverlay');
             if (overlay) overlay.classList.remove('active');
 
@@ -3897,7 +3900,7 @@
                     state.compareModeActive = false;
 
                     const sidebar = document.getElementById('scenarioSidebar');
-                    if (sidebar) gsap.to(sidebar, { xPercent: 100, duration: 0.3 });
+                    if (sidebar) sidebar.classList.remove('active');
                     const overlay = document.getElementById('sidebarOverlay');
                     if (overlay) overlay.classList.remove('active');
 
@@ -3969,18 +3972,18 @@
                 e.stopPropagation();
                 saveSettings();
                 
-                gsap.fromTo(sidebar, { xPercent: 100 }, { xPercent: 0, duration: 0.4, ease: "power3.out" });
+                sidebar.classList.add('active');
                 overlay.classList.add('active');
                 renderSandboxList();
             });
 
             closeBtn.addEventListener('click', () => {
-                gsap.to(sidebar, { xPercent: 100, duration: 0.3, ease: "power3.in" });
+                sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
             overlay.addEventListener('click', () => {
-                gsap.to(sidebar, { xPercent: 100, duration: 0.3, ease: "power3.in" });
+                sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
