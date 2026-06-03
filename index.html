@@ -3004,6 +3004,12 @@
                 }
                 
                 syncLabelButtons();
+
+                // Dispatch change event to sync custom dropdown visuals (like the flag)
+                if (els.inputs.countrySelect) {
+                    els.inputs.countrySelect.dispatchEvent(new Event('change'));
+                }
+
                 if (typeof renderSandboxList === 'function') {
                     renderSandboxList();
                 }
@@ -3672,7 +3678,7 @@
             saveSettings();
         });
         
-        document.getElementById('clearBtn').addEventListener('click', () => {
+        const resetApplicationData = () => {
             try {
                 localStorage.removeItem('mtg_calculator_settings');
             } catch (err) {
@@ -3683,9 +3689,20 @@
             els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             els.inputs.countrySelect.value = 'semi';
             state.labelFormat = 'date';
+            
+            // Sync Date format button active states
             document.querySelectorAll('.label-format-btn').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-format') === 'date');
             });
+
+            // Set state parameters back to defaults
+            state.currentMode = 'mortgage';
+            state.complexity = 'simple';
+            state.isDark = true;
+            state.compareModeActive = false;
+            state.comparisonProfileId = null;
+            state.termRates = {};
+            state.customizedYears = {};
 
             const defaultId = 'profile-default';
             state.profiles = {};
@@ -3704,17 +3721,55 @@
                 }
             };
             state.activeProfileId = defaultId;
-            state.comparisonProfileId = null;
-            state.compareModeActive = false;
 
+            // Slide closed sandbox sidebars
             const sidebar = document.getElementById('scenarioSidebar');
             if (sidebar) sidebar.classList.remove('active');
             const overlay = document.getElementById('sidebarOverlay');
             if (overlay) overlay.classList.remove('active');
 
-            state.termRates = {};
-            state.customizedYears = {};
+            // Reset bento grid draggable order back to default visual structure
+            const container = document.getElementById('draggable-charts-container');
+            if (container) {
+                const order = ['chart3', 'chart', 'chart4', 'chart2', 'chart11', 'chart6'];
+                const wrappers = Array.from(container.children);
+                const wrapperMap = {};
+                wrappers.forEach(wrapper => {
+                    const chartDiv = wrapper.querySelector('.plotly-container');
+                    if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                });
+                order.forEach(id => {
+                    if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                });
+            }
+            
+            const stratContainer = document.getElementById('draggable-strategy-container');
+            if (stratContainer) {
+                const order = ['chart9', 'chart12'];
+                const wrappers = Array.from(stratContainer.children);
+                const wrapperMap = {};
+                wrappers.forEach(wrapper => {
+                    const chartDiv = wrapper.querySelector('.plotly-container');
+                    if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                });
+                order.forEach(id => {
+                    if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
+                });
+            }
+
+            // Sync visual button tabs, body classes, country flags, and calculate results
+            loadSettings();
             calculate();
+        };
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            const confirmWipe = confirm(
+                "⚠️ WARNING: Reset Sidebar Form\n\nAre you sure you want to clear all customized data, calculations, and restore the calculator to default start choices?"
+            );
+            if (confirmWipe) {
+                resetApplicationData();
+                alert("Calculator successfully reset to system defaults! 🎉");
+            }
         });
 
         // Table label format selectors (DATE vs PERIOD)
@@ -3878,91 +3933,7 @@
                 );
                 
                 if (confirmWipe) {
-                    try {
-                        localStorage.removeItem('mtg_calculator_settings');
-                    } catch (err) {
-                        console.error("Error clearing settings from localStorage:", err);
-                    }
-                    els.form.reset();
-                    const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-                    els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-                    els.inputs.countrySelect.value = 'semi';
-                    state.labelFormat = 'date';
-                    document.querySelectorAll('.label-format-btn').forEach(b => {
-                        b.classList.toggle('active', b.getAttribute('data-format') === 'date');
-                    });
-
-                    const defaultId = 'profile-default';
-                    state.profiles = {};
-                    state.profiles[defaultId] = {
-                        id: defaultId,
-                        name: "30-Year Baseline",
-                        currentMode: 'mortgage',
-                        complexity: 'simple',
-                        isDark: true,
-                        termRates: {},
-                        customizedYears: {},
-                        inputs: {
-                            homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                            paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                            province: "ON", compounding: "semi", countrySelect: "semi"
-                        }
-                    };
-                    state.activeProfileId = defaultId;
-                    state.comparisonProfileId = null;
-                    state.compareModeActive = false;
-
-                    const sidebar = document.getElementById('scenarioSidebar');
-                    if (sidebar) sidebar.classList.remove('active');
-                    const overlay = document.getElementById('sidebarOverlay');
-                    if (overlay) overlay.classList.remove('active');
-
-                    state.termRates = {};
-                    state.customizedYears = {};
-                    
-                    // Reset bento grid draggable order back to default visual structure
-                    const container = document.getElementById('draggable-charts-container');
-                    if (container) {
-                        const order = ['chart3', 'chart', 'chart4', 'chart2', 'chart11', 'chart6'];
-                        const wrappers = Array.from(container.children);
-                        const wrapperMap = {};
-                        wrappers.forEach(wrapper => {
-                            const chartDiv = wrapper.querySelector('.plotly-container');
-                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                        });
-                        order.forEach(id => {
-                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                        });
-                    }
-                    
-                    const stratContainer = document.getElementById('draggable-strategy-container');
-                    if (stratContainer) {
-                        const order = ['chart9', 'chart12'];
-                        const wrappers = Array.from(stratContainer.children);
-                        const wrapperMap = {};
-                        wrappers.forEach(wrapper => {
-                            const chartDiv = wrapper.querySelector('.plotly-container');
-                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                        });
-                        order.forEach(id => {
-                            if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
-                        });
-                    }
-
-                    // Reset values to defaults
-                    state.currentMode = 'mortgage';
-                    state.complexity = 'simple';
-                    state.isDark = true;
-                    
-                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
-                    
-                    // Reset inputs
-                    els.inputs.rate.value = 2.62;
-                    els.inputs.extra.value = 0;
-                    
-                    loadSettings(); // fallback restore
-                    calculate();
-                    
+                    resetApplicationData();
                     alert("Calculator successfully reset to system defaults! 🎉");
                 }
             });
