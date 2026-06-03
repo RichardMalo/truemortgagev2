@@ -3099,7 +3099,7 @@
                 }
 
                 // Restore draggable charts order
-                if (settings.chartsOrder) {
+                if (settings && settings.chartsOrder) {
                     const container = document.getElementById('draggable-charts-container');
                     if (container) {
                         const wrappers = Array.from(container.children);
@@ -3115,7 +3115,7 @@
                 }
                 
                 // Restore draggable strategy charts order
-                if (settings.strategyOrder) {
+                if (settings && settings.strategyOrder) {
                     const container = document.getElementById('draggable-strategy-container');
                     if (container) {
                         const wrappers = Array.from(container.children);
@@ -3131,7 +3131,7 @@
                 }
                 
                 // Sync classes and buttons based on loaded settings
-                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
                 
                 // Update mode switch checkbox
                 if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
@@ -3778,10 +3778,10 @@
             complexityBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     complexityBtns.forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    state.complexity = e.target.getAttribute('data-complexity');
+                    e.currentTarget.classList.add('active');
+                    state.complexity = e.currentTarget.getAttribute('data-complexity');
                     
-                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
                     
                     calculate();
                     saveSettings();
@@ -3791,14 +3791,14 @@
 
         els.masterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const targetMode = e.target.getAttribute('data-mode');
+                const targetMode = e.currentTarget.getAttribute('data-mode');
                 if (state.currentMode === targetMode) return;
                 
                 els.masterBtns.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
+                e.currentTarget.classList.add('active');
                 state.currentMode = targetMode;
                 
-                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
                 
                 if (state.currentMode === 'cc') {
                     els.inputs.rate.value = 19.99;
@@ -3815,7 +3815,7 @@
             });
         });
 
-        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`; calculate(); saveSettings(); });
+        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim(); calculate(); saveSettings(); });
         
         els.inputs.pitiToggle.addEventListener('change', (e) => { els.containers.pitiSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
         els.inputs.oppCostToggle.addEventListener('change', (e) => { els.containers.oppCostSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
@@ -4578,7 +4578,7 @@
                 const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
                 els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             }
-            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
             
             setupTouchTooltips(); 
             setupDragAndDrop();
