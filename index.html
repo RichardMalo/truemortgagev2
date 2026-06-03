@@ -60,9 +60,22 @@
         .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; position: relative; z-index: 99999;}
         .header-selectors, .header-tools { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        @media (min-width: 1024px) {
+        
+        @media (min-width: 769px) {
             header { flex-wrap: nowrap !important; gap: 15px !important; }
             .header-selectors, .header-tools { flex-wrap: nowrap !important; flex-shrink: 0; }
+        }
+
+        /* Compact Layout Snapping for Snapped side-by-side viewports (769px to 1150px) */
+        @media (min-width: 769px) and (max-width: 1150px) {
+            header h1 { font-size: 1.35rem !important; }
+            .mode-btn, .complexity-btn { padding: 8px 14px !important; font-size: 0.82rem !important; }
+            .header-selectors, .header-tools { gap: 8px !important; }
+            header { gap: 8px !important; }
+            .master-mode-selector { padding: 4px !important; border-radius: 16px !important; }
+            .mode-btn, .complexity-btn { border-radius: 10px !important; }
+            .country-select-wrapper { padding: 4px 8px !important; }
+            .mode-toggle { gap: 6px !important; font-size: 0.82rem !important; }
         }
         h1, h2, h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; }
         .section-title { margin: 0 0 15px 0; color: var(--primary-color); font-size: 1.15rem; display: flex; align-items: center;}
