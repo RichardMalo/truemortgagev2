@@ -315,6 +315,71 @@
         
         #error-message { background-color: var(--danger-color); color: white; padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: center; font-weight: 600; display: none;}
 
+        /* Bank Wages Circle Chart Styles */
+        .bank-wages-section {
+            width: 100%;
+        }
+        .bank-wages-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .wage-circle-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            text-align: center;
+            gap: 8px;
+        }
+        .wage-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.02) 100%);
+            border: 1.5px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            color: var(--text-color);
+            font-weight: 700;
+            transition: transform 0.4s var(--spring-easing), border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        body.dark-mode .wage-circle {
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.22) 0%, rgba(15, 23, 42, 0.4) 100%);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+        .wage-circle:hover {
+            transform: translateY(-6px) scale(1.06);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
+        }
+        body.dark-mode .wage-circle:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
+        }
+        .wage-circle-value {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            color: var(--text-color);
+            text-align: center;
+            line-height: 1.2;
+        }
+        .wage-circle-year {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
         body.mode-mortgage .cc-only { display: none !important; }
         body.mode-cc .mortgage-only { display: none !important; }
 
@@ -1455,6 +1520,17 @@
                             <div id="chart6" class="plotly-container"></div>
                         </div>
                     </div>
+
+                    <!-- Bank Wages Circles Card Section -->
+                    <div class="bank-wages-section" style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 25px;">
+                        <h4 class="sub-section-title" style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center;">
+                            How much do you pay towards the banks wages per year
+                            <span class="help-tip">?<span class="tooltip-text">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.</span></span>
+                        </h4>
+                        <div class="bank-wages-container" id="bankWagesCirclesContainer">
+                            <!-- Dynamic circle elements -->
+                        </div>
+                    </div>
                 </div>
 
                 <div id="ltv-container" class="bento-card mortgage-only" style="display: none; margin-bottom: 24px;">
@@ -1911,6 +1987,7 @@
                 totI += iPart; totP += pPart; totEx += cExtra; totEsc += pEscrow;
 
                 let dLbl = `P${i}`, yLbl = (i / perYear);
+                let calendarYear = new Date().getFullYear() + Math.floor(i / perYear);
                 if (cDate) {
                     const d = new Date(cDate.getTime());
                     if (freq === 'monthly') d.setMonth(d.getMonth() + (i - 1));
@@ -1918,10 +1995,11 @@
                     else d.setDate(d.getDate() + ((i - 1) * 14)); 
                     dLbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     yLbl = d.getFullYear() + (d.getMonth() / 12) + (d.getDate() / 365);
+                    calendarYear = d.getFullYear();
                 }
 
                 sched.push({ 
-                    period: i, year: yLbl, dateLabel: dLbl, ltv: (bal / inputs.homePrice) * 100, 
+                    period: i, year: yLbl, calendarYear: calendarYear, dateLabel: dLbl, ltv: (bal / inputs.homePrice) * 100, 
                     payment: pPart + iPart + pEscrow + cExtra, principal: pPart, interest: iPart, 
                     tax: pTax, ins: pIns, hoa: pHOA, pmi: pPMI, escrow: pEscrow, extra: cExtra, balance: bal, 
                     totalInterest: totI, totalPrincipal: totP, totalExtra: totEx, totalEscrow: totEsc  
@@ -1976,15 +2054,17 @@
                 totI += iPart; totP += (pPart - cExtra); totEx += cExtra;
                 
                 let dLbl = `M${i}`, yLbl = (i / 12);
+                let calendarYear = new Date().getFullYear() + Math.floor(i / 12);
                 if (cDate) {
                     const d = new Date(cDate.getTime());
                     d.setMonth(d.getMonth() + (i - 1));
                     dLbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     yLbl = d.getFullYear() + (d.getMonth() / 12) + (d.getDate() / 365);
+                    calendarYear = d.getFullYear();
                 }
 
                 sched.push({
-                    period: i, year: yLbl, dateLabel: dLbl, ltv: 0,
+                    period: i, year: yLbl, calendarYear: calendarYear, dateLabel: dLbl, ltv: 0,
                     payment: totalActualPayment, principal: pPart - cExtra, interest: iPart,
                     tax: 0, ins: 0, hoa: 0, pmi: 0, escrow: 0, extra: cExtra, balance: bal,
                     totalInterest: totI, totalPrincipal: totP, totalExtra: totEx, totalEscrow: 0
@@ -2468,6 +2548,92 @@
             container.scrollLeft = currentScrollLeft;
         };
 
+        const renderBankWages = (actData) => {
+            const container = document.getElementById('bankWagesCirclesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const schedule = actData.schedule;
+            if (!schedule || schedule.length === 0) return;
+
+            const periodsPerYear = actData.summary.periodsPerYear || 12;
+
+            // Group interest by calendarYear
+            const yearlyData = {};
+            for (const row of schedule) {
+                const yr = row.calendarYear;
+                if (!yearlyData[yr]) {
+                    yearlyData[yr] = {
+                        year: yr,
+                        interest: 0,
+                        count: 0
+                    };
+                }
+                yearlyData[yr].interest += row.interest;
+                yearlyData[yr].count += 1;
+            }
+
+            const years = Object.keys(yearlyData).map(Number).sort((a, b) => a - b);
+            if (years.length === 0) return;
+
+            // Handle first year partial payment 'work backwards to fill it in'
+            const firstYear = years[0];
+            if (yearlyData[firstYear].count < periodsPerYear) {
+                let filledInterest = 0;
+                const limit = Math.min(schedule.length, periodsPerYear);
+                for (let i = 0; i < limit; i++) {
+                    filledInterest += schedule[i].interest;
+                }
+                yearlyData[firstYear].interest = filledInterest;
+            }
+
+            // Find max interest to scale circle sizes
+            let maxInterest = 0;
+            for (const yr of years) {
+                if (yearlyData[yr].interest > maxInterest) {
+                    maxInterest = yearlyData[yr].interest;
+                }
+            }
+
+            if (maxInterest <= 0) maxInterest = 1;
+
+            const minSize = 65; // pixels
+            const maxSize = 130; // pixels
+
+            years.forEach(yr => {
+                const interest = yearlyData[yr].interest;
+                // Calculate size proportional to interest
+                const ratio = interest / maxInterest;
+                // Using sqrt scaling for visual area mapping
+                const size = minSize + (maxSize - minSize) * Math.sqrt(ratio);
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'wage-circle-wrapper';
+
+                const circle = document.createElement('div');
+                circle.className = 'wage-circle';
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Dynamic font size scaling to prevent overflow
+                const fontSize = Math.max(0.68, 0.95 * (size / maxSize));
+                circle.style.fontSize = `${fontSize}rem`;
+
+                circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(interest)}</span>`;
+                
+                // Tooltip info on hover
+                circle.title = `Year: ${yr}\nInterest: ${formatCurrency(interest)}`;
+
+                const yearLbl = document.createElement('div');
+                yearLbl.className = 'wage-circle-year';
+                yearLbl.textContent = yr;
+
+                wrapper.appendChild(circle);
+                wrapper.appendChild(yearLbl);
+                container.appendChild(wrapper);
+            });
+        };
+
         const validate = () => {
             els.containers.error.style.display = 'none';
             if (state.currentMode === 'mortgage') {
@@ -2646,6 +2812,9 @@
             // Dynamically calculate and render Chronological Milestone Roadmap
             const milestones = calculateMilestones(baseData, actData, inputs);
             renderMilestonesUI(milestones);
+
+            // Render Annual Bank Wages descending circle chart
+            renderBankWages(actData);
 
             // Auto-persist settings on any successful calculation
             saveSettings();
