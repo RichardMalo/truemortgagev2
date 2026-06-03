@@ -32,6 +32,7 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 * **Advanced Charting (Plotly.js):** Fluid, interactive linear and bar charts plotting outstanding principal, cumulative interest, and net worth comparisons over time.
 * **High-Fidelity Amortization Table:** Interactive schedule mapping principal reduction, absolute interest decay curves, and extra payment efficiency metrics across every active cycle step.
 * **Table Label Selector (DATE vs PERIOD):** A segmented pill control allowing users to toggle table row headers between chronological calendar dates (e.g., `Jun 1, 2026`) and numerical cycle periods (e.g., `P1`, `P2`, `P3...`), fully supported in both Simple and Advanced Modes.
+* **Snapped PC & Mobile Responsive Layouts:** Optimized for all screen sizes, including a custom snapped desktop breakpoint (769px to 1150px) where selectors, region dropdowns, and tools automatically scale down to fit side-by-side on a single row without wrapping.
 * **One-Click PDF Reports (html2pdf.js):** Generate clean, professional financial planning brochures directly in the browser.
 
 ### 📂 Multi-Scenario Sandbox (Profile Manager)
@@ -43,7 +44,7 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 
 ### 🔒 Private Session Persistence & Operations
 * **Automatic LocalStorage Cache:** Safely caches your exact calculation parameters, active modes, themes, complexity levels, customized drag-and-drop card layouts, and custom rate shock inputs on your local browser. Calculations resume instantly upon revisiting the page without sending any private financial data to a web server.
-* **Deep Cleanse Reset:** Wipes all custom values inside local storage, resets all form input controls and dynamically edited renewal rate shock timelines, reorders visual bento grid modules in the DOM back to their exact system defaults, and immediately re-renders default calculations.
+* **Unified Deep Cleanse Reset:** Prompts confirmation and executes a thorough cleanse across both the sidebar Reset button and settings menu. Wipes localStorage caches, restores bento draggable visual blocks to their default sequence, resets all inputs to mortgage baselines, and visually synchronizes all button selectors (tabs) back to Simple and Mortgage mode configurations instantly.
 
 ### 🔑 Secure Sync & Portability (JSON Backups)
 * **JSON Strategy Blueprints:** Export and import your customized debt strategies as standard JSON files to back up your custom scenarios. All data remains 100% private in local storage.
