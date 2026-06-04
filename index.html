@@ -3000,7 +3000,9 @@
                 const compInputs = {
                     homePrice: parseFloat(compProfile.inputs.homePrice) || 0, downPayment: parseFloat(compProfile.inputs.downPayment) || 0,
                     ccBalance: parseFloat(compProfile.inputs.ccBalance) || 0, province: compProfile.inputs.province,
-                    annualRate: parseFloat(compProfile.inputs.interestRate) || parseFloat(compProfile.inputs.rate) || 0,
+                    annualRate: compProfile.currentMode === 'cc' 
+                        ? (parseFloat(compProfile.inputs.ccRate) || parseFloat(compProfile.inputs.rate) || 0) 
+                        : (parseFloat(compProfile.inputs.mortgageRate) || parseFloat(compProfile.inputs.rate) || 0),
                     amortizationYears: parseFloat(compProfile.inputs.amortization) || 0,
                     termYears: parseFloat(compProfile.inputs.term) || 0, compounding: compProfile.inputs.compounding,
                     frequency: compProfile.inputs.paymentFrequency || compProfile.inputs.frequency,
@@ -3011,7 +3013,9 @@
                     pmiRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.pmiRate) || 0) : 0,
                     useOppCost: compProfile.inputs.oppCostToggle === true,
                     investRate: compProfile.inputs.oppCostToggle === true ? (parseFloat(compProfile.inputs.investRate) || 7.0) : 7.0,
-                    extraPayment: parseFloat(compProfile.inputs.extraPayment) || parseFloat(compProfile.inputs.extra) || 0,
+                    extraPayment: compProfile.currentMode === 'cc' 
+                        ? (parseFloat(compProfile.inputs.ccExtra) || parseFloat(compProfile.inputs.extra) || 0) 
+                        : (parseFloat(compProfile.inputs.mortgageExtra) || parseFloat(compProfile.inputs.extra) || 0),
                     startDate: compProfile.inputs.firstPaymentDate || compProfile.inputs.date,
                     rateShockEnabled: compProfile.currentMode === 'mortgage' && compProfile.inputs.rateShockToggle === true,
                     termRates: compProfile.termRates || {}
@@ -3199,6 +3203,15 @@
                             activeProfile.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
                         }
                     });
+
+                    // Backup active values to mode-specific fields
+                    if (state.currentMode === 'mortgage') {
+                        activeProfile.inputs.mortgageRate = activeProfile.inputs.rate;
+                        activeProfile.inputs.mortgageExtra = activeProfile.inputs.extra;
+                    } else if (state.currentMode === 'cc') {
+                        activeProfile.inputs.ccRate = activeProfile.inputs.rate;
+                        activeProfile.inputs.ccExtra = activeProfile.inputs.extra;
+                    }
                 }
 
                 const settings = {
@@ -3283,7 +3296,11 @@
                     investRate: "7.0",
                     extra: "0",
                     date: prefilledDate,
-                    rateShockToggle: false
+                    rateShockToggle: false,
+                    mortgageRate: "2.62",
+                    mortgageExtra: "0",
+                    ccRate: "19.99",
+                    ccExtra: "0"
                 };
                 
                 const sanitized = {
@@ -3330,6 +3347,20 @@
                 }
                 if (sourceInputs.pmiRate !== undefined && sourceInputs.pmi === undefined) {
                     sourceInputs.pmi = sourceInputs.pmiRate;
+                }
+
+                // Set default mode-specific rates if missing from old schemas
+                if (sourceInputs.mortgageRate === undefined) {
+                    sourceInputs.mortgageRate = (sanitized.currentMode !== 'cc') ? (sourceInputs.rate || "2.62") : "2.62";
+                }
+                if (sourceInputs.mortgageExtra === undefined) {
+                    sourceInputs.mortgageExtra = (sanitized.currentMode !== 'cc') ? (sourceInputs.extra || "0") : "0";
+                }
+                if (sourceInputs.ccRate === undefined) {
+                    sourceInputs.ccRate = (sanitized.currentMode === 'cc') ? (sourceInputs.rate || "19.99") : "19.99";
+                }
+                if (sourceInputs.ccExtra === undefined) {
+                    sourceInputs.ccExtra = (sanitized.currentMode === 'cc') ? (sourceInputs.extra || "0") : "0";
                 }
 
                 Object.keys(defaultInputs).forEach(key => {
@@ -3384,7 +3415,11 @@
                         investRate: "7.0",
                         extra: "0",
                         date: prefilledDate,
-                        rateShockToggle: false
+                        rateShockToggle: false,
+                        mortgageRate: "2.62",
+                        mortgageExtra: "0",
+                        ccRate: "19.99",
+                        ccExtra: "0"
                     }
                 };
                 state.activeProfileId = defaultId;
@@ -4299,6 +4334,9 @@
                 const targetMode = e.currentTarget.getAttribute('data-mode');
                 if (state.currentMode === targetMode) return;
                 
+                // Save current state of old mode inputs before switching
+                saveSettings();
+                
                 els.masterBtns.forEach(b => b.classList.remove('active'));
                 e.currentTarget.classList.add('active');
                 state.currentMode = targetMode;
@@ -4306,12 +4344,20 @@
                 document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
                 
                 if (state.currentMode === 'cc') {
-                    els.inputs.rate.value = 19.99;
-                    els.inputs.extra.value = 0;
+                    const activeProfile = state.profiles[state.activeProfileId];
+                    const savedRate = activeProfile && activeProfile.inputs ? activeProfile.inputs.ccRate : undefined;
+                    const savedExtra = activeProfile && activeProfile.inputs ? activeProfile.inputs.ccExtra : undefined;
+                    
+                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 19.99;
+                    els.inputs.extra.value = savedExtra !== undefined ? savedExtra : 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'CC Balance';
                 } else {
-                    els.inputs.rate.value = 2.62;
-                    els.inputs.extra.value = 0;
+                    const activeProfile = state.profiles[state.activeProfileId];
+                    const savedRate = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageRate : undefined;
+                    const savedExtra = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageExtra : undefined;
+                    
+                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 2.62;
+                    els.inputs.extra.value = savedExtra !== undefined ? savedExtra : 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'Principal';
                 }
                 
