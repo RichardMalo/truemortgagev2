@@ -1585,7 +1585,7 @@
                 <div class="concentric-visualization-card">
                     <h3 class="section-title">
                         The Gravity of the Debt
-                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative debt markup. The relative size of the interest envelope (red) highlights capital inefficiencies over baseline asset cost (blue). Note: Calculations are close estimations; banks may use proprietary interest formulas causing minor variations.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative interest overhead. The relative size of the interest envelope (red) highlights capital inefficiencies over baseline asset cost (blue). Note: Calculations are close estimations; banks may use proprietary interest formulas causing minor variations.</span></span>
                     </h3>
                     <div class="dynamic-concentric-stack">
                         <div class="stack-wrapper">
@@ -1605,7 +1605,7 @@
                                 <div id="out-principal-val" style="color: var(--text-color); font-size: 0.95rem; margin-top: 4px;">$0</div>
                             </div>
                             <div class="cost-label">
-                                <div style="color: #ef4444;">Bank Markup</div>
+                                <div style="color: #ef4444;">Total Interest Overhead</div>
                                 <div id="out-markup-val" style="color: #ef4444; font-size: 0.95rem; margin-top: 4px;">$0</div>
                             </div>
                         </div>
@@ -1625,7 +1625,7 @@
                             <div class="kinetic-text" id="mortgageAmountDisplay" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box danger-box squishy-interactive cc-only">
-                            <label class="danger-text">Daily Vampire Drain <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The localized capital leak calculated down to a 24-hour window. This is the interest accrued daily. Note: Actual bank accruals may vary slightly based on the exact day-count convention used (e.g. 365 vs. 360 days).</span></span></label>
+                            <label class="danger-text">Daily Fee to the Bank <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The interest accrued daily, representing a direct fee paid to the bank every 24 hours. Note: Actual bank accruals may vary slightly based on calculations (e.g. 365 vs. 360 days).</span></span></label>
                             <div class="kinetic-text danger-text" id="dailyVampireDrain" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box squishy-interactive mortgage-only advanced-only">
@@ -3191,6 +3191,17 @@
             }
         };
 
+        const updateSubmitButtonCTA = () => {
+            const calcBtn = document.getElementById('calcBtn');
+            if (calcBtn) {
+                if (state.currentMode === 'cc') {
+                    calcBtn.textContent = 'Eradicate Credit Card Debt';
+                } else {
+                    calcBtn.textContent = 'Optimize Mortgage Strategy';
+                }
+            }
+        };
+
         const loadSettings = () => {
             const syncLabelButtons = () => {
                 const formatBtns = document.querySelectorAll('.label-format-btn');
@@ -3429,6 +3440,8 @@
                     btn.classList.remove('active');
                 }
             });
+
+            updateSubmitButtonCTA();
             
             // Update Complexity buttons (.complexity-btn) active state
             const complexityBtns = document.querySelectorAll('.complexity-btn');
@@ -3789,7 +3802,7 @@
                                     </div>
                                 ` : `
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span>Daily Interest Drain:</span><strong>${dailyVampire}</strong>
+                                        <span>Daily Fee to the Bank:</span><strong>${dailyVampire}</strong>
                                     </div>
                                 `}
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
@@ -4118,6 +4131,7 @@
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'Principal';
                 }
                 
+                updateSubmitButtonCTA();
                 calculate();
                 saveSettings();
             });
