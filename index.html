@@ -380,6 +380,48 @@
             margin-top: 4px;
         }
 
+        /* Wage Circles Switch Toggle */
+        .wage-toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 0 0 20px 0;
+            width: 100%;
+        }
+        .wage-toggle-selector {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .wage-toggle-btn {
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s var(--spring-easing);
+            opacity: 0.6;
+        }
+        .wage-toggle-btn:hover {
+            opacity: 1;
+        }
+        .wage-toggle-btn.active {
+            background: var(--primary-color);
+            color: white !important;
+            opacity: 1 !important;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+        body.dark-mode .wage-toggle-btn.active {
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
         body.mode-mortgage .cc-only { display: none !important; }
         body.mode-cc .mortgage-only { display: none !important; }
 
@@ -409,6 +451,8 @@
             .plotly-container { min-height: 300px; }
             .bank-wages-container { gap: 12px; }
             .wage-circle-year { font-size: 0.75rem; }
+            .wage-toggle-container { flex-direction: column; align-items: stretch; gap: 12px; }
+            .wage-toggle-selector { width: 100%; justify-content: center; }
 
             .help-tip .tooltip-text { left: 0; transform: translateX(-40%) translateY(10px); }
             
@@ -1525,10 +1569,16 @@
 
                     <!-- Bank Wages Circles Card Section -->
                     <div class="bank-wages-section" style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 25px;">
-                        <h4 class="sub-section-title" style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center;">
-                            How much do you pay towards the banks wages per year
-                            <span class="help-tip">?<span class="tooltip-text">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.</span></span>
-                        </h4>
+                        <div class="wage-toggle-container">
+                            <h4 class="sub-section-title" style="margin: 0; color: var(--primary-color); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center;">
+                                <span id="bankWagesTitleText">How much do you pay towards the banks wages per year</span>
+                                <span class="help-tip">?<span class="tooltip-text" id="bankWagesTooltip">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.</span></span>
+                            </h4>
+                            <div class="wage-toggle-selector" id="bankWagesToggle">
+                                <button class="wage-toggle-btn active" data-view="wages">Bank Wages</button>
+                                <button class="wage-toggle-btn" data-view="rent">Rent Equivalent</button>
+                            </div>
+                        </div>
                         <div class="bank-wages-container" id="bankWagesCirclesContainer">
                             <!-- Dynamic circle elements -->
                         </div>
@@ -1755,7 +1805,7 @@
          * Houses active variables, dynamic modes, compounding profiles,
          * and customizable rate-shock arrays.
          */
-         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date', activeProfileId: null, comparisonProfileId: null, compareModeActive: false, profiles: {} };
+         let state = { isDark: true, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date', activeProfileId: null, comparisonProfileId: null, compareModeActive: false, profiles: {}, bankWagesView: 'wages' };
 
         const els = {
             form: document.getElementById('mortgageForm'),
@@ -2555,6 +2605,22 @@
             if (!container) return;
             container.innerHTML = '';
 
+            // Update titles and tooltips based on view
+            const titleEl = document.getElementById('bankWagesTitleText');
+            const tooltipEl = document.getElementById('bankWagesTooltip');
+            const isRent = (state.bankWagesView === 'rent');
+
+            if (titleEl) {
+                titleEl.textContent = isRent 
+                    ? "How much does the interest represent if it was your rent per month" 
+                    : "How much do you pay towards the banks wages per year";
+            }
+            if (tooltipEl) {
+                tooltipEl.textContent = isRent
+                    ? "Annual interest averaged into a monthly cost, showing what your interest payments would represent if it was rent. Calculated as (Annual Interest / 12), rounded up."
+                    : "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.";
+            }
+
             const schedule = actData.schedule;
             if (!schedule || schedule.length === 0) return;
 
@@ -2622,10 +2688,14 @@
                 const fontSize = Math.max(0.68, 0.95 * (size / maxSize));
                 circle.style.fontSize = `${fontSize}rem`;
 
-                circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(interest)}</span>`;
-                
-                // Tooltip info on hover
-                circle.title = `Year: ${yr}\nInterest: ${formatCurrency(interest)}`;
+                if (isRent) {
+                    const monthlyAverage = Math.ceil(interest / 12);
+                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(monthlyAverage)}</span>`;
+                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(monthlyAverage)}/mo`;
+                } else {
+                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(interest)}</span>`;
+                    circle.title = `Year: ${yr}\nInterest: ${formatCurrency(interest)}`;
+                }
 
                 const yearLbl = document.createElement('div');
                 yearLbl.className = 'wage-circle-year';
@@ -2817,6 +2887,7 @@
             renderMilestonesUI(milestones);
 
             // Render Annual Bank Wages descending circle chart
+            window.lastActData = actData;
             renderBankWages(actData);
 
             // Auto-persist settings on any successful calculation
@@ -2937,6 +3008,7 @@
                         isDark: state.isDark,
                         termRates: JSON.parse(JSON.stringify(state.termRates || {})),
                         customizedYears: JSON.parse(JSON.stringify(state.customizedYears || {})),
+                        bankWagesView: state.bankWagesView || 'wages',
                         inputs: {}
                     };
                 }
@@ -2947,6 +3019,7 @@
                 activeProfile.isDark = state.isDark;
                 activeProfile.termRates = JSON.parse(JSON.stringify(state.termRates || {}));
                 activeProfile.customizedYears = JSON.parse(JSON.stringify(state.customizedYears || {}));
+                activeProfile.bankWagesView = state.bankWagesView || 'wages';
                 
                 Object.entries(els.inputs).forEach(([key, el]) => {
                     if (el) {
@@ -2961,7 +3034,8 @@
                     profiles: state.profiles,
                     isDark: state.isDark,
                     complexity: state.complexity,
-                    labelFormat: state.labelFormat || 'date'
+                    labelFormat: state.labelFormat || 'date',
+                    bankWagesView: state.bankWagesView || 'wages'
                 };
                 
                 // Save draggable cards layout order
@@ -3019,6 +3093,7 @@
                         isDark: true,
                         termRates: {},
                         customizedYears: {},
+                        bankWagesView: 'wages',
                         inputs: {
                             homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
                             paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
@@ -3028,6 +3103,7 @@
                     state.activeProfileId = defaultId;
                     state.comparisonProfileId = null;
                     state.compareModeActive = false;
+                    state.bankWagesView = 'wages';
                 } else if (settings.inputs) {
                     const legacyId = 'profile-' + Date.now();
                     state.profiles = {};
@@ -3039,6 +3115,7 @@
                         isDark: settings.isDark !== undefined ? settings.isDark : true,
                         termRates: settings.termRates || {},
                         customizedYears: settings.customizedYears || {},
+                        bankWagesView: settings.bankWagesView || 'wages',
                         inputs: settings.inputs || {}
                     };
                     state.activeProfileId = legacyId;
@@ -3047,6 +3124,7 @@
                     state.isDark = settings.isDark !== undefined ? settings.isDark : true;
                     state.complexity = settings.complexity || 'simple';
                     state.labelFormat = settings.labelFormat || 'date';
+                    state.bankWagesView = settings.bankWagesView || 'wages';
                 } else {
                     state.activeProfileId = settings.activeProfileId;
                     state.comparisonProfileId = settings.comparisonProfileId;
@@ -3055,6 +3133,7 @@
                     state.isDark = settings.isDark !== undefined ? settings.isDark : true;
                     state.complexity = settings.complexity || 'simple';
                     state.labelFormat = settings.labelFormat || 'date';
+                    state.bankWagesView = settings.bankWagesView || 'wages';
                 }
 
                 if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
@@ -3071,6 +3150,7 @@
                             isDark: true,
                             termRates: {},
                             customizedYears: {},
+                            bankWagesView: 'wages',
                             inputs: {
                                 homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
                                 paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
@@ -3087,6 +3167,7 @@
                 state.isDark = activeProfile.isDark !== undefined ? activeProfile.isDark : true;
                 state.termRates = activeProfile.termRates || {};
                 state.customizedYears = activeProfile.customizedYears || {};
+                state.bankWagesView = activeProfile.bankWagesView || (settings && settings.bankWagesView) || 'wages';
 
                 if (activeProfile.inputs) {
                     Object.entries(activeProfile.inputs).forEach(([key, val]) => {
@@ -3175,6 +3256,12 @@
                     els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
                 }
                 
+                // Update Wage Toggle buttons active state
+                const wageToggleBtns = document.querySelectorAll('.wage-toggle-btn');
+                wageToggleBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-view') === state.bankWagesView);
+                });
+
                 syncLabelButtons();
 
                 // Dispatch change event to sync custom dropdown visuals (like the flag)
@@ -3792,6 +3879,26 @@
             });
         };
 
+        const setupBankWagesToggle = () => {
+            const container = document.getElementById('bankWagesToggle');
+            if (!container) return;
+            const buttons = container.querySelectorAll('.wage-toggle-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const view = e.currentTarget.getAttribute('data-view');
+                    if (state.bankWagesView === view) return;
+                    
+                    state.bankWagesView = view;
+                    buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === view));
+                    
+                    if (window.lastActData) {
+                        renderBankWages(window.lastActData);
+                    }
+                    saveSettings();
+                });
+            });
+        };
+
         els.masterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetMode = e.currentTarget.getAttribute('data-mode');
@@ -3875,6 +3982,7 @@
             state.comparisonProfileId = null;
             state.termRates = {};
             state.customizedYears = {};
+            state.bankWagesView = 'wages';
 
             const defaultId = 'profile-default';
             state.profiles = {};
@@ -3886,6 +3994,7 @@
                 isDark: true,
                 termRates: {},
                 customizedYears: {},
+                bankWagesView: 'wages',
                 inputs: {
                     homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
                     paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
@@ -4587,6 +4696,7 @@
             setupDragAndDrop();
             setupShareFunctionality();
             setupComplexityToggle();
+            setupBankWagesToggle();
             setupCustomDropdown();
             setupBlueprintSync();
             setupSettingsMenu();
