@@ -3115,6 +3115,8 @@
             }
         };
 
+        const CURRENT_ENGINE_VERSION = 2.0;
+
         /*
          * AUTO-PERSISTENCE STATE MANAGEMENT (LOCAL STORAGE)
          * Saves and restores all inputs, active mode, complexity, theme,
@@ -3153,6 +3155,7 @@
                 });
 
                 const settings = {
+                    version: CURRENT_ENGINE_VERSION,
                     activeProfileId: state.activeProfileId,
                     comparisonProfileId: state.comparisonProfileId,
                     compareModeActive: state.compareModeActive,
@@ -3196,209 +3199,279 @@
                 });
             };
 
+            const sanitizeProfile = (profile) => {
+                if (!profile || typeof profile !== 'object') return null;
+                const defaultInputs = {
+                    homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                    paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                    province: "ON", compounding: "semi", countrySelect: "semi"
+                };
+                
+                const sanitized = {
+                    id: profile.id || 'profile-' + Date.now(),
+                    name: profile.name || "Active Scenario",
+                    currentMode: profile.currentMode === 'cc' ? 'cc' : 'mortgage',
+                    complexity: profile.complexity === 'advanced' ? 'advanced' : 'simple',
+                    isDark: profile.isDark !== false,
+                    termRates: typeof profile.termRates === 'object' ? profile.termRates : {},
+                    customizedYears: typeof profile.customizedYears === 'object' ? profile.customizedYears : {},
+                    bankWagesView: profile.bankWagesView === 'rent' ? 'rent' : 'wages',
+                    inputs: {}
+                };
+                
+                const sourceInputs = profile.inputs && typeof profile.inputs === 'object' ? profile.inputs : {};
+                Object.keys(defaultInputs).forEach(key => {
+                    sanitized.inputs[key] = sourceInputs[key] !== undefined ? String(sourceInputs[key]) : defaultInputs[key];
+                });
+                
+                return sanitized;
+            };
+
+            const initializeDefaultState = () => {
+                const defaultId = 'profile-default';
+                state.profiles = {};
+                state.profiles[defaultId] = {
+                    id: defaultId,
+                    name: "30-Year Baseline",
+                    currentMode: 'mortgage',
+                    complexity: 'simple',
+                    isDark: true,
+                    termRates: {},
+                    customizedYears: {},
+                    bankWagesView: 'wages',
+                    inputs: {
+                        homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
+                        paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
+                        province: "ON", compounding: "semi", countrySelect: "semi"
+                    }
+                };
+                state.activeProfileId = defaultId;
+                state.comparisonProfileId = null;
+                state.compareModeActive = false;
+                state.bankWagesView = 'wages';
+                state.isDark = true;
+                state.complexity = 'simple';
+                state.labelFormat = 'date';
+            };
+
+            let settings = null;
             try {
                 const data = localStorage.getItem('mtg_calculator_settings');
-                let settings = null;
-                if (data) {
+                if (!data) {
+                    initializeDefaultState();
+                } else {
                     try {
                         settings = JSON.parse(data);
-                    } catch (e) {
-                        console.error("JSON parse error on load settings", e);
+                    } catch (jsonErr) {
+                        throw new Error("JSON parse failure: corrupted storage data");
                     }
-                }
-
-                if (!settings) {
-                    const defaultId = 'profile-default';
-                    state.profiles = {};
-                    state.profiles[defaultId] = {
-                        id: defaultId,
-                        name: "30-Year Baseline",
-                        currentMode: 'mortgage',
-                        complexity: 'simple',
-                        isDark: true,
-                        termRates: {},
-                        customizedYears: {},
-                        bankWagesView: 'wages',
-                        inputs: {
-                            homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                            paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                            province: "ON", compounding: "semi", countrySelect: "semi"
+                    
+                    if (!settings || typeof settings !== 'object') {
+                        throw new Error("Invalid storage structure format");
+                    }
+                    
+                    // Schema Validation & Migration Guard
+                    if (!settings.version || settings.version < CURRENT_ENGINE_VERSION) {
+                        console.warn("Outdated or unversioned schema detected. Initiating state migration block.");
+                        
+                        let migratedProfiles = {};
+                        let activeId = 'profile-default';
+                        
+                        if (settings.profiles && typeof settings.profiles === 'object') {
+                            // Upgrade existing profiles registry
+                            Object.entries(settings.profiles).forEach(([id, prof]) => {
+                                const sanitized = sanitizeProfile(prof);
+                                if (sanitized) {
+                                    migratedProfiles[sanitized.id] = sanitized;
+                                }
+                            });
+                            activeId = settings.activeProfileId;
+                        } else if (settings.inputs && typeof settings.inputs === 'object') {
+                            // Migrate legacy single-scenario flat input schema
+                            const legacyId = 'profile-legacy';
+                            const legacyProf = sanitizeProfile({
+                                id: legacyId,
+                                name: "Migrated Baseline",
+                                currentMode: settings.currentMode,
+                                complexity: settings.complexity,
+                                isDark: settings.isDark,
+                                termRates: settings.termRates,
+                                customizedYears: settings.customizedYears,
+                                bankWagesView: settings.bankWagesView,
+                                inputs: settings.inputs
+                            });
+                            if (legacyProf) {
+                                migratedProfiles[legacyId] = legacyProf;
+                                activeId = legacyId;
+                            }
                         }
-                    };
-                    state.activeProfileId = defaultId;
-                    state.comparisonProfileId = null;
-                    state.compareModeActive = false;
-                    state.bankWagesView = 'wages';
-                } else if (settings.inputs) {
-                    const legacyId = 'profile-' + Date.now();
-                    state.profiles = {};
-                    state.profiles[legacyId] = {
-                        id: legacyId,
-                        name: "Active Scenario",
-                        currentMode: settings.currentMode || 'mortgage',
-                        complexity: settings.complexity || 'simple',
-                        isDark: settings.isDark !== undefined ? settings.isDark : true,
-                        termRates: settings.termRates || {},
-                        customizedYears: settings.customizedYears || {},
-                        bankWagesView: settings.bankWagesView || 'wages',
-                        inputs: settings.inputs || {}
-                    };
-                    state.activeProfileId = legacyId;
-                    state.comparisonProfileId = null;
-                    state.compareModeActive = false;
-                    state.isDark = settings.isDark !== undefined ? settings.isDark : true;
-                    state.complexity = settings.complexity || 'simple';
-                    state.labelFormat = settings.labelFormat || 'date';
-                    state.bankWagesView = settings.bankWagesView || 'wages';
-                } else {
+                        
+                        if (Object.keys(migratedProfiles).length === 0) {
+                            throw new Error("No legacy data structures could be successfully migrated.");
+                        }
+                        
+                        settings = {
+                            version: CURRENT_ENGINE_VERSION,
+                            activeProfileId: activeId,
+                            comparisonProfileId: settings.comparisonProfileId || null,
+                            compareModeActive: !!settings.compareModeActive,
+                            profiles: migratedProfiles,
+                            isDark: settings.isDark !== undefined ? settings.isDark : true,
+                            complexity: settings.complexity || 'simple',
+                            labelFormat: settings.labelFormat || 'date',
+                            bankWagesView: settings.bankWagesView || 'wages',
+                            chartsOrder: settings.chartsOrder,
+                            strategyOrder: settings.strategyOrder
+                        };
+                    }
+                    
+                    // Hydrate State Store safely from parsed settings
                     state.activeProfileId = settings.activeProfileId;
                     state.comparisonProfileId = settings.comparisonProfileId;
                     state.compareModeActive = !!settings.compareModeActive;
-                    state.profiles = settings.profiles || {};
-                    state.isDark = settings.isDark !== undefined ? settings.isDark : true;
-                    state.complexity = settings.complexity || 'simple';
-                    state.labelFormat = settings.labelFormat || 'date';
-                    state.bankWagesView = settings.bankWagesView || 'wages';
-                }
-
-                if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
-                    const keys = Object.keys(state.profiles);
-                    if (keys.length > 0) {
-                        state.activeProfileId = keys[0];
-                    } else {
-                        const seedId = 'profile-' + Date.now();
-                        state.profiles[seedId] = {
-                            id: seedId,
-                            name: "Active Scenario",
-                            currentMode: 'mortgage',
-                            complexity: 'simple',
-                            isDark: true,
-                            termRates: {},
-                            customizedYears: {},
-                            bankWagesView: 'wages',
-                            inputs: {
-                                homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                                paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                                province: "ON", compounding: "semi", countrySelect: "semi"
-                            }
-                        };
-                        state.activeProfileId = seedId;
-                    }
-                }
-
-                const activeProfile = state.profiles[state.activeProfileId];
-                state.currentMode = activeProfile.currentMode || 'mortgage';
-                state.complexity = activeProfile.complexity || 'simple';
-                state.isDark = activeProfile.isDark !== undefined ? activeProfile.isDark : true;
-                state.termRates = activeProfile.termRates || {};
-                state.customizedYears = activeProfile.customizedYears || {};
-                state.bankWagesView = activeProfile.bankWagesView || (settings && settings.bankWagesView) || 'wages';
-
-                if (activeProfile.inputs) {
-                    Object.entries(activeProfile.inputs).forEach(([key, val]) => {
-                        const el = els.inputs[key];
-                        if (el) {
-                            if (el.type === 'checkbox') {
-                                el.checked = val;
-                            } else {
-                                el.value = val;
-                            }
+                    state.profiles = {};
+                    
+                    Object.entries(settings.profiles).forEach(([id, prof]) => {
+                        const clean = sanitizeProfile(prof);
+                        if (clean) {
+                            state.profiles[clean.id] = clean;
                         }
                     });
-                }
-
-                // Restore draggable charts order
-                if (settings && settings.chartsOrder) {
-                    const container = document.getElementById('draggable-charts-container');
-                    if (container) {
-                        const wrappers = Array.from(container.children);
-                        const wrapperMap = {};
-                        wrappers.forEach(wrapper => {
-                            const chartDiv = wrapper.querySelector('.plotly-container');
-                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                        });
-                        settings.chartsOrder.forEach(id => {
-                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                        });
+                    
+                    if (Object.keys(state.profiles).length === 0) {
+                        throw new Error("No profiles could be successfully verified after schema validation");
                     }
-                }
-                
-                // Restore draggable strategy charts order
-                if (settings && settings.strategyOrder) {
-                    const container = document.getElementById('draggable-strategy-container');
-                    if (container) {
-                        const wrappers = Array.from(container.children);
-                        const wrapperMap = {};
-                        wrappers.forEach(wrapper => {
-                            const chartDiv = wrapper.querySelector('.plotly-container');
-                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                        });
-                        settings.strategyOrder.forEach(id => {
-                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                        });
+                    
+                    if (!state.profiles[state.activeProfileId]) {
+                        state.activeProfileId = Object.keys(state.profiles)[0];
                     }
-                }
-                
-                // Sync classes and buttons based on loaded settings
-                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
-                
-                // Update mode switch checkbox
-                if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
-                
-                // Update Mode buttons (.mode-btn) active state
-                els.masterBtns.forEach(btn => {
-                    if (btn.getAttribute('data-mode') === state.currentMode) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // Update Complexity buttons (.complexity-btn) active state
-                const complexityBtns = document.querySelectorAll('.complexity-btn');
-                complexityBtns.forEach(btn => {
-                    if (btn.getAttribute('data-complexity') === state.complexity) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // Update inner circle label depending on the restored mode
-                if (document.getElementById('inner-circle-label')) {
-                    document.getElementById('inner-circle-label').textContent = 
-                        state.currentMode === 'cc' ? 'CC Balance' : 'Principal';
-                }
-                
-                // Update display status of conditional sections
-                if (els.containers.pitiSection) {
-                    els.containers.pitiSection.style.display = els.inputs.pitiToggle.checked ? 'block' : 'none';
-                }
-                if (els.containers.oppCostSection) {
-                    els.containers.oppCostSection.style.display = els.inputs.oppCostToggle.checked ? 'block' : 'none';
-                }
-                if (els.containers.rateShockSection) {
-                    els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
-                }
-                
-                // Update Wage Toggle buttons active state
-                const wageToggleBtns = document.querySelectorAll('.wage-toggle-btn');
-                wageToggleBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-view') === state.bankWagesView);
-                });
-
-                syncLabelButtons();
-
-                // Dispatch change event to sync custom dropdown visuals (like the flag)
-                if (els.inputs.countrySelect) {
-                    els.inputs.countrySelect.dispatchEvent(new Event('change'));
-                }
-
-                if (typeof renderSandboxList === 'function') {
-                    renderSandboxList();
+                    
+                    state.isDark = settings.isDark !== false;
+                    state.complexity = settings.complexity === 'advanced' ? 'advanced' : 'simple';
+                    state.labelFormat = settings.labelFormat === 'age' ? 'age' : 'date';
+                    state.bankWagesView = settings.bankWagesView === 'rent' ? 'rent' : 'wages';
                 }
             } catch (err) {
-                console.error("Error loading settings from localStorage:", err);
+                console.warn("State engine hydration halted safely. Running emergency reset:", err.message || err);
+                initializeDefaultState();
+                try {
+                    saveSettings(); // Persist the clean initial structural defaults to clear the corruption
+                } catch (saveErr) {
+                    console.error("Emergency settings save failed:", saveErr);
+                }
+            }
+
+            // Restore UI layout, active profiles, and inputs
+            const activeProfile = state.profiles[state.activeProfileId];
+            state.currentMode = activeProfile.currentMode || 'mortgage';
+            state.complexity = activeProfile.complexity || 'simple';
+            state.isDark = activeProfile.isDark !== undefined ? activeProfile.isDark : true;
+            state.termRates = activeProfile.termRates || {};
+            state.customizedYears = activeProfile.customizedYears || {};
+            state.bankWagesView = activeProfile.bankWagesView || 'wages';
+
+            if (activeProfile.inputs) {
+                Object.entries(activeProfile.inputs).forEach(([key, val]) => {
+                    const el = els.inputs[key];
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            el.checked = val === true || val === 'true';
+                        } else {
+                            el.value = val;
+                        }
+                    }
+                });
+            }
+
+            // Restore draggable charts order
+            if (settings && settings.chartsOrder) {
+                const container = document.getElementById('draggable-charts-container');
+                if (container) {
+                    const wrappers = Array.from(container.children);
+                    const wrapperMap = {};
+                    wrappers.forEach(wrapper => {
+                        const chartDiv = wrapper.querySelector('.plotly-container');
+                        if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                    });
+                    settings.chartsOrder.forEach(id => {
+                        if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                    });
+                }
+            }
+            
+            // Restore draggable strategy charts order
+            if (settings && settings.strategyOrder) {
+                const container = document.getElementById('draggable-strategy-container');
+                if (container) {
+                    const wrappers = Array.from(container.children);
+                    const wrapperMap = {};
+                    wrappers.forEach(wrapper => {
+                        const chartDiv = wrapper.querySelector('.plotly-container');
+                        if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                    });
+                    settings.strategyOrder.forEach(id => {
+                        if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                    });
+                }
+            }
+            
+            // Sync classes and buttons based on loaded settings
+            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
+            
+            // Update mode switch checkbox
+            if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
+            
+            // Update Mode buttons (.mode-btn) active state
+            els.masterBtns.forEach(btn => {
+                if (btn.getAttribute('data-mode') === state.currentMode) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Update Complexity buttons (.complexity-btn) active state
+            const complexityBtns = document.querySelectorAll('.complexity-btn');
+            complexityBtns.forEach(btn => {
+                if (btn.getAttribute('data-complexity') === state.complexity) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Update inner circle label depending on the restored mode
+            if (document.getElementById('inner-circle-label')) {
+                document.getElementById('inner-circle-label').textContent = 
+                    state.currentMode === 'cc' ? 'CC Balance' : 'Principal';
+            }
+            
+            // Update display status of conditional sections
+            if (els.containers.pitiSection) {
+                els.containers.pitiSection.style.display = els.inputs.pitiToggle.checked ? 'block' : 'none';
+            }
+            if (els.containers.oppCostSection) {
+                els.containers.oppCostSection.style.display = els.inputs.oppCostToggle.checked ? 'block' : 'none';
+            }
+            if (els.containers.rateShockSection) {
+                els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
+            }
+            
+            // Update Wage Toggle buttons active state
+            const wageToggleBtns = document.querySelectorAll('.wage-toggle-btn');
+            wageToggleBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-view') === state.bankWagesView);
+            });
+
+            syncLabelButtons();
+
+            // Dispatch change event to sync custom dropdown visuals (like the flag)
+            if (els.inputs.countrySelect) {
+                els.inputs.countrySelect.dispatchEvent(new Event('change'));
+            }
+
+            if (typeof renderSandboxList === 'function') {
+                renderSandboxList();
             }
         };
 
