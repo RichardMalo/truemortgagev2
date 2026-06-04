@@ -2059,6 +2059,7 @@
                             state.customizedYears[y] = true;
                             state.termRates[y] = val;
                             calculate();
+                            saveSettings();
                         }
                     });
                     inp.addEventListener('blur', (e) => {
@@ -2071,6 +2072,7 @@
                         state.customizedYears[y] = true;
                         state.termRates[y] = val;
                         calculate();
+                        saveSettings();
                     });
                 });
             } else {
@@ -3124,7 +3126,7 @@
          * Saves and restores all inputs, active mode, complexity, theme,
          * and custom refinancing terms to ensure seamless session persistence.
          */
-        const saveSettings = () => {
+        const saveSettings = (skipDomSync = false) => {
             try {
                 if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
                     const newId = 'profile-' + Date.now();
@@ -3142,19 +3144,21 @@
                     };
                 }
 
-                const activeProfile = state.profiles[state.activeProfileId];
-                activeProfile.currentMode = state.currentMode;
-                activeProfile.complexity = state.complexity;
-                activeProfile.isDark = state.isDark;
-                activeProfile.termRates = JSON.parse(JSON.stringify(state.termRates || {}));
-                activeProfile.customizedYears = JSON.parse(JSON.stringify(state.customizedYears || {}));
-                activeProfile.bankWagesView = state.bankWagesView || 'wages';
-                
-                Object.entries(els.inputs).forEach(([key, el]) => {
-                    if (el) {
-                        activeProfile.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
-                    }
-                });
+                if (!skipDomSync) {
+                    const activeProfile = state.profiles[state.activeProfileId];
+                    activeProfile.currentMode = state.currentMode;
+                    activeProfile.complexity = state.complexity;
+                    activeProfile.isDark = state.isDark;
+                    activeProfile.termRates = JSON.parse(JSON.stringify(state.termRates || {}));
+                    activeProfile.customizedYears = JSON.parse(JSON.stringify(state.customizedYears || {}));
+                    activeProfile.bankWagesView = state.bankWagesView || 'wages';
+                    
+                    Object.entries(els.inputs).forEach(([key, el]) => {
+                        if (el) {
+                            activeProfile.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
+                        }
+                    });
+                }
 
                 const settings = {
                     version: CURRENT_ENGINE_VERSION,
@@ -3214,10 +3218,31 @@
 
             const sanitizeProfile = (profile) => {
                 if (!profile || typeof profile !== 'object') return null;
+                
+                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+
                 const defaultInputs = {
-                    homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                    paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                    province: "ON", compounding: "semi", countrySelect: "semi"
+                    homePrice: "800000",
+                    downPayment: "160000",
+                    ccBalance: "15000",
+                    province: "ON",
+                    rate: "2.62",
+                    amortization: "30",
+                    term: "5",
+                    compounding: "semi",
+                    countrySelect: "semi",
+                    frequency: "monthly",
+                    pitiToggle: false,
+                    tax: "0.5",
+                    ins: "1000",
+                    hoa: "0",
+                    pmi: "0.5",
+                    oppCostToggle: false,
+                    investRate: "7.0",
+                    extra: "0",
+                    date: prefilledDate,
+                    rateShockToggle: false
                 };
                 
                 const sanitized = {
@@ -3233,8 +3258,50 @@
                 };
                 
                 const sourceInputs = profile.inputs && typeof profile.inputs === 'object' ? profile.inputs : {};
+                
+                // Compatibility mapping for older schema keys
+                if (sourceInputs.interestRate !== undefined && sourceInputs.rate === undefined) {
+                    sourceInputs.rate = sourceInputs.interestRate;
+                }
+                if (sourceInputs.interestRateCC !== undefined && sourceInputs.rate === undefined && sanitized.currentMode === 'cc') {
+                    sourceInputs.rate = sourceInputs.interestRateCC;
+                }
+                if (sourceInputs.paymentFrequency !== undefined && sourceInputs.frequency === undefined) {
+                    sourceInputs.frequency = sourceInputs.paymentFrequency;
+                }
+                if (sourceInputs.extraPayment !== undefined && sourceInputs.extra === undefined) {
+                    sourceInputs.extra = sourceInputs.extraPayment;
+                }
+                if (sourceInputs.firstPaymentDate !== undefined && sourceInputs.date === undefined) {
+                    sourceInputs.date = sourceInputs.firstPaymentDate;
+                }
+                if (sourceInputs.includePitiToggle !== undefined && sourceInputs.pitiToggle === undefined) {
+                    sourceInputs.pitiToggle = sourceInputs.includePitiToggle;
+                }
+                if (sourceInputs.propertyTax !== undefined && sourceInputs.tax === undefined) {
+                    sourceInputs.tax = sourceInputs.propertyTax;
+                }
+                if (sourceInputs.homeInsurance !== undefined && sourceInputs.ins === undefined) {
+                    sourceInputs.ins = sourceInputs.homeInsurance;
+                }
+                if (sourceInputs.hoaFees !== undefined && sourceInputs.hoa === undefined) {
+                    sourceInputs.hoa = sourceInputs.hoaFees;
+                }
+                if (sourceInputs.pmiRate !== undefined && sourceInputs.pmi === undefined) {
+                    sourceInputs.pmi = sourceInputs.pmiRate;
+                }
+
                 Object.keys(defaultInputs).forEach(key => {
-                    sanitized.inputs[key] = sourceInputs[key] !== undefined ? String(sourceInputs[key]) : defaultInputs[key];
+                    const srcVal = sourceInputs[key];
+                    if (srcVal !== undefined) {
+                        if (typeof defaultInputs[key] === 'boolean') {
+                            sanitized.inputs[key] = srcVal === true || srcVal === 'true';
+                        } else {
+                            sanitized.inputs[key] = String(srcVal);
+                        }
+                    } else {
+                        sanitized.inputs[key] = defaultInputs[key];
+                    }
                 });
                 
                 return sanitized;
@@ -3243,6 +3310,10 @@
             const initializeDefaultState = () => {
                 const defaultId = 'profile-default';
                 state.profiles = {};
+                
+                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+                
                 state.profiles[defaultId] = {
                     id: defaultId,
                     name: "30-Year Baseline",
@@ -3253,9 +3324,26 @@
                     customizedYears: {},
                     bankWagesView: 'wages',
                     inputs: {
-                        homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                        paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                        province: "ON", compounding: "semi", countrySelect: "semi"
+                        homePrice: "800000",
+                        downPayment: "160000",
+                        ccBalance: "15000",
+                        province: "ON",
+                        rate: "2.62",
+                        amortization: "30",
+                        term: "5",
+                        compounding: "semi",
+                        countrySelect: "semi",
+                        frequency: "monthly",
+                        pitiToggle: false,
+                        tax: "0.5",
+                        ins: "1000",
+                        hoa: "0",
+                        pmi: "0.5",
+                        oppCostToggle: false,
+                        investRate: "7.0",
+                        extra: "0",
+                        date: prefilledDate,
+                        rateShockToggle: false
                     }
                 };
                 state.activeProfileId = defaultId;
@@ -4179,7 +4267,8 @@
             }
             els.form.reset();
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-            els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+            const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+            els.inputs.date.value = prefilledDate;
             els.inputs.countrySelect.value = 'semi';
             state.labelFormat = 'date';
             
@@ -4210,9 +4299,26 @@
                 customizedYears: {},
                 bankWagesView: 'wages',
                 inputs: {
-                    homePrice: "800000", downPayment: "160000", interestRate: "2.62", amortization: "30",
-                    paymentFrequency: "monthly", ccBalance: "15000", interestRateCC: "19.99",
-                    province: "ON", compounding: "semi", countrySelect: "semi"
+                    homePrice: "800000",
+                    downPayment: "160000",
+                    ccBalance: "15000",
+                    province: "ON",
+                    rate: "2.62",
+                    amortization: "30",
+                    term: "5",
+                    compounding: "semi",
+                    countrySelect: "semi",
+                    frequency: "monthly",
+                    pitiToggle: false,
+                    tax: "0.5",
+                    ins: "1000",
+                    hoa: "0",
+                    pmi: "0.5",
+                    oppCostToggle: false,
+                    investRate: "7.0",
+                    extra: "0",
+                    date: prefilledDate,
+                    rateShockToggle: false
                 }
             };
             state.activeProfileId = defaultId;
@@ -4485,39 +4591,24 @@
                 const defaultInputs = {
                     homePrice: "800000",
                     downPayment: "160000",
-                    interestRate: "2.62",
+                    ccBalance: "15000",
+                    province: "ON",
                     rate: "2.62",
                     amortization: "30",
                     term: "5",
-                    frequency: "monthly",
-                    paymentFrequency: "monthly",
-                    ccBalance: "15000",
-                    interestRateCC: "19.99",
-                    province: "ON",
                     compounding: "semi",
                     countrySelect: "semi",
-                    extra: "0",
-                    extraPayment: "0",
-                    date: prefilledDate,
-                    firstPaymentDate: prefilledDate,
+                    frequency: "monthly",
                     pitiToggle: false,
-                    includePitiToggle: false,
                     tax: "0.5",
-                    propertyTax: "0.5",
                     ins: "1000",
-                    homeInsurance: "1000",
                     hoa: "0",
-                    hoaFees: "0",
                     pmi: "0.5",
-                    pmiRate: "0.5",
                     oppCostToggle: false,
                     investRate: "7.0",
-                    rateShockToggle: false,
-                    renewalRateShock: "6.0",
-                    shockAmortization: "25",
-                    amortizationPeriodShock: "5",
-                    refinanceFrequency: "yearly",
-                    refinanceTerm: "5"
+                    extra: "0",
+                    date: prefilledDate,
+                    rateShockToggle: false
                 };
 
                 state.profiles[newId] = {
@@ -4535,16 +4626,7 @@
                 newNameInput.value = '';
                 
                 // Persist the new active profile ID and new profiles registry to localStorage
-                const settings = {
-                    activeProfileId: state.activeProfileId,
-                    comparisonProfileId: state.comparisonProfileId,
-                    compareModeActive: state.compareModeActive,
-                    profiles: state.profiles,
-                    isDark: state.isDark,
-                    complexity: state.complexity,
-                    labelFormat: state.labelFormat || 'date'
-                };
-                localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+                saveSettings(true);
 
                 loadSettings();
                 calculate();
@@ -4628,16 +4710,7 @@
                     }
 
                     // Save the activeProfileId update directly to localStorage so loadSettings() reads the correct active ID!
-                    const data = localStorage.getItem('mtg_calculator_settings');
-                    if (data) {
-                        try {
-                            const settings = JSON.parse(data);
-                            settings.activeProfileId = state.activeProfileId;
-                            localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
-                        } catch (err) {
-                            console.error(err);
-                        }
-                    }
+                    saveSettings(true);
 
                     loadSettings(); // Load new profile inputs into DOM
                     calculate(); // Recalculate (which will safely auto-save)
@@ -4670,16 +4743,7 @@
                                 state.activeProfileId = Object.keys(state.profiles)[0];
                                 
                                 // Save the updated activeProfileId and profiles registry to localStorage so loadSettings() reads it!
-                                const settings = {
-                                    activeProfileId: state.activeProfileId,
-                                    comparisonProfileId: state.comparisonProfileId,
-                                    compareModeActive: state.compareModeActive,
-                                    profiles: state.profiles,
-                                    isDark: state.isDark,
-                                    complexity: state.complexity,
-                                    labelFormat: state.labelFormat || 'date'
-                                };
-                                localStorage.setItem('mtg_calculator_settings', JSON.stringify(settings));
+                                saveSettings(true);
 
                                 loadSettings(); // Switch active profile in DOM
                             } else {
@@ -4885,8 +4949,11 @@
                         }
                     }
 
-                    // Validate settings signature keys
-                    if (!parsedSettings || !parsedSettings.currentMode || !parsedSettings.inputs) {
+                    // Validate settings signature keys (supports version 1 flat format and version 2 multi-profile format)
+                    const isValidV2 = parsedSettings && parsedSettings.profiles && typeof parsedSettings.profiles === 'object' && parsedSettings.activeProfileId;
+                    const isValidV1 = parsedSettings && parsedSettings.currentMode && parsedSettings.inputs && typeof parsedSettings.inputs === 'object';
+                    
+                    if (!isValidV2 && !isValidV1) {
                         showFeedback("Invalid Strategy Blueprint file structure!", true);
                         return;
                     }
