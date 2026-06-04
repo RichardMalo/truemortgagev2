@@ -1284,26 +1284,26 @@
                         
                         <div class="input-group-row">
                             <div class="input-group mortgage-only">
-                                <label>Home Price ($) <span class="help-tip">?<span class="tooltip-text">The gross transactional purchase price of the real estate asset asset before deducting any down payment, adjustments, or transaction fees.</span></span></label>
+                                <label>Home Price ($) <span class="help-tip">?<span class="tooltip-text">The gross transactional purchase price of the real estate asset before deducting any down payment, adjustments, or transaction fees. Note: Banks may apply local valuation models which can alter exact loan calculations.</span></span></label>
                                 <input type="number" id="homePrice" inputmode="decimal" value="800000" step="100" min="0">
                             </div>
                             <div class="input-group mortgage-only">
-                                <label>Down Payment ($) <span class="help-tip">?<span class="tooltip-text">The upfront equity capital contributed in cash. Higher thresholds mitigate initial loan-to-value (LTV) exposure and directly deflate the starting principal.</span></span></label>
+                                <label>Down Payment ($) <span class="help-tip">?<span class="tooltip-text">The upfront equity capital contributed in cash. Higher thresholds mitigate initial loan-to-value (LTV) exposure and directly deflate the starting principal. Note: Exact minimum down payment requirements vary by region and property type.</span></span></label>
                                 <input type="number" id="downPayment" inputmode="decimal" value="0" step="100" min="0">
                             </div>
                             <div class="input-group cc-only">
-                                <label>Current Balance ($) <span class="help-tip">?<span class="tooltip-text">The aggregate statement balance currently outstanding. This is the entire volume of compounding debt subject to dangerous revolving interest rates.</span></span></label>
+                                <label>Current Balance ($) <span class="help-tip">?<span class="tooltip-text">The aggregate statement balance currently outstanding. This is the entire volume of compounding debt subject to dangerous revolving interest rates. Note: Daily balance variations and pending charges may cause statement totals to differ slightly.</span></span></label>
                                 <input type="number" id="ccBalance" inputmode="decimal" value="15000" step="100" min="0">
                             </div>
                         </div>
                         
                         <div class="input-group-row">
                             <div class="input-group">
-                                <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially.</span></span></label>
+                                <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially. Note: Real APR may include lender fees not captured here. Bank calculations may vary slightly due to daily interest accrual conventions.</span></span></label>
                                 <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.00" min="0">
                             </div>
                             <div class="input-group mortgage-only">
-                                <label>Amortization (Yrs) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments.</span></span></label>
+                                <label>Amortization (Yrs) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments. Note: Lender formulas and payment frequencies can affect the exact payoff timeline.</span></span></label>
                                 <input type="number" id="amortization" inputmode="decimal" value="25" step="any" min="0.1">
                             </div>
                             <div class="input-group cc-only advanced-only">
@@ -1317,11 +1317,11 @@
 
                         <div class="input-group-row mortgage-only advanced-only">
                             <div class="input-group">
-                                <label>Term Length (Yrs) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields.</span></span></label>
+                                <label>Term Length (Yrs) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields. Note: Local regulations may restrict term lengths or mandate specific renewal conditions.</span></span></label>
                                 <input type="number" id="term" inputmode="decimal" value="5" step="any" min="0.1">
                             </div>
                             <div class="input-group">
-                                <label>Compounding <span class="help-tip">?<span class="tooltip-text">The frequency of interest calculations. Canadian law dictates semi-annual compounding for fixed mortgages, resulting in a lower Effective Annual Rate than US, UK, AU, and NZ monthly/daily compounding.</span></span></label>
+                                <label>Compounding <span class="help-tip">?<span class="tooltip-text">The frequency of interest calculations. Canadian law dictates semi-annual compounding for fixed mortgages, resulting in a lower Effective Annual Rate than US, UK, AU, and NZ monthly/daily compounding. Note: Some non-traditional lenders may use custom compounding models.</span></span></label>
                                 <select id="compounding" class="custom-select">
                                     <option value="semi">Canadian (Semi-Annual)</option>
                                     <option value="monthly">US / UK / AU / NZ (Monthly/Daily)</option>
@@ -1334,7 +1334,7 @@
                         <h3 class="section-title">Aggressive Strategy</h3>
                         <div class="input-group-row mortgage-only">
                             <div class="input-group">
-                                <label>Payment Frequency <span class="help-tip">?<span class="tooltip-text">Accelerated schedules divide standard monthly distributions into halves or quarters, non-disruptively forcing an extra full monthly installment against principal per calendar year.</span></span></label>
+                                <label>Payment Frequency <span class="help-tip">?<span class="tooltip-text">Accelerated schedules divide standard monthly distributions into halves or quarters, non-disruptively forcing an extra full monthly installment against principal per calendar year. Note: Banks may calculate accelerated payments using slightly different formulas (e.g. dividing monthly payment by 2 vs. 26 bi-weekly periods).</span></span></label>
                                 <select id="paymentFrequency" class="custom-select">
                                     <option value="monthly">Monthly</option>
                                     <option value="semi-monthly">Semi-Monthly (24/yr)</option>
@@ -1345,8 +1345,8 @@
                         </div>
                         <div class="input-group-row">
                             <div class="input-group">
-                                <label class="mortgage-only">Extra Payment Surplus ($) <span class="help-tip">?<span class="tooltip-text">Discretionary capital injected straight toward principal reduction per cycle, entirely bypassing the lender's interest calculation mechanism.</span></span></label>
-                                <label class="cc-only">Monthly Surplus ($) <span class="inline-tooltip-text">(Above Minimum)</span> <span class="help-tip">?<span class="tooltip-text">Incremental capital deployed monthly above the mandatory minimum threshold, locking in an un-leveraged, guaranteed return equal to the account APR.</span></span></label>
+                                <label class="mortgage-only">Extra Payment Surplus ($) <span class="help-tip">?<span class="tooltip-text">Discretionary capital injected straight toward principal reduction per cycle, entirely bypassing the lender's interest calculation mechanism. Note: Some lenders restrict prepayments or charge penalty fees for exceeding yearly thresholds.</span></span></label>
+                                <label class="cc-only">Monthly Surplus ($) <span class="inline-tooltip-text">(Above Minimum)</span> <span class="help-tip">?<span class="tooltip-text">Incremental capital deployed monthly above the mandatory minimum threshold, locking in an un-leveraged, guaranteed return equal to the account APR. Note: Review your credit agreement for terms regarding surplus payments.</span></span></label>
                                 <input type="number" id="extraPayment" inputmode="decimal" required value="0" step="50" min="0">
                             </div>
                         </div>
@@ -1356,7 +1356,7 @@
                                 <input type="date" id="firstPaymentDate">
                             </div>
                             <div class="input-group" style="flex: 1; min-width: 0;">
-                                <label>Table Label <span class="help-tip">?<span class="tooltip-text">Choose whether the amortization schedule labels each installment by calendar date (e.g. Jun 1, 2026) or by numeric cycle period (e.g. P1, P2, P3).</span></span></label>
+                                <label>Table Label <span class="help-tip">?<span class="tooltip-text">Choose whether the amortization schedule labels each installment by calendar date (e.g. Jun 1, 2026) or by numeric cycle period (e.g. P1, P2, P3). Note: Calendar date assumes payments occur exactly on schedule with no deferred periods.</span></span></label>
                                 <div class="master-mode-selector label-format-selector" style="height: 52px; padding: 4px; border-radius: 14px; display: flex; align-items: center; width: 100%;">
                                     <button type="button" class="label-format-btn active" id="labelFormatDate" data-format="date">DATE</button>
                                     <button type="button" class="label-format-btn" id="labelFormatPeriod" data-format="period">PERIOD</button>
@@ -1367,7 +1367,7 @@
                         <div class="section-header-with-toggle advanced-only" style="margin-top: 20px;">
                             <h3 class="section-title" style="margin:0; font-size: 0.95rem;">
                                 Opportunity Cost
-                                <span class="help-tip">?<span class="tooltip-text">A strategic net worth comparison. Evaluates whether aggressive debt pay-down yields superior equity value versus allocating those exact liquid surpluses to market index investments.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">A strategic net worth comparison. Evaluates whether aggressive debt pay-down yields superior equity value versus allocating those exact liquid surpluses to market index investments. Note: Market returns are projections and not guaranteed. Historical averages are not indicative of future performance.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Compare paying off vs investing">
                                 <label class="switch small-switch">
@@ -1390,7 +1390,7 @@
                         <div class="section-header-with-toggle">
                             <h3 class="section-title" style="margin:0;">
                                 Taxes & Insurance
-                                <span class="help-tip">?<span class="tooltip-text">Integrates escrow cash flow items (PITI components) to map non-equity housing expenses that impact gross monthly liquidity and overall holding costs.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">Integrates escrow cash flow items (PITI components) to map non-equity housing expenses that impact gross monthly liquidity. Note: Tax assessments, insurance premiums, and HOA fees fluctuate over time; calculations are close estimates.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Include Escrow (PITI)">
                                 <label class="switch small-switch">
@@ -1427,7 +1427,7 @@
                         <div class="section-header-with-toggle">
                             <h3 class="section-title" style="margin:0;">
                                 Refinancing Rate Shock
-                                <span class="help-tip">?<span class="tooltip-text">Simulate term renewal interest rate adjustments. Each term's rate can be edited individually to project the dynamic impact on your remaining mortgage amortization while keeping payments fixed.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">Simulate term renewal interest rate adjustments. Each term's rate can be edited individually to project the dynamic impact on remaining amortization. Note: Rate projections are theoretical; bank calculations may differ based on dynamic refinancing terms.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Simulate refinancing shocks">
                                 <label class="switch small-switch">
@@ -1460,7 +1460,7 @@
                 <div class="concentric-visualization-card">
                     <h3 class="section-title">
                         The Gravity of the Debt
-                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative debt markup. The relative size of the interest envelope (red) highlights capital inefficiencies and macro interest costs over the baseline asset cost (blue).</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative debt markup. The relative size of the interest envelope (red) highlights capital inefficiencies over baseline asset cost (blue). Note: Calculations are close estimations; banks may use proprietary interest formulas causing minor variations.</span></span>
                     </h3>
                     <div class="dynamic-concentric-stack">
                         <div class="stack-wrapper">
@@ -1500,11 +1500,11 @@
                             <div class="kinetic-text" id="mortgageAmountDisplay" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box danger-box squishy-interactive cc-only">
-                            <label class="danger-text">Daily Vampire Drain <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The localized capital leak calculated down to a 24-hour window. This is the structural interest cost accrued every single day you carry the remaining debt.</span></span></label>
+                            <label class="danger-text">Daily Vampire Drain <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The localized capital leak calculated down to a 24-hour window. This is the interest accrued daily. Note: Actual bank accruals may vary slightly based on the exact day-count convention used (e.g. 365 vs. 360 days).</span></span></label>
                             <div class="kinetic-text danger-text" id="dailyVampireDrain" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box squishy-interactive mortgage-only advanced-only">
-                            <label>Balance at Term End <span class="help-tip"><span class="tooltip-text">The verified principal debt remaining at the completion of your current multi-year rate term, determining the scale of refinancing risk.</span></span></label>
+                            <label>Balance at Term End <span class="help-tip"><span class="tooltip-text">The verified principal debt remaining at term end, indicating refinancing risk. Note: Assumes standard payment schedule with no pre-payments or missed payments. Bank formulas may vary slightly.</span></span></label>
                             <div class="kinetic-text" id="balanceAtTerm" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box squishy-interactive">
@@ -1520,7 +1520,7 @@
                     <div class="circles-container">
                         <div class="circle-wrapper squishy-interactive mortgage-only advanced-only">
                             <div class="true-payment-circle" id="monthlyPaymentCircle"></div>
-                            <span>Periodic Payment Comp <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in your installment ratios. Over time, reducing the principal forces down the interest wedge, making subsequent payments much more efficient.</span></span></span>
+                            <span>Periodic Payment Comp <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in installment ratios. Over time, reducing the principal shrinks the interest wedge. Note: Commercial bank schedules may vary slightly due to interest rounding routines.</span></span></span>
                         </div>
                         <div class="circle-wrapper squishy-interactive">
                             <div class="payment-breakdown-circle" id="paymentBreakdownCircle"></div>
@@ -1534,7 +1534,7 @@
                 <div class="bento-card advanced-only" id="milestoneRoadmapCard">
                     <h3 class="section-title">
                         Chronological Milestone Roadmap
-                        <span class="help-tip">?<span class="tooltip-text">A dynamic chronological timeline highlighting your critical wealth milestones—answering the 'So What?' of your payoff strategy with actionable life impact.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A dynamic timeline highlighting critical wealth milestones. Note: Projections assume continuous, uninterrupted surplus payments as scheduled. Commercial timelines may vary due to custom bank policies.</span></span>
                     </h3>
                     <div class="roadmap-timeline" id="milestoneTimelineContainer">
                         <!-- Dynamically populated timeline nodes -->
@@ -1544,7 +1544,7 @@
                 <div class="bento-card">
                     <h3 class="section-title">
                         Visual Analysis
-                        <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards inside this grid layout can be grabbed, dragged, and swapped across slots to customize your workspace view.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards can be dragged to customize your layout. Calculations are close estimates; exact bank totals may vary due to custom formulas.</span></span>
                     </h3>
                     <div class="charts-grid" id="draggable-charts-container">
                         <div class="chart-wrapper chart-box squishy-interactive" draggable="true">
@@ -1572,7 +1572,7 @@
                         <div class="wage-toggle-container">
                             <h4 class="sub-section-title" style="margin: 0; color: var(--primary-color); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center;">
                                 <span id="bankWagesTitleText">How much do you pay towards the banks wages per year</span>
-                                <span class="help-tip">?<span class="tooltip-text" id="bankWagesTooltip">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text" id="bankWagesTooltip">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.</span></span>
                             </h4>
                             <div class="wage-toggle-selector" id="bankWagesToggle">
                                 <button class="wage-toggle-btn active" data-view="wages">Bank Wages</button>
@@ -1612,7 +1612,7 @@
                 <div class="bento-card" style="margin-top: 24px;">
                     <h3 class="section-title">
                         Amortization Schedule
-                        <span class="help-tip">?<span class="tooltip-text">A granular structural ledger mapping principal pay-down, absolute interest decay curves, and extra payment efficiency metrics relative to your outstanding debt scale across every active cycle step.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A granular ledger mapping principal pay-down and interest decay curves. Note: Minor variances can occur based on how individual lenders round daily interest and process extra payments.</span></span>
                     </h3>
                     <div class="table-responsive">
                         <table id="amortization-table">
@@ -2617,8 +2617,8 @@
             }
             if (tooltipEl) {
                 tooltipEl.textContent = isRent
-                    ? "Annual interest averaged into a monthly cost, showing what your interest payments would represent if it was rent. Calculated as (Annual Interest / 12), rounded up."
-                    : "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity.";
+                    ? "Annual interest payments averaged into a monthly rent equivalent: (Annual Interest / 12), rounded up. Note: Does not include property taxes, home insurance, HOA fees, or operational holding costs. For estimation purposes only."
+                    : "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.";
             }
 
             const schedule = actData.schedule;
