@@ -157,6 +157,26 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* Tooltip Below overrides for top-overflow boundary safety */
+        .help-tip .tooltip-text.tooltip-below {
+            bottom: auto;
+            top: 140%;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        .help-tip .tooltip-text.tooltip-below::after {
+            top: auto;
+            bottom: 100%;
+            border-color: transparent transparent var(--card-bg) transparent;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .help-tip:hover .tooltip-text.tooltip-below, .help-tip:active .tooltip-text.tooltip-below {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .help-tip.touch-active .tooltip-text.tooltip-below {
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* Elevate parent containers when tooltip is active to prevent z-index layering issues under the header */
         .column:has(.help-tip:hover),
         .column:has(.help-tip.touch-active),
@@ -464,6 +484,21 @@
             .help-tip.touch-active .tooltip-text { transform: translateX(-40%) translateY(0); }
             
             .help-tip .tooltip-text::after { left: var(--arrow-left, 40%); }
+
+            /* Mobile below-tooltip safety overrides */
+            .help-tip .tooltip-text.tooltip-below {
+                bottom: auto;
+                top: 140%;
+                transform: translateX(-40%) translateY(-10px);
+            }
+            @media (hover: hover) and (pointer: fine) {
+                .help-tip:hover .tooltip-text.tooltip-below, .help-tip:active .tooltip-text.tooltip-below {
+                    transform: translateX(-40%) translateY(0);
+                }
+            }
+            .help-tip.touch-active .tooltip-text.tooltip-below {
+                transform: translateX(-40%) translateY(0);
+            }
         }
 
         /* Share Modal Styles */
@@ -3585,16 +3620,25 @@
             if (!active) {
                 tooltip.style.transform = '';
                 tooltip.style.removeProperty('--arrow-left');
+                tooltip.classList.remove('tooltip-below');
                 return;
             }
 
-            // Reset inline styles temporarily so bounding box matches the CSS layout
+            // Reset inline styles and remove below class temporarily to measure standard position
             tooltip.style.transform = '';
             tooltip.style.removeProperty('--arrow-left');
+            tooltip.classList.remove('tooltip-below');
 
-            const rect = tooltip.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
+            let rect = tooltip.getBoundingClientRect();
             
+            // If tooltip overflows top of screen, flip it below the trigger icon
+            if (rect.top < 10) {
+                tooltip.classList.add('tooltip-below');
+                // Re-measure bounding box for horizontal alignment checks
+                rect = tooltip.getBoundingClientRect();
+            }
+
+            const viewportWidth = window.innerWidth;
             let offset = 0;
             if (rect.left < 10) {
                 offset = 10 - rect.left;
