@@ -4406,6 +4406,8 @@
                 console.error("Error clearing settings from localStorage:", err);
             }
             els.form.reset();
+            els.inputs.rate.value = '2.62';
+            els.inputs.extra.value = '0';
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
             const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             els.inputs.date.value = prefilledDate;
@@ -4458,7 +4460,11 @@
                     investRate: "7.0",
                     extra: "0",
                     date: prefilledDate,
-                    rateShockToggle: false
+                    rateShockToggle: false,
+                    mortgageRate: "2.62",
+                    mortgageExtra: "0",
+                    ccRate: "19.99",
+                    ccExtra: "0"
                 }
             };
             state.activeProfileId = defaultId;
