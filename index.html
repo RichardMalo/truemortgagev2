@@ -407,6 +407,8 @@
             
             .chart-wrapper { padding: 5px; min-height: 320px; border-radius: 16px; }
             .plotly-container { min-height: 300px; }
+            .bank-wages-container { gap: 12px; }
+            .wage-circle-year { font-size: 0.75rem; }
 
             .help-tip .tooltip-text { left: 0; transform: translateX(-40%) translateY(10px); }
             
@@ -2597,8 +2599,9 @@
 
             if (maxInterest <= 0) maxInterest = 1;
 
-            const minSize = 65; // pixels
-            const maxSize = 130; // pixels
+            const isMobile = window.innerWidth <= 768;
+            const minSize = isMobile ? 35 : 55; // pixels
+            const maxSize = isMobile ? 70 : 110; // pixels
 
             years.forEach(yr => {
                 const interest = yearlyData[yr].interest;
