@@ -2334,6 +2334,21 @@
             
             const termLine = termX ? { type: 'line', x0: termX, y0: 0, x1: termX, y1: 1, xref: 'x', yref: 'paper', line: { color: CONFIG.colors.interest, width: 2, dash: 'dot' } } : null;
 
+            // Define the payoff vertical line for early payoff visual aid
+            const payoffX = (hasStrat && actualData.schedule.length > 0)
+                ? actualData.schedule[actualData.schedule.length - 1].year 
+                : null;
+            const payoffLine = payoffX ? { 
+                type: 'line', 
+                x0: payoffX, 
+                y0: 0, 
+                x1: payoffX, 
+                y1: 1, 
+                xref: 'x', 
+                yref: 'paper', 
+                line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' } 
+            } : null;
+
             const p1 = actualData.schedule[0] || { principal:0, interest:0, tax:0, ins:0, hoa:0, pmi:0, extra:0 };
             const totPITI = p1.principal + p1.interest + p1.tax + p1.ins + p1.hoa + p1.pmi + p1.extra;
             const fs = window.innerWidth < 768 ? '18px' : '22px';
@@ -2374,7 +2389,11 @@
                     });
                 }
                 
-                const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$'); if(termLine) l3.shapes = [termLine];
+                const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$');
+                const shapes3 = [];
+                if (termLine) shapes3.push(termLine);
+                if (payoffLine) shapes3.push(payoffLine);
+                if (shapes3.length > 0) l3.shapes = shapes3;
                 Plotly.react('chart3', t3, l3, PLOT_CONFIG);
             }
 
@@ -2469,7 +2488,9 @@
                             }
                         }
 
-                        Plotly.react('chartOppCost', tOpp, getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)'), PLOT_CONFIG);
+                        const lOpp = getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)');
+                        if (payoffLine) lOpp.shapes = [payoffLine];
+                        Plotly.react('chartOppCost', tOpp, lOpp, PLOT_CONFIG);
                     }
                 } else {
                     els.containers.oppCost.style.display = 'none';
