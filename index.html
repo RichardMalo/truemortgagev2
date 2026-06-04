@@ -1171,102 +1171,227 @@
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             }
         }
+
+        /* Settings Gear Interactive Options styling */
+        .settings-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .settings-item-row .master-mode-selector {
+            border-radius: 12px;
+            padding: 3px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+        }
+        .settings-item-row .complexity-btn, 
+        .settings-item-row .mode-btn {
+            padding: 6px 12px !important;
+            font-size: 0.78rem !important;
+            border-radius: 8px !important;
+        }
+        /* Overrides to make switch slider sit perfectly inside dropdown items */
+        .settings-item-row .switch {
+            width: 40px !important;
+            height: 22px !important;
+        }
+        .settings-item-row .switch .slider:before {
+            height: 16px !important;
+            width: 16px !important;
+            left: 3px !important;
+            bottom: 3px !important;
+        }
+        .settings-item-row .switch input:checked + .slider:before {
+            transform: translateX(18px) !important;
+        }
+
+        /* New Header Layout */
+        .app-header {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
+            margin-bottom: 35px !important;
+        }
+        .header-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            width: 100%;
+        }
+        .header-branding {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            min-width: 280px;
+        }
+        .branding-text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+        .branding-descriptor {
+            margin: 0;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-color);
+            opacity: 0.7;
+            line-height: 1.35;
+        }
+        .header-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        
+        #country-dropdown .dropdown-menu {
+            right: 0 !important;
+            left: auto !important;
+        }
+        
+        @media (max-width: 768px) {
+            .header-top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+            .header-branding {
+                justify-content: flex-start;
+                min-width: 0;
+            }
+            .header-controls-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .header-controls-right .master-mode-selector {
+                flex: 1;
+            }
+        }
     </style>
 </head>
 <body class="mode-mortgage complexity-simple">
     <div class="container">
-        <header class="gsap-fade-in">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown" style="margin-left: 0; margin-right: 4px;">
-                    <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings">
-                        <span class="gear-icon">⚙️</span>
+        <header class="app-header gsap-fade-in">
+            <div class="header-top-bar">
+                <div class="header-branding">
+                    <div class="branding-text-group">
+                        <h1 style="margin: 0;">Debt Strategy Engine</h1>
+                        <p class="branding-descriptor">Algorithmic optimization engine to minimize lifetime interest friction and accelerate debt eradication.</p>
+                    </div>
+                </div>
+                
+                <div class="header-controls-right">
+                    <!-- Mortgage/CC selector -->
+                    <div class="master-mode-selector">
+                        <button class="mode-btn active" data-mode="mortgage">Mortgage</button>
+                        <button class="mode-btn" data-mode="cc">Credit Card</button>
+                    </div>
+
+                    <!-- Sandbox button -->
+                    <button type="button" class="dropdown-trigger settings-trigger" id="sandboxTrigger" title="Scenario Sandbox" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer;">
+                        <span style="font-size: 1.15rem;">📂</span>
                     </button>
-                    <div class="dropdown-menu settings-menu" id="settingsMenu">
-                        <div class="settings-menu-header">Portability & Sync</div>
-                        <div class="settings-item" id="settingsOptSync">
-                            <span>🔑</span> Secure Sync & Portability
-                        </div>
-                        <div class="settings-menu-divider"></div>
-                        <div class="settings-menu-header">Engine Logic</div>
-                        <div class="settings-item" id="settingsOptLimits">
-                            <span>⚙️</span> Constraints & Limits
-                        </div>
-                        <div class="settings-menu-divider"></div>
-                        <div class="settings-menu-header">System Operations</div>
-                        <div class="settings-item danger-action" id="settingsOptReset">
-                            <span>🔄</span> Reset Application Data
-                        </div>
-                    </div>
-                </div>
-                <h1 style="margin: 0;">Debt Strategy Engine</h1>
-            </div>
-            
-            <div class="header-selectors">
-                <div class="master-mode-selector">
-                    <button class="mode-btn active" data-mode="mortgage">Mortgage</button>
-                    <button class="mode-btn" data-mode="cc">Credit Card</button>
-                </div>
 
-                <div class="master-mode-selector" id="complexity-selector">
-                    <button class="complexity-btn active" data-complexity="simple">Simple Mode</button>
-                    <button class="complexity-btn" data-complexity="advanced">Advanced Mode</button>
-                </div>
-            </div>
-
-            <div class="header-tools">
-                <button type="button" class="dropdown-trigger settings-trigger" id="sandboxTrigger" title="Scenario Sandbox" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer; margin-right: 8px;">
-                    <span style="font-size: 1.15rem;">📂</span>
-                </button>
-                <div class="master-mode-selector country-select-wrapper" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 20px;">
-                    <label style="font-weight: 700; font-size: 0.85rem; opacity: 0.8;">Region</label>
-                    
-                    <!-- Hidden native select to preserve calculations/reactivity -->
-                    <select id="country-select" style="display: none;">
-                        <option value="semi">Canada</option>
-                        <option value="monthly">USA</option>
-                        <option value="monthly-uk">UK</option>
-                        <option value="monthly-au">AU</option>
-                        <option value="monthly-nz">NZ</option>
-                    </select>
-
-                    <!-- Premium Custom Dropdown Visual skin with SVG Flags -->
-                    <div class="custom-dropdown" id="country-dropdown">
-                        <button type="button" class="dropdown-trigger">
-                            <img src="flags/ca.svg" class="flag-icon" id="selected-country-flag" alt="Canada Flag">
-                            <span id="selected-country-text">Canada</span>
-                            <span class="chevron">▼</span>
+                    <!-- Settings Gear button -->
+                    <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown">
+                        <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer;">
+                            <span class="gear-icon" style="font-size: 1.15rem; display: inline-block;">⚙️</span>
                         </button>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-item selected" data-value="semi">
-                                <img src="flags/ca.svg" class="flag-icon" alt="Canada Flag">
-                                <span>Canada</span>
+                        <div class="dropdown-menu settings-menu" id="settingsMenu">
+                            <div class="settings-menu-header">Portability & Sync</div>
+                            <div class="settings-item" id="settingsOptSync">
+                                <span>🔑</span> Secure Sync & Portability
                             </div>
-                            <div class="dropdown-item" data-value="monthly">
-                                <img src="flags/us.svg" class="flag-icon" alt="USA Flag">
-                                <span>USA</span>
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-header">Engine Logic</div>
+                            <div class="settings-item" id="settingsOptLimits">
+                                <span>⚙️</span> Constraints & Limits
                             </div>
-                            <div class="dropdown-item" data-value="monthly-uk">
-                                <img src="flags/gb.svg" class="flag-icon" alt="UK Flag">
-                                <span>UK</span>
+                            <div class="settings-menu-divider"></div>
+                            
+                            <div class="settings-menu-header">App Preferences</div>
+                            
+                            <!-- Complexity Mode Selector inside dropdown -->
+                            <div class="settings-item-row">
+                                <span>Complexity</span>
+                                <div class="master-mode-selector" id="complexity-selector">
+                                    <button class="complexity-btn active" data-complexity="simple">Simple</button>
+                                    <button class="complexity-btn" data-complexity="advanced">Advanced</button>
+                                </div>
                             </div>
-                            <div class="dropdown-item" data-value="monthly-au">
-                                <img src="flags/au.svg" class="flag-icon" alt="AU Flag">
-                                <span>AU</span>
+                            
+                            <!-- Region Selector inside dropdown -->
+                            <div class="settings-item-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    <span>Region</span>
+                                    <select id="country-select" style="display: none;">
+                                        <option value="semi">Canada</option>
+                                        <option value="monthly">USA</option>
+                                        <option value="monthly-uk">UK</option>
+                                        <option value="monthly-au">AU</option>
+                                        <option value="monthly-nz">NZ</option>
+                                    </select>
+                                    <div class="custom-dropdown" id="country-dropdown">
+                                        <button type="button" class="dropdown-trigger">
+                                            <img src="flags/ca.svg" class="flag-icon" id="selected-country-flag" alt="Canada Flag">
+                                            <span id="selected-country-text">Canada</span>
+                                            <span class="chevron">▼</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-item selected" data-value="semi">
+                                                <img src="flags/ca.svg" class="flag-icon" alt="Canada Flag">
+                                                <span>Canada</span>
+                                            </div>
+                                            <div class="dropdown-item" data-value="monthly">
+                                                <img src="flags/us.svg" class="flag-icon" alt="USA Flag">
+                                                <span>USA</span>
+                                            </div>
+                                            <div class="dropdown-item" data-value="monthly-uk">
+                                                <img src="flags/gb.svg" class="flag-icon" alt="UK Flag">
+                                                <span>UK</span>
+                                            </div>
+                                            <div class="dropdown-item" data-value="monthly-au">
+                                                <img src="flags/au.svg" class="flag-icon" alt="AU Flag">
+                                                <span>AU</span>
+                                            </div>
+                                            <div class="dropdown-item" data-value="monthly-nz">
+                                                <img src="flags/nz.svg" class="flag-icon" alt="NZ Flag">
+                                                <span>NZ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="dropdown-item" data-value="monthly-nz">
-                                <img src="flags/nz.svg" class="flag-icon" alt="NZ Flag">
-                                <span>NZ</span>
+
+                            <!-- Dark Mode Toggle inside dropdown -->
+                            <div class="settings-item-row">
+                                <span>Appearance</span>
+                                <div class="mode-toggle squishy-interactive" style="background: none; padding: 0; box-shadow: none; border-radius: 0; width: auto; display: flex; align-items: center; gap: 8px;">
+                                    <label for="mode-switch" style="font-weight: 600; font-size: 0.85rem; cursor: pointer;">Dark Mode</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="mode-switch" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="settings-menu-divider"></div>
+                            <div class="settings-menu-header">System Operations</div>
+                            <div class="settings-item danger-action" id="settingsOptReset">
+                                <span>🔄</span> Reset Application Data
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="mode-toggle squishy-interactive">
-                    <label for="mode-switch">Dark Mode</label>
-                    <label class="switch">
-                        <input type="checkbox" id="mode-switch" checked>
-                        <span class="slider"></span>
-                    </label>
                 </div>
             </div>
         </header>
@@ -4167,11 +4292,19 @@
             });
 
             dropdown.addEventListener('click', (e) => {
+                const countryDropdown = document.getElementById('country-dropdown');
+                if (countryDropdown && !countryDropdown.contains(e.target)) {
+                    countryDropdown.classList.remove('active');
+                }
                 e.stopPropagation();
             });
 
             document.addEventListener('click', () => {
                 dropdown.classList.remove('active');
+                const countryDropdown = document.getElementById('country-dropdown');
+                if (countryDropdown) {
+                    countryDropdown.classList.remove('active');
+                }
             });
 
             // Open Sync & Portability Modal
