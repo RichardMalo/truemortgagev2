@@ -76,6 +76,8 @@
             .mode-btn, .complexity-btn { border-radius: 10px !important; }
             .country-select-wrapper { padding: 4px 8px !important; }
             .mode-toggle { gap: 6px !important; font-size: 0.82rem !important; }
+            .chart-wrapper { min-height: 430px !important; }
+            .plotly-container { min-height: 380px !important; }
         }
         h1, h2, h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; }
         .section-title { margin: 0 0 15px 0; color: var(--primary-color); font-size: 1.15rem; display: flex; align-items: center;}
@@ -2273,8 +2275,8 @@
                 paper_bgcolor: 'transparent', plot_bgcolor: 'transparent', font: { color: c, family: 'Inter, sans-serif' }, 
                 xaxis: { title: xTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
                 yaxis: { title: yTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
-                margin: { t: 60, r: 10, l: 45, b: 100 },
-                legend: { orientation: 'h', y: -0.3, x: 0.5, xanchor: 'center', automargin: true },
+                margin: { t: 50, r: 10, l: 45, b: 80 },
+                legend: { orientation: 'h', y: -0.18, x: 0.5, xanchor: 'center', yanchor: 'top' },
                 autosize: true, dragmode: false 
             };
         };
