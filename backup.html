@@ -59,26 +59,6 @@
 
         .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; position: relative; z-index: 99999;}
-        .header-selectors, .header-tools { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        
-        @media (min-width: 769px) {
-            header { flex-wrap: nowrap !important; gap: 15px !important; }
-            .header-selectors, .header-tools { flex-wrap: nowrap !important; flex-shrink: 0; }
-        }
-
-        /* Compact Layout Snapping for Snapped side-by-side viewports (769px to 1150px) */
-        @media (min-width: 769px) and (max-width: 1150px) {
-            header h1 { font-size: 1.35rem !important; }
-            .mode-btn, .complexity-btn { padding: 8px 14px !important; font-size: 0.82rem !important; }
-            .header-selectors, .header-tools { gap: 8px !important; }
-            header { gap: 8px !important; }
-            .master-mode-selector { padding: 4px !important; border-radius: 16px !important; }
-            .mode-btn, .complexity-btn { border-radius: 10px !important; }
-            .country-select-wrapper { padding: 4px 8px !important; }
-            .mode-toggle { gap: 6px !important; font-size: 0.82rem !important; }
-            .chart-wrapper { min-height: 430px !important; }
-            .plotly-container { min-height: 380px !important; }
-        }
         h1, h2, h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; }
         .section-title { margin: 0 0 15px 0; color: var(--primary-color); font-size: 1.15rem; display: flex; align-items: center;}
 
@@ -98,12 +78,6 @@
             border-radius: 50%;
             vertical-align: middle;
             transition: background 0.3s ease, transform 0.2s ease;
-        }
-        
-        .help-tip:hover,
-        .help-tip:active,
-        .help-tip.touch-active {
-            z-index: 1000001;
         }
         
         @media (hover: hover) and (pointer: fine) {
@@ -142,7 +116,7 @@
             content: "";
             position: absolute;
             top: 100%;
-            left: var(--arrow-left, 50%);
+            left: 50%;
             margin-left: -6px;
             border-width: 6px;
             border-style: solid;
@@ -160,26 +134,6 @@
         .help-tip.touch-active .tooltip-text {
             visibility: visible;
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Tooltip Below overrides for top-overflow boundary safety */
-        .help-tip .tooltip-text.tooltip-below {
-            bottom: auto;
-            top: 140%;
-            transform: translateX(-50%) translateY(-10px);
-        }
-        .help-tip .tooltip-text.tooltip-below::after {
-            top: auto;
-            bottom: 100%;
-            border-color: transparent transparent var(--card-bg) transparent;
-        }
-        @media (hover: hover) and (pointer: fine) {
-            .help-tip:hover .tooltip-text.tooltip-below, .help-tip:active .tooltip-text.tooltip-below {
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .help-tip.touch-active .tooltip-text.tooltip-below {
             transform: translateX(-50%) translateY(0);
         }
 
@@ -343,143 +297,6 @@
         
         #error-message { background-color: var(--danger-color); color: white; padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: center; font-weight: 600; display: none;}
 
-        /* Bank Wages Circle Chart Styles */
-        .bank-wages-section {
-            width: 100%;
-        }
-        .bank-wages-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            align-items: flex-end;
-            justify-content: flex-start;
-            padding: 10px 0;
-            width: 100%;
-        }
-        .wage-circle-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            text-align: center;
-            gap: 8px;
-        }
-        .wage-circle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0.02) 100%);
-            border: 1.5px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            color: var(--text-color);
-            font-weight: 700;
-            transition: transform 0.4s var(--spring-easing), border-color 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        body.dark-mode .wage-circle {
-            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.22) 0%, rgba(15, 23, 42, 0.4) 100%);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-        .wage-circle:hover {
-            transform: translateY(-6px) scale(1.06);
-            border-color: var(--primary-color);
-            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
-        }
-        body.dark-mode .wage-circle:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
-        }
-        .wage-circle-value,
-        .wage-circle-default-val {
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            color: var(--text-color);
-            text-align: center;
-            line-height: 1.2;
-        }
-        .wage-circle-hover-val {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.15;
-            font-size: 0.78em;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            height: 100%;
-        }
-        .wage-circle-hover-val span {
-            font-weight: 700;
-        }
-        .wage-circle-hover-val .breakdown-rent {
-            font-weight: 800;
-            font-size: 1.05em;
-        }
-        .wage-circle-hover-val .breakdown-tax,
-        .wage-circle-hover-val .breakdown-ins {
-            opacity: 0.85;
-            font-size: 0.9em;
-        }
-        .wage-circle:hover .wage-circle-hover-val {
-            display: flex;
-        }
-        .wage-circle:hover .wage-circle-default-val {
-            display: none;
-        }
-        .wage-circle-year {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-color);
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        /* Wage Circles Switch Toggle */
-        .wage-toggle-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin: 0 0 20px 0;
-            width: 100%;
-        }
-        .wage-toggle-selector {
-            display: flex;
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 4px;
-            border: 1px solid var(--border-color);
-        }
-        .wage-toggle-btn {
-            padding: 6px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.3s var(--spring-easing);
-            opacity: 0.6;
-        }
-        .wage-toggle-btn:hover {
-            opacity: 1;
-        }
-        .wage-toggle-btn.active {
-            background: var(--primary-color);
-            color: white !important;
-            opacity: 1 !important;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-        }
-        body.dark-mode .wage-toggle-btn.active {
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-        }
-
         body.mode-mortgage .cc-only { display: none !important; }
         body.mode-cc .mortgage-only { display: none !important; }
 
@@ -507,10 +324,6 @@
             
             .chart-wrapper { padding: 5px; min-height: 320px; border-radius: 16px; }
             .plotly-container { min-height: 300px; }
-            .bank-wages-container { gap: 12px; }
-            .wage-circle-year { font-size: 0.75rem; }
-            .wage-toggle-container { flex-direction: column; align-items: stretch; gap: 12px; }
-            .wage-toggle-selector { width: 100%; justify-content: center; }
 
             .help-tip .tooltip-text { left: 0; transform: translateX(-40%) translateY(10px); }
             
@@ -519,22 +332,7 @@
             }
             .help-tip.touch-active .tooltip-text { transform: translateX(-40%) translateY(0); }
             
-            .help-tip .tooltip-text::after { left: var(--arrow-left, 40%); }
-
-            /* Mobile below-tooltip safety overrides */
-            .help-tip .tooltip-text.tooltip-below {
-                bottom: auto;
-                top: 140%;
-                transform: translateX(-40%) translateY(-10px);
-            }
-            @media (hover: hover) and (pointer: fine) {
-                .help-tip:hover .tooltip-text.tooltip-below, .help-tip:active .tooltip-text.tooltip-below {
-                    transform: translateX(-40%) translateY(0);
-                }
-            }
-            .help-tip.touch-active .tooltip-text.tooltip-below {
-                transform: translateX(-40%) translateY(0);
-            }
+            .help-tip .tooltip-text::after { left: 40%; }
         }
 
         /* Share Modal Styles */
@@ -743,7 +541,7 @@
             transition: all 0.3s var(--spring-easing);
             user-select: none;
         }
-        .dropdown-trigger:focus, .custom-dropdown.active > .dropdown-trigger {
+        .dropdown-trigger:focus, .custom-dropdown.active .dropdown-trigger {
             border-color: var(--primary-color);
             background-color: var(--card-bg);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
@@ -759,12 +557,6 @@
             object-fit: cover;
             border-radius: 2px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease, filter 0.3s ease;
-        }
-        body.dark-mode .flag-icon {
-            border-color: rgba(255, 255, 255, 0.15);
-            filter: brightness(0.95) contrast(1.05);
         }
         .dropdown-trigger .chevron {
             font-size: 0.65rem;
@@ -772,7 +564,7 @@
             transition: transform 0.3s var(--spring-easing);
             opacity: 0.7;
         }
-        .custom-dropdown.active > .dropdown-trigger .chevron {
+        .custom-dropdown.active .dropdown-trigger .chevron {
             transform: rotate(180deg);
         }
         .dropdown-menu {
@@ -791,7 +583,7 @@
             transform: translateY(10px) scale(0.95);
             transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
         }
-        .custom-dropdown.active > .dropdown-menu {
+        .custom-dropdown.active .dropdown-menu {
             visibility: visible; /* Show menu content */
             opacity: 1;
             transform: translateY(0) scale(1);
@@ -992,485 +784,103 @@
                 min-width: 0 !important;
                 transform: translateY(10px) scale(0.95) !important;
             }
-            .custom-dropdown.active > .settings-menu {
+            .custom-dropdown.active .settings-menu {
                 transform: translateY(0) scale(1) !important;
-            }
-        }
-
-        /* 📂 SCENARIO SANDBOX SIDEBAR & DELTA STYLES */
-        .scenario-sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 380px;
-            z-index: 1000001;
-            transform: translateX(100%);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            background: rgba(15, 23, 42, 0.75);
-            border-left: 1px solid var(--border-color);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
-            color: var(--text-color);
-            transition: transform 0.4s var(--spring-easing), background-color 0.3s ease;
-        }
-        .scenario-sidebar.active {
-            transform: translateX(0) !important;
-        }
-        body:not(.dark-mode) .scenario-sidebar {
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
-        }
-        .sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 1000000;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .sidebar-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-        .sidebar-header h3 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .sidebar-close-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5rem;
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-            padding: 0;
-            line-height: 1;
-        }
-        .sidebar-close-btn:hover {
-            opacity: 1;
-        }
-        .create-profile-group {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-        }
-        .create-profile-group input {
-            flex: 1;
-            padding: 10px 14px;
-            font-size: 0.88rem;
-            min-height: 42px;
-            height: 42px;
-        }
-        .create-profile-btn {
-            width: 42px;
-            height: 42px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            border-radius: 14px;
-            flex-shrink: 0;
-        }
-        .profiles-list {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-right: 4px;
-        }
-        .profiles-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        .profiles-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .profiles-list::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
-        .profile-card {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s var(--spring-easing);
-            position: relative;
-        }
-        .profile-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
-        }
-        .profile-card.active {
-            border-color: var(--primary-color);
-            background: rgba(37, 99, 235, 0.05);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
-        }
-        .profile-card.active-mortgage {
-            border-left: 4px solid var(--primary-color);
-        }
-        .profile-card.active-cc {
-            border-left: 4px solid #ef4444;
-        }
-        .profile-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .profile-card-title {
-            font-size: 0.92rem;
-            font-weight: 700;
-            margin: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            flex: 1;
-        }
-        .profile-card-title input {
-            font-size: 0.92rem;
-            font-weight: 700;
-            padding: 2px 6px;
-            height: auto;
-            min-height: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            color: var(--text-color);
-            width: 100%;
-        }
-        .profile-card-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .profile-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            opacity: 0.6;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .profile-btn:hover {
-            opacity: 1;
-            background: var(--border-color);
-        }
-        .profile-btn.delete-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-        .profile-card-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.72rem;
-            font-weight: 600;
-            opacity: 0.8;
-        }
-        .profile-card-tags {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .profile-tag {
-            background: var(--border-color);
-            padding: 2px 6px;
-            border-radius: 6px;
-        }
-        .compare-toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-        }
-        .compare-toggle-label input {
-            cursor: pointer;
-        }
-        .delta-badge {
-            font-size: 0.7rem;
-            font-weight: 800;
-            margin-top: 4px;
-            display: block;
-        }
-        .delta-badge.better {
-            color: #10b981;
-        }
-        .delta-badge.worse {
-            color: #f59e0b;
-        }
-
-        /* Mobile Viewport Optimization for Scenario Sidebar */
-        @media (max-width: 768px) {
-            .scenario-sidebar {
-                width: calc(100vw - 32px);
-                right: 16px;
-                top: 16px;
-                bottom: 16px;
-                border-radius: 24px;
-                transform: translateX(120%);
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            }
-        }
-
-        /* Settings Gear Interactive Options styling */
-        .settings-item-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 8px 12px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        .settings-item-row .master-mode-selector {
-            border-radius: 12px;
-            padding: 3px;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-        }
-        .settings-item-row .complexity-btn, 
-        .settings-item-row .mode-btn {
-            padding: 6px 12px !important;
-            font-size: 0.78rem !important;
-            border-radius: 8px !important;
-        }
-        /* Overrides to make switch slider sit perfectly inside dropdown items */
-        .settings-item-row .switch {
-            width: 40px !important;
-            height: 22px !important;
-        }
-        .settings-item-row .switch .slider:before {
-            height: 16px !important;
-            width: 16px !important;
-            left: 3px !important;
-            bottom: 3px !important;
-        }
-        .settings-item-row .switch input:checked + .slider:before {
-            transform: translateX(18px) !important;
-        }
-
-        /* New Header Layout */
-        .app-header {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: stretch !important;
-            gap: 16px !important;
-            margin-bottom: 35px !important;
-        }
-        .header-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            width: 100%;
-        }
-        .header-branding {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex: 1;
-            min-width: 280px;
-        }
-        .branding-text-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            text-align: left;
-        }
-        .branding-descriptor {
-            margin: 0;
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: var(--text-color);
-            opacity: 0.7;
-            line-height: 1.35;
-        }
-        .header-controls-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-        
-        #country-dropdown > .dropdown-menu {
-            right: 0 !important;
-            left: auto !important;
-        }
-        
-        @media (max-width: 768px) {
-            .header-top-bar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 20px;
-            }
-            .header-branding {
-                justify-content: flex-start;
-                min-width: 0;
-            }
-            .header-controls-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .header-controls-right .master-mode-selector {
-                flex: 1;
             }
         }
     </style>
 </head>
 <body class="mode-mortgage complexity-simple">
     <div class="container">
-        <header class="app-header gsap-fade-in">
-            <div class="header-top-bar">
-                <div class="header-branding">
-                    <div class="branding-text-group">
-                        <h1 style="margin: 0;">Debt Elimination Engine</h1>
-                        <p class="branding-descriptor">Algorithmic optimization engine to minimize lifetime interest friction and accelerate debt eradication.</p>
+        <header class="gsap-fade-in">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown" style="margin-left: 0; margin-right: 4px;">
+                    <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings">
+                        <span class="gear-icon">⚙️</span>
+                    </button>
+                    <div class="dropdown-menu settings-menu" id="settingsMenu">
+                        <div class="settings-menu-header">Portability & Sync</div>
+                        <div class="settings-item" id="settingsOptSync">
+                            <span>🔑</span> Secure Sync & Portability
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">Engine Logic</div>
+                        <div class="settings-item" id="settingsOptLimits">
+                            <span>⚙️</span> Constraints & Limits
+                        </div>
+                        <div class="settings-menu-divider"></div>
+                        <div class="settings-menu-header">System Operations</div>
+                        <div class="settings-item danger-action" id="settingsOptReset">
+                            <span>🔄</span> Reset Application Data
+                        </div>
                     </div>
                 </div>
-                
-                <div class="header-controls-right">
-                    <!-- Mortgage/CC selector -->
-                    <div class="master-mode-selector">
-                        <button class="mode-btn active" data-mode="mortgage">Mortgage</button>
-                        <button class="mode-btn" data-mode="cc">Credit Card</button>
-                    </div>
+                <h1 style="margin: 0;">Debt Elimination Engine</h1>
+            </div>
+            
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div class="master-mode-selector">
+                    <button class="mode-btn active" data-mode="mortgage">Mortgage</button>
+                    <button class="mode-btn" data-mode="cc">Credit Card</button>
+                </div>
 
-                    <!-- Sandbox button -->
-                    <button type="button" class="dropdown-trigger settings-trigger" id="sandboxTrigger" title="Scenario Sandbox" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer;">
-                        <span style="font-size: 1.15rem;">📂</span>
-                    </button>
+                <div class="master-mode-selector" id="complexity-selector">
+                    <button class="complexity-btn active" data-complexity="simple">Simple Mode</button>
+                    <button class="complexity-btn" data-complexity="advanced">Advanced Mode</button>
+                </div>
+            </div>
 
-                    <!-- Settings Gear button -->
-                    <div class="custom-dropdown settings-dropdown-wrapper" id="settings-dropdown">
-                        <button type="button" class="dropdown-trigger settings-trigger" id="settingsTrigger" title="Engine Tools & Settings" style="width: 42px; height: 42px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s var(--spring-easing); cursor: pointer;">
-                            <span class="gear-icon" style="font-size: 1.15rem; display: inline-block;">⚙️</span>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <div class="master-mode-selector country-select-wrapper" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 20px;">
+                    <label style="font-weight: 700; font-size: 0.85rem; opacity: 0.8;">Region</label>
+                    
+                    <!-- Hidden native select to preserve calculations/reactivity -->
+                    <select id="country-select" style="display: none;">
+                        <option value="semi">Canada</option>
+                        <option value="monthly">USA</option>
+                        <option value="monthly-uk">UK</option>
+                        <option value="monthly-au">AU</option>
+                        <option value="monthly-nz">NZ</option>
+                    </select>
+
+                    <!-- Premium Custom Dropdown Visual skin with SVG Flags -->
+                    <div class="custom-dropdown" id="country-dropdown">
+                        <button type="button" class="dropdown-trigger">
+                            <img src="flags/ca.svg" class="flag-icon" id="selected-country-flag" alt="Canada Flag">
+                            <span id="selected-country-text">Canada</span>
+                            <span class="chevron">▼</span>
                         </button>
-                        <div class="dropdown-menu settings-menu" id="settingsMenu">
-                            <div class="settings-menu-header">Portability & Sync</div>
-                            <div class="settings-item" id="settingsOptSync">
-                                <span>🔑</span> Secure Sync & Portability
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item selected" data-value="semi">
+                                <img src="flags/ca.svg" class="flag-icon" alt="Canada Flag">
+                                <span>Canada</span>
                             </div>
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-header">Engine Logic</div>
-                            <div class="settings-item" id="settingsOptLimits">
-                                <span>⚙️</span> Constraints & Limits
+                            <div class="dropdown-item" data-value="monthly">
+                                <img src="flags/us.svg" class="flag-icon" alt="USA Flag">
+                                <span>USA</span>
                             </div>
-                            <div class="settings-menu-divider"></div>
-                            
-                            <div class="settings-menu-header">App Preferences</div>
-                            
-                            <!-- Complexity Mode Selector inside dropdown -->
-                            <div class="settings-item-row">
-                                <span>Complexity</span>
-                                <div class="master-mode-selector" id="complexity-selector">
-                                    <button class="complexity-btn active" data-complexity="simple">Simple</button>
-                                    <button class="complexity-btn" data-complexity="advanced">Advanced</button>
-                                </div>
+                            <div class="dropdown-item" data-value="monthly-uk">
+                                <img src="flags/gb.svg" class="flag-icon" alt="UK Flag">
+                                <span>UK</span>
                             </div>
-                            
-                            <!-- Region Selector inside dropdown -->
-                            <div class="settings-item-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Region</span>
-                                    <select id="country-select" style="display: none;">
-                                        <option value="semi">Canada</option>
-                                        <option value="monthly">USA</option>
-                                        <option value="monthly-uk">UK</option>
-                                        <option value="monthly-au">AU</option>
-                                        <option value="monthly-nz">NZ</option>
-                                    </select>
-                                    <div class="custom-dropdown" id="country-dropdown">
-                                        <button type="button" class="dropdown-trigger">
-                                            <img src="flags/ca.svg" class="flag-icon" id="selected-country-flag" alt="Canada Flag">
-                                            <span id="selected-country-text">Canada</span>
-                                            <span class="chevron">▼</span>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <div class="dropdown-item selected" data-value="semi">
-                                                <img src="flags/ca.svg" class="flag-icon" alt="Canada Flag">
-                                                <span>Canada</span>
-                                            </div>
-                                            <div class="dropdown-item" data-value="monthly">
-                                                <img src="flags/us.svg" class="flag-icon" alt="USA Flag">
-                                                <span>USA</span>
-                                            </div>
-                                            <div class="dropdown-item" data-value="monthly-uk">
-                                                <img src="flags/gb.svg" class="flag-icon" alt="UK Flag">
-                                                <span>UK</span>
-                                            </div>
-                                            <div class="dropdown-item" data-value="monthly-au">
-                                                <img src="flags/au.svg" class="flag-icon" alt="AU Flag">
-                                                <span>AU</span>
-                                            </div>
-                                            <div class="dropdown-item" data-value="monthly-nz">
-                                                <img src="flags/nz.svg" class="flag-icon" alt="NZ Flag">
-                                                <span>NZ</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="dropdown-item" data-value="monthly-au">
+                                <img src="flags/au.svg" class="flag-icon" alt="AU Flag">
+                                <span>AU</span>
                             </div>
-
-                            <!-- Dark Mode Toggle inside dropdown -->
-                            <div class="settings-item-row">
-                                <span>Appearance</span>
-                                <div class="mode-toggle squishy-interactive" style="background: none; padding: 0; box-shadow: none; border-radius: 0; width: auto; display: flex; align-items: center; gap: 8px;">
-                                    <label for="mode-switch" style="font-weight: 600; font-size: 0.85rem; cursor: pointer;">Dark Mode</label>
-                                    <label class="switch">
-                                        <input type="checkbox" id="mode-switch" role="switch" aria-checked="false">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="settings-menu-divider"></div>
-                            <div class="settings-menu-header">System Operations</div>
-                            <div class="settings-item danger-action" id="settingsOptReset">
-                                <span>🔄</span> Reset Application Data
+                            <div class="dropdown-item" data-value="monthly-nz">
+                                <img src="flags/nz.svg" class="flag-icon" alt="NZ Flag">
+                                <span>NZ</span>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="mode-toggle squishy-interactive">
+                    <label for="mode-switch">Dark Mode</label>
+                    <label class="switch">
+                        <input type="checkbox" id="mode-switch">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
         </header>
@@ -1488,26 +898,26 @@
                         
                         <div class="input-group-row">
                             <div class="input-group mortgage-only">
-                                <label>Home Price ($) <span class="help-tip">?<span class="tooltip-text">The gross transactional purchase price of the real estate asset before deducting any down payment, adjustments, or transaction fees. Note: Banks may apply local valuation models which can alter exact loan calculations.</span></span></label>
+                                <label>Home Price ($) <span class="help-tip">?<span class="tooltip-text">The gross transactional purchase price of the real estate asset asset before deducting any down payment, adjustments, or transaction fees.</span></span></label>
                                 <input type="number" id="homePrice" inputmode="decimal" value="800000" step="100" min="0">
                             </div>
                             <div class="input-group mortgage-only">
-                                <label>Down Payment ($) <span class="help-tip">?<span class="tooltip-text">The upfront equity capital contributed in cash. Higher thresholds mitigate initial loan-to-value (LTV) exposure and directly deflate the starting principal. Note: Exact minimum down payment requirements vary by region and property type.</span></span></label>
+                                <label>Down Payment ($) <span class="help-tip">?<span class="tooltip-text">The upfront equity capital contributed in cash. Higher thresholds mitigate initial loan-to-value (LTV) exposure and directly deflate the starting principal.</span></span></label>
                                 <input type="number" id="downPayment" inputmode="decimal" value="0" step="100" min="0">
                             </div>
                             <div class="input-group cc-only">
-                                <label>Current Balance ($) <span class="help-tip">?<span class="tooltip-text">The aggregate statement balance currently outstanding. This is the entire volume of compounding debt subject to dangerous revolving interest rates. Note: Daily balance variations and pending charges may cause statement totals to differ slightly.</span></span></label>
+                                <label>Current Balance ($) <span class="help-tip">?<span class="tooltip-text">The aggregate statement balance currently outstanding. This is the entire volume of compounding debt subject to dangerous revolving interest rates.</span></span></label>
                                 <input type="number" id="ccBalance" inputmode="decimal" value="15000" step="100" min="0">
                             </div>
                         </div>
                         
                         <div class="input-group-row">
                             <div class="input-group">
-                                <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially. Note: Real APR may include lender fees not captured here. Bank calculations may vary slightly due to daily interest accrual conventions.</span></span></label>
+                                <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially.</span></span></label>
                                 <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.00" min="0">
                             </div>
                             <div class="input-group mortgage-only">
-                                <label>Amortization (Years) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments. Note: Lender formulas and payment frequencies can affect the exact payoff timeline.</span></span></label>
+                                <label>Amortization (Yrs) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments.</span></span></label>
                                 <input type="number" id="amortization" inputmode="decimal" value="25" step="any" min="0.1">
                             </div>
                             <div class="input-group cc-only advanced-only">
@@ -1521,11 +931,11 @@
 
                         <div class="input-group-row mortgage-only advanced-only">
                             <div class="input-group">
-                                <label>Term Length (Years) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields. Note: Local regulations may restrict term lengths or mandate specific renewal conditions.</span></span></label>
+                                <label>Term Length (Yrs) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields.</span></span></label>
                                 <input type="number" id="term" inputmode="decimal" value="5" step="any" min="0.1">
                             </div>
                             <div class="input-group">
-                                <label>Compounding <span class="help-tip">?<span class="tooltip-text">The frequency of interest calculations. Canadian law dictates semi-annual compounding for fixed mortgages, resulting in a lower Effective Annual Rate than US, UK, AU, and NZ monthly/daily compounding. Note: Some non-traditional lenders may use custom compounding models.</span></span></label>
+                                <label>Compounding <span class="help-tip">?<span class="tooltip-text">The frequency of interest calculations. Canadian law dictates semi-annual compounding for fixed mortgages, resulting in a lower Effective Annual Rate than US, UK, AU, and NZ monthly/daily compounding.</span></span></label>
                                 <select id="compounding" class="custom-select">
                                     <option value="semi">Canadian (Semi-Annual)</option>
                                     <option value="monthly">US / UK / AU / NZ (Monthly/Daily)</option>
@@ -1538,19 +948,19 @@
                         <h3 class="section-title">Aggressive Strategy</h3>
                         <div class="input-group-row mortgage-only">
                             <div class="input-group">
-                                <label>Payment Frequency <span class="help-tip">?<span class="tooltip-text">Accelerated schedules divide standard monthly distributions into halves or quarters, non-disruptively forcing an extra full monthly installment against principal per calendar year. Note: Banks may calculate accelerated payments using slightly different formulas (e.g. dividing monthly payment by 2 vs. 26 bi-weekly periods).</span></span></label>
+                                <label>Payment Frequency <span class="help-tip">?<span class="tooltip-text">Accelerated schedules divide standard monthly distributions into halves or quarters, non-disruptively forcing an extra full monthly installment against principal per calendar year.</span></span></label>
                                 <select id="paymentFrequency" class="custom-select">
                                     <option value="monthly">Monthly</option>
-                                    <option value="semi-monthly">Semi-Monthly (24/Year)</option>
-                                    <option value="bi-weekly">Bi-Weekly (26/Year)</option>
+                                    <option value="semi-monthly">Semi-Monthly (24/yr)</option>
+                                    <option value="bi-weekly">Bi-Weekly (26/yr)</option>
                                     <option value="accelerated-biweekly">Accelerated Bi-Weekly</option>
                                 </select>
                             </div>
                         </div>
                         <div class="input-group-row">
                             <div class="input-group">
-                                <label class="mortgage-only">Extra Payment Surplus ($) <span class="help-tip">?<span class="tooltip-text">Discretionary capital injected straight toward principal reduction per cycle, entirely bypassing the lender's interest calculation mechanism. Note: Some lenders restrict prepayments or charge penalty fees for exceeding yearly thresholds.</span></span></label>
-                                <label class="cc-only">Monthly Surplus ($) <span class="inline-tooltip-text">(Above Minimum)</span> <span class="help-tip">?<span class="tooltip-text">Incremental capital deployed monthly above the mandatory minimum threshold, locking in an un-leveraged, guaranteed return equal to the account APR. Note: Review your credit agreement for terms regarding surplus payments.</span></span></label>
+                                <label class="mortgage-only">Extra Payment Surplus ($) <span class="help-tip">?<span class="tooltip-text">Discretionary capital injected straight toward principal reduction per cycle, entirely bypassing the lender's interest calculation mechanism.</span></span></label>
+                                <label class="cc-only">Monthly Surplus ($) <span class="inline-tooltip-text">(Above Minimum)</span> <span class="help-tip">?<span class="tooltip-text">Incremental capital deployed monthly above the mandatory minimum threshold, locking in an un-leveraged, guaranteed return equal to the account APR.</span></span></label>
                                 <input type="number" id="extraPayment" inputmode="decimal" required value="0" step="50" min="0">
                             </div>
                         </div>
@@ -1560,7 +970,7 @@
                                 <input type="date" id="firstPaymentDate">
                             </div>
                             <div class="input-group" style="flex: 1; min-width: 0;">
-                                <label>Table Label <span class="help-tip">?<span class="tooltip-text">Choose whether the amortization schedule labels each installment by calendar date (e.g. Jun 1, 2026) or by numeric cycle period (e.g. P1, P2, P3). Note: Calendar date assumes payments occur exactly on schedule with no deferred periods.</span></span></label>
+                                <label>Table Label <span class="help-tip">?<span class="tooltip-text">Choose whether the amortization schedule labels each installment by calendar date (e.g. Jun 1, 2026) or by numeric cycle period (e.g. P1, P2, P3).</span></span></label>
                                 <div class="master-mode-selector label-format-selector" style="height: 52px; padding: 4px; border-radius: 14px; display: flex; align-items: center; width: 100%;">
                                     <button type="button" class="label-format-btn active" id="labelFormatDate" data-format="date">DATE</button>
                                     <button type="button" class="label-format-btn" id="labelFormatPeriod" data-format="period">PERIOD</button>
@@ -1571,11 +981,11 @@
                         <div class="section-header-with-toggle advanced-only" style="margin-top: 20px;">
                             <h3 class="section-title" style="margin:0; font-size: 0.95rem;">
                                 Opportunity Cost
-                                <span class="help-tip">?<span class="tooltip-text">A strategic net worth comparison. Evaluates whether aggressive debt pay-down yields superior equity value versus allocating those exact liquid surpluses to market index investments. Note: Market returns are projections and not guaranteed. Historical averages are not indicative of future performance.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">A strategic net worth comparison. Evaluates whether aggressive debt pay-down yields superior equity value versus allocating those exact liquid surpluses to market index investments.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Compare paying off vs investing">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="oppCostToggle" role="switch" aria-checked="false">
+                                    <input type="checkbox" id="oppCostToggle">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1583,7 +993,7 @@
                         <div id="oppCostSection" class="advanced-only" style="display: none; margin-top: 15px;">
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>Expected Investment Return (%/Year)</label>
+                                    <label>Expected Investment Return (%/yr)</label>
                                     <input type="number" id="investRate" inputmode="decimal" value="7.0" step="0.1">
                                 </div>
                             </div>
@@ -1594,11 +1004,11 @@
                         <div class="section-header-with-toggle">
                             <h3 class="section-title" style="margin:0;">
                                 Taxes & Insurance
-                                <span class="help-tip">?<span class="tooltip-text">Integrates escrow cash flow items (PITI components) to map non-equity housing expenses that impact gross monthly liquidity. Note: Tax assessments, insurance premiums, and HOA fees fluctuate over time; calculations are close estimates.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">Integrates escrow cash flow items (PITI components) to map non-equity housing expenses that impact gross monthly liquidity and overall holding costs.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Include Escrow (PITI)">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="includePitiToggle" role="switch" aria-checked="false">
+                                    <input type="checkbox" id="includePitiToggle">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1606,21 +1016,21 @@
                         <div id="pitiSection" style="display: none; margin-top: 15px;">
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>Property Tax ($/Year)</label>
-                                    <input type="number" id="propertyTax" inputmode="decimal" value="4000" step="100" min="0">
+                                    <label>Property Tax (%/yr)</label>
+                                    <input type="number" id="propertyTax" inputmode="decimal" value="1.2" step="0.01" min="0">
                                 </div>
                                 <div class="input-group">
-                                    <label>Home Insurance ($/Year)</label>
+                                    <label>Home Insurance ($/yr)</label>
                                     <input type="number" id="homeInsurance" inputmode="decimal" value="1200" step="50" min="0">
                                 </div>
                             </div>
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>HOA Fees ($/Month)</label>
+                                    <label>HOA Fees ($/mo)</label>
                                     <input type="number" id="hoaFees" inputmode="decimal" value="0" step="10" min="0">
                                 </div>
                                 <div class="input-group">
-                                    <label>PMI (%/Year) <span class="inline-tooltip-text">(Drops at 80% LTV)</span></label>
+                                    <label>PMI (%/yr) <span class="inline-tooltip-text">(Drops at 80% LTV)</span></label>
                                     <input type="number" id="pmiRate" inputmode="decimal" value="0.5" step="0.01" min="0">
                                 </div>
                             </div>
@@ -1631,11 +1041,11 @@
                         <div class="section-header-with-toggle">
                             <h3 class="section-title" style="margin:0;">
                                 Refinancing Rate Shock
-                                <span class="help-tip">?<span class="tooltip-text">Simulate term renewal interest rate adjustments. Each term's rate can be edited individually to project the dynamic impact on remaining amortization. Note: Rate projections are theoretical; bank calculations may differ based on dynamic refinancing terms.</span></span>
+                                <span class="help-tip">?<span class="tooltip-text">Simulate term renewal interest rate adjustments. Each term's rate can be edited individually to project the dynamic impact on your remaining mortgage amortization while keeping payments fixed.</span></span>
                             </h3>
                             <div class="toggle-wrapper" title="Simulate refinancing shocks">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="rateShockToggle" role="switch" aria-checked="false">
+                                    <input type="checkbox" id="rateShockToggle">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1664,7 +1074,7 @@
                 <div class="concentric-visualization-card">
                     <h3 class="section-title">
                         The Gravity of the Debt
-                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative interest overhead. The relative size of the interest envelope (red) highlights capital inefficiencies over baseline asset cost (blue). Note: Calculations are close estimations; banks may use proprietary interest formulas causing minor variations.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A spatial representation of cumulative debt markup. The relative size of the interest envelope (red) highlights capital inefficiencies and macro interest costs over the baseline asset cost (blue).</span></span>
                     </h3>
                     <div class="dynamic-concentric-stack">
                         <div class="stack-wrapper">
@@ -1674,7 +1084,7 @@
                                 
                                 <circle cx="50" cy="50" r="20" fill="#3b82f6"></circle>
                                 
-                                <text id="svg-inner-principal" x="50" y="42" text-anchor="middle" font-size="5.5" font-weight="800" fill="white">$0</text>
+                                <text id="svg-inner-principal" x="50" y="42" text-anchor="middle" font-size="5.5" font-weight="800" fill="black">$0</text>
                                 <text x="50" y="50" text-anchor="middle" font-size="7" font-weight="800" fill="white">+</text>
                                 <text id="svg-inner-markup" x="50" y="58" text-anchor="middle" font-size="5.5" font-weight="800" fill="white">$0</text>
                             </svg>
@@ -1684,7 +1094,7 @@
                                 <div id="out-principal-val" style="color: var(--text-color); font-size: 0.95rem; margin-top: 4px;">$0</div>
                             </div>
                             <div class="cost-label">
-                                <div style="color: #ef4444;">Total Interest Overhead</div>
+                                <div style="color: #ef4444;">Bank Markup</div>
                                 <div id="out-markup-val" style="color: #ef4444; font-size: 0.95rem; margin-top: 4px;">$0</div>
                             </div>
                         </div>
@@ -1704,16 +1114,16 @@
                             <div class="kinetic-text" id="mortgageAmountDisplay" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box danger-box squishy-interactive cc-only">
-                            <label class="danger-text">Daily Fee to the Bank <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The interest accrued daily, representing a direct fee paid to the bank every 24 hours. Note: Actual bank accruals may vary slightly based on calculations (e.g. 365 vs. 360 days).</span></span></label>
+                            <label class="danger-text">Daily Vampire Drain <span class="help-tip" style="background: rgba(239, 68, 68, 0.2);"><span class="tooltip-text">The localized capital leak calculated down to a 24-hour window. This is the structural interest cost accrued every single day you carry the remaining debt.</span></span></label>
                             <div class="kinetic-text danger-text" id="dailyVampireDrain" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box squishy-interactive mortgage-only advanced-only">
-                            <label>Balance at Term End <span class="help-tip"><span class="tooltip-text">The verified principal debt remaining at term end, indicating refinancing risk. Note: Assumes standard payment schedule with no pre-payments or missed payments. Bank formulas may vary slightly.</span></span></label>
+                            <label>Balance at Term End <span class="help-tip"><span class="tooltip-text">The verified principal debt remaining at the completion of your current multi-year rate term, determining the scale of refinancing risk.</span></span></label>
                             <div class="kinetic-text" id="balanceAtTerm" data-val="0">$0.00</div>
                         </div>
                         <div class="stat-box squishy-interactive">
                             <label>Actual Payoff Time</label>
-                            <div class="kinetic-text" id="paidOffIn">0 Years</div>
+                            <div class="kinetic-text" id="paidOffIn">0 yrs</div>
                         </div>
                         <div class="stat-box highlight-box squishy-interactive">
                             <label>Interest Saved <span class="inline-tooltip-text">(vs Minimums)</span></label>
@@ -1724,7 +1134,7 @@
                     <div class="circles-container">
                         <div class="circle-wrapper squishy-interactive mortgage-only advanced-only">
                             <div class="true-payment-circle" id="monthlyPaymentCircle"></div>
-                            <span>Periodic Payment Composition <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in installment ratios. Over time, reducing the principal shrinks the interest wedge. Note: Commercial bank schedules may vary slightly due to interest rounding routines.</span></span></span>
+                            <span>Periodic Payment Comp <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in your installment ratios. Over time, reducing the principal forces down the interest wedge, making subsequent payments much more efficient.</span></span></span>
                         </div>
                         <div class="circle-wrapper squishy-interactive">
                             <div class="payment-breakdown-circle" id="paymentBreakdownCircle"></div>
@@ -1738,7 +1148,7 @@
                 <div class="bento-card advanced-only" id="milestoneRoadmapCard">
                     <h3 class="section-title">
                         Chronological Milestone Roadmap
-                        <span class="help-tip">?<span class="tooltip-text">A dynamic timeline highlighting critical wealth milestones. Note: Projections assume continuous, uninterrupted surplus payments as scheduled. Commercial timelines may vary due to custom bank policies.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A dynamic chronological timeline highlighting your critical wealth milestones—answering the 'So What?' of your payoff strategy with actionable life impact.</span></span>
                     </h3>
                     <div class="roadmap-timeline" id="milestoneTimelineContainer">
                         <!-- Dynamically populated timeline nodes -->
@@ -1748,7 +1158,7 @@
                 <div class="bento-card">
                     <h3 class="section-title">
                         Visual Analysis
-                        <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards can be dragged to customize your layout. Calculations are close estimates; exact bank totals may vary due to custom formulas.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards inside this grid layout can be grabbed, dragged, and swapped across slots to customize your workspace view.</span></span>
                     </h3>
                     <div class="charts-grid" id="draggable-charts-container">
                         <div class="chart-wrapper chart-box squishy-interactive" draggable="true">
@@ -1768,24 +1178,6 @@
                         </div>
                         <div class="chart-wrapper chart-box squishy-interactive advanced-only" draggable="true">
                             <div id="chart6" class="plotly-container"></div>
-                        </div>
-                    </div>
-
-                    <!-- Bank Wages Circles Card Section -->
-                    <div class="bank-wages-section" style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 25px;">
-                        <div class="wage-toggle-container">
-                            <h4 class="sub-section-title" style="margin: 0; color: var(--primary-color); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center;">
-                                <span id="bankWagesTitleText">How much do you pay towards the banks wages per year</span>
-                                <span class="help-tip">?<span class="tooltip-text" id="bankWagesTooltip">Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.</span></span>
-                            </h4>
-                            <div class="wage-toggle-selector" id="bankWagesToggle">
-                                <button class="wage-toggle-btn active" data-view="wages">Bank Wages</button>
-                                <button class="wage-toggle-btn" data-view="rent">Rent Equivalent</button>
-                                <button class="wage-toggle-btn" data-view="rent-tax-ins">Rent + Tax & Insurance</button>
-                            </div>
-                        </div>
-                        <div class="bank-wages-container" id="bankWagesCirclesContainer">
-                            <!-- Dynamic circle elements -->
                         </div>
                     </div>
                 </div>
@@ -1817,7 +1209,7 @@
                 <div class="bento-card" style="margin-top: 24px;">
                     <h3 class="section-title">
                         Amortization Schedule
-                        <span class="help-tip">?<span class="tooltip-text">A granular ledger mapping principal pay-down and interest decay curves. Note: Minor variances can occur based on how individual lenders round daily interest and process extra payments.</span></span>
+                        <span class="help-tip">?<span class="tooltip-text">A granular structural ledger mapping principal pay-down, absolute interest decay curves, and extra payment efficiency metrics relative to your outstanding debt scale across every active cycle step.</span></span>
                     </h3>
                     <div class="table-responsive">
                         <table id="amortization-table">
@@ -1998,8 +1390,7 @@
             colors: {
                 principal: '#2563eb', interest: '#ef4444', tax: '#f59e0b',
                 ins: '#8b5cf6', hoa: '#14b8a6', pmi: '#ec4899',
-                extra: '#10b981', balance: '#64748b', thresholdRed: '#ef4444', investLine: '#8b5cf6',
-                termEnd: '#f97316'
+                extra: '#10b981', balance: '#64748b', thresholdRed: '#ef4444', investLine: '#8b5cf6'
             }
         };
 
@@ -2011,7 +1402,7 @@
          * Houses active variables, dynamic modes, compounding profiles,
          * and customizable rate-shock arrays.
          */
-         let state = { isDark: false, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date', activeProfileId: null, comparisonProfileId: null, compareModeActive: false, profiles: {}, bankWagesView: 'wages' };
+         let state = { isDark: false, currentMode: 'mortgage', complexity: 'simple', termRates: {}, labelFormat: 'date' };
 
         const els = {
             form: document.getElementById('mortgageForm'),
@@ -2138,7 +1529,6 @@
                             state.customizedYears[y] = true;
                             state.termRates[y] = val;
                             calculate();
-                            saveSettings();
                         }
                     });
                     inp.addEventListener('blur', (e) => {
@@ -2151,7 +1541,6 @@
                         state.customizedYears[y] = true;
                         state.termRates[y] = val;
                         calculate();
-                        saveSettings();
                     });
                 });
             } else {
@@ -2205,7 +1594,7 @@
             else if(freq === 'bi-weekly') { perYear = 26; perPI = (basePI * 12) / 26; }
             else { perYear = 26; perPI = basePI / 2; } // Accelerated Bi-Weekly (forces standard monthly half-payment 26 times/yr)
 
-            const pTax = inputs.taxRate / perYear;
+            const pTax = (inputs.homePrice * (inputs.taxRate / 100)) / perYear;
             const pIns = inputs.insRate / perYear;
             const pHOA = (inputs.hoaRate * 12) / perYear;
             const pmiDrop = inputs.homePrice * 0.80; 
@@ -2247,7 +1636,6 @@
                 totI += iPart; totP += pPart; totEx += cExtra; totEsc += pEscrow;
 
                 let dLbl = `P${i}`, yLbl = (i / perYear);
-                let calendarYear = new Date().getFullYear() + Math.floor(i / perYear);
                 if (cDate) {
                     const d = new Date(cDate.getTime());
                     if (freq === 'monthly') d.setMonth(d.getMonth() + (i - 1));
@@ -2255,11 +1643,10 @@
                     else d.setDate(d.getDate() + ((i - 1) * 14)); 
                     dLbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     yLbl = d.getFullYear() + (d.getMonth() / 12) + (d.getDate() / 365);
-                    calendarYear = d.getFullYear();
                 }
 
                 sched.push({ 
-                    period: i, year: yLbl, calendarYear: calendarYear, dateLabel: dLbl, ltv: (bal / inputs.homePrice) * 100, 
+                    period: i, year: yLbl, dateLabel: dLbl, ltv: (bal / inputs.homePrice) * 100, 
                     payment: pPart + iPart + pEscrow + cExtra, principal: pPart, interest: iPart, 
                     tax: pTax, ins: pIns, hoa: pHOA, pmi: pPMI, escrow: pEscrow, extra: cExtra, balance: bal, 
                     totalInterest: totI, totalPrincipal: totP, totalExtra: totEx, totalEscrow: totEsc  
@@ -2314,17 +1701,15 @@
                 totI += iPart; totP += (pPart - cExtra); totEx += cExtra;
                 
                 let dLbl = `M${i}`, yLbl = (i / 12);
-                let calendarYear = new Date().getFullYear() + Math.floor(i / 12);
                 if (cDate) {
                     const d = new Date(cDate.getTime());
                     d.setMonth(d.getMonth() + (i - 1));
                     dLbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     yLbl = d.getFullYear() + (d.getMonth() / 12) + (d.getDate() / 365);
-                    calendarYear = d.getFullYear();
                 }
 
                 sched.push({
-                    period: i, year: yLbl, calendarYear: calendarYear, dateLabel: dLbl, ltv: 0,
+                    period: i, year: yLbl, dateLabel: dLbl, ltv: 0,
                     payment: totalActualPayment, principal: pPart - cExtra, interest: iPart,
                     tax: 0, ins: 0, hoa: 0, pmi: 0, escrow: 0, extra: cExtra, balance: bal,
                     totalInterest: totI, totalPrincipal: totP, totalExtra: totEx, totalEscrow: 0
@@ -2349,34 +1734,20 @@
             gsap.to(obj, { v: val, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = isCurr ? (decimal ? formatDecimal(obj.v) : formatCurrency(obj.v)) : Math.round(obj.v); } });
         };
 
-        const syncCheckboxARIALabels = () => {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => {
-                cb.setAttribute('role', 'switch');
-                cb.setAttribute('aria-checked', cb.checked ? 'true' : 'false');
-            });
-        };
-
         const getBaseLayout = (title, xTitle, yTitle) => {
             const c = state.isDark ? '#f8fafc' : '#1e293b', g = state.isDark ? '#334155' : '#e2e8f0';
-            const isCurrency = yTitle && (yTitle.includes('$') || yTitle === '$');
-            const yaxisConfig = { title: yTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true };
-            if (isCurrency) {
-                yaxisConfig.tickformat = '$,.0f';
-            }
             return { 
                 title: { text: title, font: { color: c, size: 16, weight: 800 }, y: 0.98 }, 
                 paper_bgcolor: 'transparent', plot_bgcolor: 'transparent', font: { color: c, family: 'Inter, sans-serif' }, 
                 xaxis: { title: xTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
-                yaxis: yaxisConfig, 
-                margin: { t: 50, r: 10, l: isCurrency ? 80 : 45, b: 80 },
-                legend: { orientation: 'h', y: -0.18, x: 0.5, xanchor: 'center', yanchor: 'top' },
-                hovermode: 'x',
+                yaxis: { title: yTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
+                margin: { t: 60, r: 10, l: 45, b: 100 },
+                legend: { orientation: 'h', y: -0.3, x: 0.5, xanchor: 'center', automargin: true },
                 autosize: true, dragmode: false 
             };
         };
 
-        const renderCharts = (baseData, actualData, inputs, hasStrat, compData = null) => {
+        const renderCharts = (baseData, actualData, inputs, hasStrat) => {
             const xKey = 'year'; 
             let termX = (state.currentMode === 'mortgage') ? inputs.termYears : null;
             
@@ -2384,22 +1755,7 @@
                 termX = baseData.schedule[0].year + inputs.termYears;
             }
             
-            const termLine = termX ? { type: 'line', x0: termX, y0: 0, x1: termX, y1: 1, xref: 'x', yref: 'paper', line: { color: CONFIG.colors.termEnd || '#f97316', width: 2, dash: 'dot' } } : null;
-
-            // Define the payoff vertical line for early payoff visual aid
-            const payoffX = (hasStrat && actualData.schedule.length > 0)
-                ? actualData.schedule[actualData.schedule.length - 1].year 
-                : null;
-            const payoffLine = payoffX ? { 
-                type: 'line', 
-                x0: payoffX, 
-                y0: 0, 
-                x1: payoffX, 
-                y1: 1, 
-                xref: 'x', 
-                yref: 'paper', 
-                line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' } 
-            } : null;
+            const termLine = termX ? { type: 'line', x0: termX, y0: 0, x1: termX, y1: 1, xref: 'x', yref: 'paper', line: { color: CONFIG.colors.interest, width: 2, dash: 'dot' } } : null;
 
             const p1 = actualData.schedule[0] || { principal:0, interest:0, tax:0, ins:0, hoa:0, pmi:0, extra:0 };
             const totPITI = p1.principal + p1.interest + p1.tax + p1.ins + p1.hoa + p1.pmi + p1.extra;
@@ -2427,53 +1783,15 @@
             }
 
             if(document.getElementById('chart3')) {
-                const t3 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.balance), name: 'Balance (Baseline)', type: 'scatter', fill: 'tozeroy', line: { color: CONFIG.colors.principal } }];
-                if(hasStrat) t3.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.balance), name: 'Balance (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
-                
-                if (compData && compData.schedule) {
-                    const compName = (state.profiles[state.comparisonProfileId] && state.profiles[state.comparisonProfileId].name) || 'Comparison';
-                    t3.push({
-                        x: compData.schedule.map(d=>d[xKey]),
-                        y: compData.schedule.map(d=>d.balance),
-                        name: `${compName} (Comparison)`,
-                        type: 'scatter',
-                        line: { color: '#a855f7', width: 2.5, dash: 'dash' }
-                    });
-                }
-                
-                const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$');
-                const shapes3 = [];
-                if (termLine) {
-                    shapes3.push(termLine);
-                    t3.push({
-                        x: [null],
-                        y: [null],
-                        name: 'Term End',
-                        type: 'scatter',
-                        mode: 'lines',
-                        line: { color: CONFIG.colors.termEnd || '#f97316', width: 2, dash: 'dot' },
-                        showlegend: true
-                    });
-                }
-                if (payoffLine) {
-                    shapes3.push(payoffLine);
-                    t3.push({
-                        x: [null],
-                        y: [null],
-                        name: 'Debt Free Year',
-                        type: 'scatter',
-                        mode: 'lines',
-                        line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' },
-                        showlegend: true
-                    });
-                }
-                if (shapes3.length > 0) l3.shapes = shapes3;
+                const t3 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.balance), name: 'Bal (Baseline)', type: 'scatter', fill: 'tozeroy', line: { color: CONFIG.colors.principal } }];
+                if(hasStrat) t3.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.balance), name: 'Bal (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
+                const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$'); if(termLine) l3.shapes = [termLine];
                 Plotly.react('chart3', t3, l3, PLOT_CONFIG);
             }
 
             if(state.currentMode === 'mortgage' && document.getElementById('chart4')) {
                 const pAmt = actualData.schedule.length ? (actualData.schedule[0].balance + actualData.schedule[0].principal) : 0;
-                const t4 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Standard)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
+                const t4 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Std)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
                 if(hasStrat) t4.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra } });
                 Plotly.react('chart4', t4, getBaseLayout('Equity Build-Up', 'Year', '$'), PLOT_CONFIG);
             }
@@ -2495,7 +1813,7 @@
             }
 
             if(document.getElementById('chart6')) {
-                Plotly.react('chart6', [ {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.interest), name: 'Interest Portion', type: 'scatter', fill: 'tozeroy', line: {color: CONFIG.colors.interest}}, {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.principal), name: 'Principal Portion', type: 'scatter', fill: 'tonexty', line: {color: CONFIG.colors.principal}} ], getBaseLayout('Payment Composition', 'Year', '$'), PLOT_CONFIG);
+                Plotly.react('chart6', [ {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.interest), name: 'Int Portion', type: 'scatter', fill: 'tozeroy', line: {color: CONFIG.colors.interest}}, {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.principal), name: 'Prin Portion', type: 'scatter', fill: 'tonexty', line: {color: CONFIG.colors.principal}} ], getBaseLayout('Payment Comp.', 'Year', '$'), PLOT_CONFIG);
             }
 
             if(document.getElementById('chart')) {
@@ -2513,7 +1831,7 @@
                 if (inputs.usePiti && state.currentMode === 'mortgage') {
                     els.containers.ltv.style.display = 'block';
                     if(document.getElementById('chartLTV')) {
-                        const tLTV = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.ltv), name: 'LTV (Standard)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
+                        const tLTV = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.ltv), name: 'LTV (Std)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
                         if(hasStrat) tLTV.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.ltv), name: 'LTV (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
                         const lLTV = getBaseLayout('LTV & PMI Drop', 'Year', 'LTV (%)'); lLTV.yaxis.range = [0, Math.max(105, actualData.schedule[0]?.ltv || 100)]; lLTV.shapes = [ termLine, { type: 'line', x0: 0, y0: 80, x1: 1, y1: 80, xref: 'paper', yref: 'y', line: { color: CONFIG.colors.thresholdRed, width: 2, dash: 'dash' } } ];
                         Plotly.react('chartLTV', tLTV, lLTV, PLOT_CONFIG);
@@ -2535,47 +1853,7 @@
                         const annBud = p1PIEx * p1PY, annBase = p2PI * p2PY; const p2InvPer = Math.max(0, annBud - annBase) / p2PY;
                         baseData.schedule.forEach(d => { p2Inv = (p2Inv + p2InvPer) * (1 + p2Rate); p2X.push(d.year); p2Y.push(hp - d.balance + p2Inv); });
                         
-                        const tOpp = [
-                            { x: p1X, y: p1Y, name: 'Pay Debt Fast', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } },
-                            { x: p2X, y: p2Y, name: 'Invest Surplus', type: 'scatter', line: { color: CONFIG.colors.investLine, width: 3, dash: 'dot' } }
-                        ];
-
-                        if (compData && compData.schedule) {
-                            const compName = (state.profiles[state.comparisonProfileId] && state.profiles[state.comparisonProfileId].name) || 'Comparison';
-                            const compX=[], compY=[]; let compInv=0;
-                            const cSched = compData.schedule;
-                            if (cSched.length > 0) {
-                                const cPIEx = cSched[0].principal + cSched[0].interest + cSched[0].extra;
-                                const cPY = compData.summary.periodsPerYear;
-                                const cRate = Math.pow(1 + ir, 1 / cPY) - 1;
-                                cSched.forEach(d => { compX.push(d.year); compY.push(hp - d.balance); });
-                                let ccY = compX[compX.length - 1];
-                                while (ccY < mY) { ccY += (1 / cPY); compInv = (compInv + cPIEx) * (1 + cRate); compX.push(ccY); compY.push(hp + compInv); }
-                                
-                                tOpp.push({
-                                    x: compX,
-                                    y: compY,
-                                    name: `${compName} Net Worth`,
-                                    type: 'scatter',
-                                    line: { color: '#a855f7', width: 2.5, dash: 'dash' }
-                                });
-                            }
-                        }
-
-                        const lOpp = getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)');
-                        if (payoffLine) {
-                            lOpp.shapes = [payoffLine];
-                            tOpp.push({
-                                x: [null],
-                                y: [null],
-                                name: 'Debt Free Year',
-                                type: 'scatter',
-                                mode: 'lines',
-                                line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' },
-                                showlegend: true
-                            });
-                        }
-                        Plotly.react('chartOppCost', tOpp, lOpp, PLOT_CONFIG);
+                        Plotly.react('chartOppCost', [ { x: p1X, y: p1Y, name: 'Pay Debt Fast', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } }, { x: p2X, y: p2Y, name: 'Invest Surplus', type: 'scatter', line: { color: CONFIG.colors.investLine, width: 3, dash: 'dot' } } ], getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)'), PLOT_CONFIG);
                     }
                 } else {
                     els.containers.oppCost.style.display = 'none';
@@ -2588,7 +1866,7 @@
                     }
                     if(document.getElementById('chart12')) {
                         const yBase = (baseData.summary.periodsToPayoff / baseData.summary.periodsPerYear).toFixed(1), yExt = (actualData.summary.periodsToPayoff / actualData.summary.periodsPerYear).toFixed(1);
-                        Plotly.react('chart12', [{ x: ['Baseline', 'Actual'], y: [yBase, yExt], type: 'bar', text: [yBase + ' Years', yExt + ' Years'], textposition: 'auto', marker: { color: [CONFIG.colors.principal, CONFIG.colors.extra] } }], getBaseLayout('Time to Pay Off', '', 'Years'), PLOT_CONFIG);
+                        Plotly.react('chart12', [{ x: ['Baseline', 'Actual'], y: [yBase, yExt], type: 'bar', text: [yBase + ' Yrs', yExt + ' Yrs'], textposition: 'auto', marker: { color: [CONFIG.colors.principal, CONFIG.colors.extra] } }], getBaseLayout('Time to Pay Off', '', 'Years'), PLOT_CONFIG);
                     }
                 }
 
@@ -2613,31 +1891,17 @@
             });
         };
 
-        const updateTable = (schedule, usePiti, compSchedule = null) => {
+        const updateTable = (schedule, usePiti) => {
             const tbody = document.querySelector('#amortization-table tbody');
             els.containers.escrowTh.style.display = usePiti ? '' : 'none';
             tbody.innerHTML = '';
             const frag = document.createDocumentFragment();
             const isPeriod = state.labelFormat === 'period';
-            schedule.forEach((row, index) => {
+            schedule.forEach(row => {
                 const tr = document.createElement('tr');
                 const eTd = usePiti ? `<td style="color: #8b5cf6">${formatCurrency(row.escrow)}</td>` : '';
                 const label = isPeriod ? `P${row.period}` : row.dateLabel;
-                
-                let deltaHtml = '';
-                if (compSchedule && compSchedule[index]) {
-                    const diff = row.balance - compSchedule[index].balance;
-                    if (Math.abs(diff) >= 1) {
-                        const isBetter = diff < 0;
-                        const diffText = formatCurrency(Math.abs(diff));
-                        deltaHtml = `<div class="delta-badge ${isBetter ? 'better' : 'worse'}">${isBetter ? '↓' : '↑'} ${diffText}</div>`;
-                    }
-                } else if (compSchedule && !compSchedule[index] && row.balance > 0) {
-                    const diffText = formatCurrency(row.balance);
-                    deltaHtml = `<div class="delta-badge worse">↑ ${diffText}</div>`;
-                }
-
-                tr.innerHTML = `<td>${label}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong>${deltaHtml}</td>`;
+                tr.innerHTML = `<td>${label}</td><td><strong>${formatCurrency(row.payment)}</strong></td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.interest)}</td>${eTd}<td>${formatCurrency(row.extra)}</td><td><strong>${formatCurrency(row.balance)}</strong></td>`;
                 frag.appendChild(tr);
             });
             tbody.appendChild(frag);
@@ -2649,9 +1913,9 @@
             const yrs = Math.floor(totalYears);
             const mos = Math.round((totalYears - yrs) * 12);
             if (yrs > 0) {
-                return `${yrs} Year${yrs > 1 ? 's' : ''}${mos > 0 ? `, ${mos} Month${mos > 1 ? 's' : ''}` : ''}`;
+                return `${yrs} Yr${yrs > 1 ? 's' : ''}${mos > 0 ? `, ${mos} Mo${mos > 1 ? 's' : ''}` : ''}`;
             }
-            return `${mos} Month${mos > 1 ? 's' : ''}`;
+            return `${mos} Mo${mos > 1 ? 's' : ''}`;
         };
 
         const calculateMilestones = (baseData, actData, inputs) => {
@@ -2706,7 +1970,7 @@
                     targetDate = row.dateLabel;
                     targetPeriod = `Month ${row.period}`;
                     const pmiAmt = (startingPrincipal * (inputs.pmiRate / 100)) / perYear;
-                    const savingsStr = inputs.usePiti && inputs.pmiRate > 0 ? ` saves you ${formatCurrency(pmiAmt)}/Month` : '';
+                    const savingsStr = inputs.usePiti && inputs.pmiRate > 0 ? ` saves you ${formatCurrency(pmiAmt)}/mo` : '';
                     soWhat = `Your Loan-to-Value (LTV) ratio drops to 80%, allowing you to cancel PMI. You shed the mandatory lender insurance tax and keep more cash flow${savingsStr}!`;
                     isAchieved = true;
                     
@@ -2876,146 +2140,6 @@
             container.scrollLeft = currentScrollLeft;
         };
 
-        const renderBankWages = (actData) => {
-            const container = document.getElementById('bankWagesCirclesContainer');
-            if (!container) return;
-            container.innerHTML = '';
-
-            // Update titles and tooltips based on view
-            const titleEl = document.getElementById('bankWagesTitleText');
-            const tooltipEl = document.getElementById('bankWagesTooltip');
-            const isRent = (state.bankWagesView === 'rent');
-            const isRentTaxIns = (state.bankWagesView === 'rent-tax-ins');
-
-            if (titleEl) {
-                if (isRentTaxIns) {
-                    titleEl.textContent = "How much does the interest + carrying costs represent if it was your rent per month";
-                } else if (isRent) {
-                    titleEl.textContent = "How much does the interest represent if it was your rent per month";
-                } else {
-                    titleEl.textContent = "How much do you pay towards the banks wages per year";
-                }
-            }
-            if (tooltipEl) {
-                if (isRentTaxIns) {
-                    tooltipEl.textContent = "Annual interest payments plus property tax and home insurance averaged into a monthly rent equivalent: ((Annual Interest / 12) rounded up) + (Annual Property Tax / 12) + (Annual Home Insurance / 12), rounded up. For estimation purposes only.";
-                } else if (isRent) {
-                    tooltipEl.textContent = "Annual interest payments averaged into a monthly rent equivalent: (Annual Interest / 12), rounded up. Note: Does not include property taxes, home insurance, HOA fees, or operational holding costs. For estimation purposes only.";
-                } else {
-                    tooltipEl.textContent = "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.";
-                }
-            }
-
-            const schedule = actData.schedule;
-            if (!schedule || schedule.length === 0) return;
-
-            const periodsPerYear = actData.summary.periodsPerYear || 12;
-
-            // Group interest by calendarYear
-            const yearlyData = {};
-            for (const row of schedule) {
-                const yr = row.calendarYear;
-                if (!yearlyData[yr]) {
-                    yearlyData[yr] = {
-                        year: yr,
-                        interest: 0,
-                        count: 0
-                    };
-                }
-                yearlyData[yr].interest += row.interest;
-                yearlyData[yr].count += 1;
-            }
-
-            const years = Object.keys(yearlyData).map(Number).sort((a, b) => a - b);
-            if (years.length === 0) return;
-
-            // Handle first year partial payment 'work backwards to fill it in'
-            const firstYear = years[0];
-            if (yearlyData[firstYear].count < periodsPerYear) {
-                let filledInterest = 0;
-                const limit = Math.min(schedule.length, periodsPerYear);
-                for (let i = 0; i < limit; i++) {
-                    filledInterest += schedule[i].interest;
-                }
-                yearlyData[firstYear].interest = filledInterest;
-            }
-
-            const annualTax = els.inputs.tax ? (parseFloat(els.inputs.tax.value) || 0) : 0;
-            const annualIns = els.inputs.ins ? (parseFloat(els.inputs.ins.value) || 0) : 0;
-
-            // Compute display values for each year and track the maximum to scale circle sizes
-            const displayValues = {};
-            let maxDisplayVal = 0;
-            for (const yr of years) {
-                const interest = yearlyData[yr].interest;
-                let val = interest;
-                if (isRentTaxIns) {
-                    const rentAlone = Math.ceil(interest / 12);
-                    val = Math.ceil(rentAlone + (annualTax / 12) + (annualIns / 12));
-                } else if (isRent) {
-                    val = Math.ceil(interest / 12);
-                }
-                displayValues[yr] = val;
-                if (val > maxDisplayVal) {
-                    maxDisplayVal = val;
-                }
-            }
-
-            if (maxDisplayVal <= 0) maxDisplayVal = 1;
-
-            const isMobile = window.innerWidth <= 768;
-            const minSize = isMobile ? 35 : 55; // pixels
-            const maxSize = isMobile ? 70 : 110; // pixels
-
-            years.forEach(yr => {
-                const interest = yearlyData[yr].interest;
-                const displayVal = displayValues[yr];
-                // Calculate size proportional to the displayed value
-                const ratio = displayVal / maxDisplayVal;
-                // Using sqrt scaling for visual area mapping
-                const size = minSize + (maxSize - minSize) * Math.sqrt(ratio);
-                
-                const wrapper = document.createElement('div');
-                wrapper.className = 'wage-circle-wrapper';
-
-                const circle = document.createElement('div');
-                circle.className = 'wage-circle';
-                circle.style.width = `${size}px`;
-                circle.style.height = `${size}px`;
-                
-                // Dynamic font size scaling to prevent overflow
-                const fontSize = Math.max(0.68, 0.95 * (size / maxSize));
-                circle.style.fontSize = `${fontSize}rem`;
-
-                if (isRentTaxIns) {
-                    const rentAlone = Math.ceil(interest / 12);
-                    circle.innerHTML = `
-                        <span class="wage-circle-default-val">${formatCurrency(displayVal)}</span>
-                        <div class="wage-circle-hover-val">
-                            <span class="breakdown-rent">${formatCurrency(rentAlone)}</span>
-                            <span class="breakdown-tax">+${formatCurrency(Math.ceil(annualTax/12))}</span>
-                            <span class="breakdown-ins">+${formatCurrency(Math.ceil(annualIns/12))}</span>
-                        </div>
-                    `;
-                    circle.title = `Year: ${yr}\nRent + Tax & Insurance: ${formatCurrency(displayVal)}/Month\n(Rent: ${formatCurrency(rentAlone)} + Tax: ${formatCurrency(Math.ceil(annualTax/12))} + Insurance: ${formatCurrency(Math.ceil(annualIns/12))})`;
-                } else if (isRent) {
-                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
-                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(displayVal)}/Month`;
-                } else {
-                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
-                    circle.title = `Year: ${yr}\nInterest: ${formatCurrency(displayVal)}`;
-                }
-
-                const yearLbl = document.createElement('div');
-                yearLbl.className = 'wage-circle-year';
-                yearLbl.textContent = yr;
-
-                wrapper.appendChild(circle);
-                wrapper.appendChild(yearLbl);
-                container.appendChild(wrapper);
-            });
-        };
-
         const validate = () => {
             els.containers.error.style.display = 'none';
             if (state.currentMode === 'mortgage') {
@@ -3100,24 +2224,6 @@
             if (els.containers.pitiSection) {
                 els.containers.pitiSection.style.display = inputs.usePiti ? 'block' : 'none';
             }
-            
-            // Rent + Tax & Insurance toggle visibility depends on Taxes & Insurance (PITI) toggle
-            const rentTaxInsBtn = document.querySelector('.wage-toggle-btn[data-view="rent-tax-ins"]');
-            if (rentTaxInsBtn) {
-                if (inputs.usePiti) {
-                    rentTaxInsBtn.style.display = '';
-                } else {
-                    rentTaxInsBtn.style.display = 'none';
-                    if (state.bankWagesView === 'rent-tax-ins') {
-                        state.bankWagesView = 'rent';
-                        const container = document.getElementById('bankWagesToggle');
-                        if (container) {
-                            const buttons = container.querySelectorAll('.wage-toggle-btn');
-                            buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === state.bankWagesView));
-                        }
-                    }
-                }
-            }
             if (els.containers.oppCostSection) {
                 els.containers.oppCostSection.style.display = inputs.useOppCost ? 'block' : 'none';
             }
@@ -3150,36 +2256,6 @@
 
             const baseData = isMortgage ? generateMortgageSchedule(inputs, true) : generateCCSchedule(inputs, true);
             const actData = isMortgage ? generateMortgageSchedule(inputs, false) : generateCCSchedule(inputs, false);
-
-            let compData = null;
-            if (state.compareModeActive && state.comparisonProfileId && state.profiles[state.comparisonProfileId]) {
-                const compProfile = state.profiles[state.comparisonProfileId];
-                const compInputs = {
-                    homePrice: parseFloat(compProfile.inputs.homePrice) || 0, downPayment: parseFloat(compProfile.inputs.downPayment) || 0,
-                    ccBalance: parseFloat(compProfile.inputs.ccBalance) || 0, province: compProfile.inputs.province,
-                    annualRate: compProfile.currentMode === 'cc' 
-                        ? (parseFloat(compProfile.inputs.ccRate) || parseFloat(compProfile.inputs.rate) || 0) 
-                        : (parseFloat(compProfile.inputs.mortgageRate) || parseFloat(compProfile.inputs.rate) || 0),
-                    amortizationYears: parseFloat(compProfile.inputs.amortization) || 0,
-                    termYears: parseFloat(compProfile.inputs.term) || 0, compounding: compProfile.inputs.compounding,
-                    frequency: compProfile.inputs.paymentFrequency || compProfile.inputs.frequency,
-                    usePiti: compProfile.currentMode === 'mortgage' && compProfile.inputs.includePitiToggle === true,
-                    taxRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.propertyTax) || 0) : 0,
-                    insRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.homeInsurance) || 0) : 0,
-                    hoaRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.hoaFees) || 0) : 0,
-                    pmiRate: compProfile.inputs.includePitiToggle === true ? (parseFloat(compProfile.inputs.pmiRate) || 0) : 0,
-                    useOppCost: compProfile.inputs.oppCostToggle === true,
-                    investRate: compProfile.inputs.oppCostToggle === true ? (parseFloat(compProfile.inputs.investRate) || 7.0) : 7.0,
-                    extraPayment: compProfile.currentMode === 'cc' 
-                        ? (parseFloat(compProfile.inputs.ccExtra) || parseFloat(compProfile.inputs.extra) || 0) 
-                        : (parseFloat(compProfile.inputs.mortgageExtra) || parseFloat(compProfile.inputs.extra) || 0),
-                    startDate: compProfile.inputs.firstPaymentDate || compProfile.inputs.date,
-                    rateShockEnabled: compProfile.currentMode === 'mortgage' && compProfile.inputs.rateShockToggle === true,
-                    termRates: compProfile.termRates || {}
-                };
-                const isCompMortgage = compProfile.currentMode === 'mortgage';
-                compData = isCompMortgage ? generateMortgageSchedule(compInputs, false) : generateCCSchedule(compInputs, false);
-            }
             
             const totalActualLifetimePaidToBank = actData.summary.totalInterest + principalBorrowAmount;
             
@@ -3201,7 +2277,7 @@
 
             let yrs_paid = Math.floor(actData.summary.periodsToPayoff / actData.summary.periodsPerYear);
             let rem_paid = actData.summary.periodsToPayoff % actData.summary.periodsPerYear;
-            updateKineticText(els.results.paidOffIn, `${yrs_paid} Years, ${rem_paid} ${isMortgage && inputs.frequency.includes('bi') ? 'Periods' : 'Months'}`, false);
+            updateKineticText(els.results.paidOffIn, `${yrs_paid} yrs, ${rem_paid} ${isMortgage && inputs.frequency.includes('bi') ? 'pds' : 'mos'}`, false);
             
             if (isMortgage) {
                 const termPer = Math.ceil(inputs.termYears * actData.summary.periodsPerYear);
@@ -3210,16 +2286,12 @@
             
             updateKineticText(els.results.saved, (baseData.summary.totalInterest) - (actData.summary.totalInterest));
 
-            renderCharts(baseData, actData, inputs, hasStrat, compData);
-            updateTable(actData.schedule, (isMortgage && inputs.usePiti), compData ? compData.schedule : null);
+            renderCharts(baseData, actData, inputs, hasStrat);
+            updateTable(actData.schedule, (isMortgage && inputs.usePiti));
 
             // Dynamically calculate and render Chronological Milestone Roadmap
             const milestones = calculateMilestones(baseData, actData, inputs);
             renderMilestonesUI(milestones);
-
-            // Render Annual Bank Wages descending circle chart
-            window.lastActData = actData;
-            renderBankWages(actData);
 
             // Auto-persist settings on any successful calculation
             saveSettings();
@@ -3321,67 +2393,28 @@
             }
         };
 
-        const CURRENT_ENGINE_VERSION = 2.0;
-
         /*
          * AUTO-PERSISTENCE STATE MANAGEMENT (LOCAL STORAGE)
          * Saves and restores all inputs, active mode, complexity, theme,
          * and custom refinancing terms to ensure seamless session persistence.
          */
-        const saveSettings = (skipDomSync = false) => {
+        const saveSettings = () => {
             try {
-                if (!state.activeProfileId || !state.profiles[state.activeProfileId]) {
-                    const newId = 'profile-' + Date.now();
-                    state.activeProfileId = newId;
-                    state.profiles[newId] = {
-                        id: newId,
-                        name: "Active Scenario",
-                        currentMode: state.currentMode,
-                        complexity: state.complexity,
-                        isDark: state.isDark,
-                        termRates: JSON.parse(JSON.stringify(state.termRates || {})),
-                        customizedYears: JSON.parse(JSON.stringify(state.customizedYears || {})),
-                        bankWagesView: state.bankWagesView || 'wages',
-                        inputs: {}
-                    };
-                }
-
-                if (!skipDomSync) {
-                    const activeProfile = state.profiles[state.activeProfileId];
-                    activeProfile.currentMode = state.currentMode;
-                    activeProfile.complexity = state.complexity;
-                    activeProfile.isDark = state.isDark;
-                    activeProfile.termRates = JSON.parse(JSON.stringify(state.termRates || {}));
-                    activeProfile.customizedYears = JSON.parse(JSON.stringify(state.customizedYears || {}));
-                    activeProfile.bankWagesView = state.bankWagesView || 'wages';
-                    
-                    Object.entries(els.inputs).forEach(([key, el]) => {
-                        if (el) {
-                            activeProfile.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
-                        }
-                    });
-
-                    // Backup active values to mode-specific fields
-                    if (state.currentMode === 'mortgage') {
-                        activeProfile.inputs.mortgageRate = activeProfile.inputs.rate;
-                        activeProfile.inputs.mortgageExtra = activeProfile.inputs.extra;
-                    } else if (state.currentMode === 'cc') {
-                        activeProfile.inputs.ccRate = activeProfile.inputs.rate;
-                        activeProfile.inputs.ccExtra = activeProfile.inputs.extra;
-                    }
-                }
-
                 const settings = {
-                    version: CURRENT_ENGINE_VERSION,
-                    activeProfileId: state.activeProfileId,
-                    comparisonProfileId: state.comparisonProfileId,
-                    compareModeActive: state.compareModeActive,
-                    profiles: state.profiles,
-                    isDark: state.isDark,
+                    currentMode: state.currentMode,
                     complexity: state.complexity,
+                    isDark: state.isDark,
                     labelFormat: state.labelFormat || 'date',
-                    bankWagesView: state.bankWagesView || 'wages'
+                    termRates: state.termRates,
+                    customizedYears: state.customizedYears,
+                    inputs: {}
                 };
+                
+                Object.entries(els.inputs).forEach(([key, el]) => {
+                    if (el) {
+                        settings.inputs[key] = el.type === 'checkbox' ? el.checked : el.value;
+                    }
+                });
                 
                 // Save draggable cards layout order
                 const chartsContainer = document.getElementById('draggable-charts-container');
@@ -3408,17 +2441,6 @@
             }
         };
 
-        const updateSubmitButtonCTA = () => {
-            const calcBtn = document.getElementById('calcBtn');
-            if (calcBtn) {
-                if (state.currentMode === 'cc') {
-                    calcBtn.textContent = 'Optimize Credit Card Payoff';
-                } else {
-                    calcBtn.textContent = 'Optimize Mortgage Strategy';
-                }
-            }
-        };
-
         const loadSettings = () => {
             const syncLabelButtons = () => {
                 const formatBtns = document.querySelectorAll('.label-format-btn');
@@ -3427,435 +2449,117 @@
                 });
             };
 
-            const sanitizeProfile = (profile) => {
-                if (!profile || typeof profile !== 'object') return null;
-                
-                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-
-                const defaultInputs = {
-                    homePrice: "800000",
-                    downPayment: "160000",
-                    ccBalance: "15000",
-                    province: "ON",
-                    rate: "2.62",
-                    amortization: "30",
-                    term: "5",
-                    compounding: "semi",
-                    countrySelect: "semi",
-                    frequency: "monthly",
-                    pitiToggle: false,
-                    tax: "4000",
-                    ins: "1000",
-                    hoa: "0",
-                    pmi: "0.5",
-                    oppCostToggle: false,
-                    investRate: "7.0",
-                    extra: "0",
-                    date: prefilledDate,
-                    rateShockToggle: false,
-                    mortgageRate: "2.62",
-                    mortgageExtra: "0",
-                    ccRate: "19.99",
-                    ccExtra: "0"
-                };
-                
-                const sanitized = {
-                    id: profile.id || 'profile-' + Date.now(),
-                    name: profile.name || "Active Scenario",
-                    currentMode: profile.currentMode === 'cc' ? 'cc' : 'mortgage',
-                    complexity: profile.complexity === 'advanced' ? 'advanced' : 'simple',
-                    isDark: profile.isDark === true,
-                    termRates: typeof profile.termRates === 'object' ? profile.termRates : {},
-                    customizedYears: typeof profile.customizedYears === 'object' ? profile.customizedYears : {},
-                    bankWagesView: ['rent', 'rent-tax-ins'].includes(profile.bankWagesView) ? profile.bankWagesView : 'wages',
-                    inputs: {}
-                };
-                
-                const sourceInputs = profile.inputs && typeof profile.inputs === 'object' ? profile.inputs : {};
-                
-                // Compatibility mapping for older schema keys
-                if (sourceInputs.interestRate !== undefined && sourceInputs.rate === undefined) {
-                    sourceInputs.rate = sourceInputs.interestRate;
-                }
-                if (sourceInputs.interestRateCC !== undefined && sourceInputs.rate === undefined && sanitized.currentMode === 'cc') {
-                    sourceInputs.rate = sourceInputs.interestRateCC;
-                }
-                if (sourceInputs.paymentFrequency !== undefined && sourceInputs.frequency === undefined) {
-                    sourceInputs.frequency = sourceInputs.paymentFrequency;
-                }
-                if (sourceInputs.extraPayment !== undefined && sourceInputs.extra === undefined) {
-                    sourceInputs.extra = sourceInputs.extraPayment;
-                }
-                if (sourceInputs.firstPaymentDate !== undefined && sourceInputs.date === undefined) {
-                    sourceInputs.date = sourceInputs.firstPaymentDate;
-                }
-                if (sourceInputs.includePitiToggle !== undefined && sourceInputs.pitiToggle === undefined) {
-                    sourceInputs.pitiToggle = sourceInputs.includePitiToggle;
-                }
-                if (sourceInputs.propertyTax !== undefined && sourceInputs.tax === undefined) {
-                    sourceInputs.tax = sourceInputs.propertyTax;
-                }
-                if (sourceInputs.homeInsurance !== undefined && sourceInputs.ins === undefined) {
-                    sourceInputs.ins = sourceInputs.homeInsurance;
-                }
-                if (sourceInputs.hoaFees !== undefined && sourceInputs.hoa === undefined) {
-                    sourceInputs.hoa = sourceInputs.hoaFees;
-                }
-                if (sourceInputs.pmiRate !== undefined && sourceInputs.pmi === undefined) {
-                    sourceInputs.pmi = sourceInputs.pmiRate;
-                }
-
-                // Set default mode-specific rates if missing from old schemas
-                if (sourceInputs.mortgageRate === undefined) {
-                    sourceInputs.mortgageRate = (sanitized.currentMode !== 'cc') ? (sourceInputs.rate || "2.62") : "2.62";
-                }
-                if (sourceInputs.mortgageExtra === undefined) {
-                    sourceInputs.mortgageExtra = (sanitized.currentMode !== 'cc') ? (sourceInputs.extra || "0") : "0";
-                }
-                if (sourceInputs.ccRate === undefined) {
-                    sourceInputs.ccRate = (sanitized.currentMode === 'cc') ? (sourceInputs.rate || "19.99") : "19.99";
-                }
-                if (sourceInputs.ccExtra === undefined) {
-                    sourceInputs.ccExtra = (sanitized.currentMode === 'cc') ? (sourceInputs.extra || "0") : "0";
-                }
-
-                Object.keys(defaultInputs).forEach(key => {
-                    const srcVal = sourceInputs[key];
-                    if (srcVal !== undefined) {
-                        if (typeof defaultInputs[key] === 'boolean') {
-                            sanitized.inputs[key] = srcVal === true || srcVal === 'true';
-                        } else {
-                            sanitized.inputs[key] = String(srcVal);
-                        }
-                    } else {
-                        sanitized.inputs[key] = defaultInputs[key];
-                    }
-                });
-                
-                return sanitized;
-            };
-
-            const initializeDefaultState = () => {
-                const defaultId = 'profile-default';
-                state.profiles = {};
-                
-                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-                
-                state.profiles[defaultId] = {
-                    id: defaultId,
-                    name: "30-Year Baseline",
-                    currentMode: 'mortgage',
-                    complexity: 'simple',
-                    isDark: false,
-                    termRates: {},
-                    customizedYears: {},
-                    bankWagesView: 'wages',
-                    inputs: {
-                        homePrice: "800000",
-                        downPayment: "160000",
-                        ccBalance: "15000",
-                        province: "ON",
-                        rate: "2.62",
-                        amortization: "30",
-                        term: "5",
-                        compounding: "semi",
-                        countrySelect: "semi",
-                        frequency: "monthly",
-                        pitiToggle: false,
-                        tax: "4000",
-                        ins: "1000",
-                        hoa: "0",
-                        pmi: "0.5",
-                        oppCostToggle: false,
-                        investRate: "7.0",
-                        extra: "0",
-                        date: prefilledDate,
-                        rateShockToggle: false,
-                        mortgageRate: "2.62",
-                        mortgageExtra: "0",
-                        ccRate: "19.99",
-                        ccExtra: "0"
-                    }
-                };
-                state.activeProfileId = defaultId;
-                state.comparisonProfileId = null;
-                state.compareModeActive = false;
-                state.bankWagesView = 'wages';
-                state.isDark = false;
-                state.complexity = 'simple';
-                state.labelFormat = 'date';
-            };
-
-            let settings = null;
             try {
                 const data = localStorage.getItem('mtg_calculator_settings');
                 if (!data) {
-                    initializeDefaultState();
-                } else {
-                    try {
-                        settings = JSON.parse(data);
-                    } catch (jsonErr) {
-                        throw new Error("JSON parse failure: corrupted storage data");
-                    }
-                    
-                    if (!settings || typeof settings !== 'object') {
-                        throw new Error("Invalid storage structure format");
-                    }
-                    
-                    // Schema Validation & Migration Guard
-                    if (!settings.version || settings.version < CURRENT_ENGINE_VERSION) {
-                        console.warn("Outdated or unversioned schema detected. Initiating state migration block.");
-                        
-                        let migratedProfiles = {};
-                        let activeId = 'profile-default';
-                        
-                        if (settings.profiles && typeof settings.profiles === 'object') {
-                            // Upgrade existing profiles registry
-                            Object.entries(settings.profiles).forEach(([id, prof]) => {
-                                const sanitized = sanitizeProfile(prof);
-                                if (sanitized) {
-                                    migratedProfiles[sanitized.id] = sanitized;
-                                }
-                            });
-                            activeId = settings.activeProfileId;
-                        } else if (settings.inputs && typeof settings.inputs === 'object') {
-                            // Migrate legacy single-scenario flat input schema
-                            const legacyId = 'profile-legacy';
-                            const legacyProf = sanitizeProfile({
-                                id: legacyId,
-                                name: "Migrated Baseline",
-                                currentMode: settings.currentMode,
-                                complexity: settings.complexity,
-                                isDark: settings.isDark,
-                                termRates: settings.termRates,
-                                customizedYears: settings.customizedYears,
-                                bankWagesView: settings.bankWagesView,
-                                inputs: settings.inputs
-                            });
-                            if (legacyProf) {
-                                migratedProfiles[legacyId] = legacyProf;
-                                activeId = legacyId;
+                    syncLabelButtons();
+                    return;
+                }
+                
+                const settings = JSON.parse(data);
+                if (!settings) {
+                    syncLabelButtons();
+                    return;
+                }
+                
+                if (settings.currentMode) state.currentMode = settings.currentMode;
+                if (settings.complexity) state.complexity = settings.complexity;
+                if (settings.isDark !== undefined) state.isDark = settings.isDark;
+                if (settings.labelFormat) state.labelFormat = settings.labelFormat;
+                else state.labelFormat = 'date';
+                if (settings.termRates) state.termRates = settings.termRates;
+                if (settings.customizedYears) state.customizedYears = settings.customizedYears;
+                
+                if (settings.inputs) {
+                    Object.entries(settings.inputs).forEach(([key, val]) => {
+                        const el = els.inputs[key];
+                        if (el) {
+                            if (el.type === 'checkbox') {
+                                el.checked = val;
+                            } else {
+                                el.value = val;
                             }
                         }
-                        
-                        if (Object.keys(migratedProfiles).length === 0) {
-                            throw new Error("No legacy data structures could be successfully migrated.");
-                        }
-                        
-                        settings = {
-                            version: CURRENT_ENGINE_VERSION,
-                            activeProfileId: activeId,
-                            comparisonProfileId: settings.comparisonProfileId || null,
-                            compareModeActive: !!settings.compareModeActive,
-                            profiles: migratedProfiles,
-                            isDark: settings.isDark !== undefined ? settings.isDark : false,
-                            complexity: settings.complexity || 'simple',
-                            labelFormat: settings.labelFormat || 'date',
-                            bankWagesView: settings.bankWagesView || 'wages',
-                            chartsOrder: settings.chartsOrder,
-                            strategyOrder: settings.strategyOrder
-                        };
-                    }
-                    
-                    // Hydrate State Store safely from parsed settings
-                    state.activeProfileId = settings.activeProfileId;
-                    state.comparisonProfileId = settings.comparisonProfileId;
-                    state.compareModeActive = !!settings.compareModeActive;
-                    state.profiles = {};
-                    
-                    Object.entries(settings.profiles).forEach(([id, prof]) => {
-                        const clean = sanitizeProfile(prof);
-                        if (clean) {
-                            state.profiles[clean.id] = clean;
-                        }
                     });
-                    
-                    if (Object.keys(state.profiles).length === 0) {
-                        throw new Error("No profiles could be successfully verified after schema validation");
-                    }
-                    
-                    if (!state.profiles[state.activeProfileId]) {
-                        state.activeProfileId = Object.keys(state.profiles)[0];
-                    }
-                    
-                    state.isDark = settings.isDark === true;
-                    state.complexity = settings.complexity === 'advanced' ? 'advanced' : 'simple';
-                    state.labelFormat = settings.labelFormat === 'age' ? 'age' : 'date';
-                    state.bankWagesView = ['rent', 'rent-tax-ins'].includes(settings.bankWagesView) ? settings.bankWagesView : 'wages';
                 }
-            } catch (err) {
-                console.warn("State engine hydration halted safely. Running emergency reset:", err.message || err);
-                initializeDefaultState();
-                try {
-                    saveSettings(); // Persist the clean initial structural defaults to clear the corruption
-                } catch (saveErr) {
-                    console.error("Emergency settings save failed:", saveErr);
+
+                // Restore draggable charts order
+                if (settings.chartsOrder) {
+                    const container = document.getElementById('draggable-charts-container');
+                    if (container) {
+                        const wrappers = Array.from(container.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        settings.chartsOrder.forEach(id => {
+                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                        });
+                    }
                 }
-            }
-
-            // Restore UI layout, active profiles, and inputs
-            const activeProfile = state.profiles[state.activeProfileId];
-            state.currentMode = activeProfile.currentMode || 'mortgage';
-            state.complexity = activeProfile.complexity || 'simple';
-            state.isDark = activeProfile.isDark !== undefined ? activeProfile.isDark : false;
-            state.termRates = activeProfile.termRates || {};
-            state.customizedYears = activeProfile.customizedYears || {};
-            state.bankWagesView = activeProfile.bankWagesView || 'wages';
-
-            if (activeProfile.inputs) {
-                Object.entries(activeProfile.inputs).forEach(([key, val]) => {
-                    const el = els.inputs[key];
-                    if (el) {
-                        if (el.type === 'checkbox') {
-                            el.checked = val === true || val === 'true';
-                        } else {
-                            el.value = val;
-                        }
+                
+                // Restore draggable strategy charts order
+                if (settings.strategyOrder) {
+                    const container = document.getElementById('draggable-strategy-container');
+                    if (container) {
+                        const wrappers = Array.from(container.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        settings.strategyOrder.forEach(id => {
+                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                        });
+                    }
+                }
+                
+                // Sync classes and buttons based on loaded settings
+                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                
+                // Update mode switch checkbox
+                if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
+                
+                // Update Mode buttons (.mode-btn) active state
+                els.masterBtns.forEach(btn => {
+                    if (btn.getAttribute('data-mode') === state.currentMode) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
                     }
                 });
-            }
-
-            // Restore draggable charts order
-            if (settings && settings.chartsOrder) {
-                const container = document.getElementById('draggable-charts-container');
-                if (container) {
-                    const wrappers = Array.from(container.children);
-                    const wrapperMap = {};
-                    wrappers.forEach(wrapper => {
-                        const chartDiv = wrapper.querySelector('.plotly-container');
-                        if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                    });
-                    settings.chartsOrder.forEach(id => {
-                        if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                    });
-                }
-            }
-            
-            // Restore draggable strategy charts order
-            if (settings && settings.strategyOrder) {
-                const container = document.getElementById('draggable-strategy-container');
-                if (container) {
-                    const wrappers = Array.from(container.children);
-                    const wrapperMap = {};
-                    wrappers.forEach(wrapper => {
-                        const chartDiv = wrapper.querySelector('.plotly-container');
-                        if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                    });
-                    settings.strategyOrder.forEach(id => {
-                        if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                    });
-                }
-            }
-            
-            // Sync classes and buttons based on loaded settings
-            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
-            
-            // Update mode switch checkbox
-            if (els.modeSwitch) els.modeSwitch.checked = state.isDark;
-            
-            // Update Mode buttons (.mode-btn) active state
-            els.masterBtns.forEach(btn => {
-                if (btn.getAttribute('data-mode') === state.currentMode) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-
-            updateSubmitButtonCTA();
-            
-            // Update Complexity buttons (.complexity-btn) active state
-            const complexityBtns = document.querySelectorAll('.complexity-btn');
-            complexityBtns.forEach(btn => {
-                if (btn.getAttribute('data-complexity') === state.complexity) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            // Update inner circle label depending on the restored mode
-            if (document.getElementById('inner-circle-label')) {
-                document.getElementById('inner-circle-label').textContent = 
-                    state.currentMode === 'cc' ? 'CC Balance' : 'Principal';
-            }
-            
-            // Update display status of conditional sections
-            if (els.containers.pitiSection) {
-                els.containers.pitiSection.style.display = els.inputs.pitiToggle.checked ? 'block' : 'none';
-            }
-            if (els.containers.oppCostSection) {
-                els.containers.oppCostSection.style.display = els.inputs.oppCostToggle.checked ? 'block' : 'none';
-            }
-            if (els.containers.rateShockSection) {
-                els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
-            }
-            
-            // Update Wage Toggle buttons active state
-            const wageToggleBtns = document.querySelectorAll('.wage-toggle-btn');
-            wageToggleBtns.forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-view') === state.bankWagesView);
-            });
-
-            syncLabelButtons();
-
-            // Dispatch change event to sync custom dropdown visuals (like the flag)
-            if (els.inputs.countrySelect) {
-                els.inputs.countrySelect.dispatchEvent(new Event('change'));
-            }
-
-            if (typeof renderSandboxList === 'function') {
-                renderSandboxList();
-            }
-            syncCheckboxARIALabels();
-        };
-
-        const adjustTooltip = (tip, active) => {
-            const tooltip = tip.querySelector('.tooltip-text');
-            if (!tooltip) return;
-
-            if (!active) {
-                tooltip.style.transform = '';
-                tooltip.style.removeProperty('--arrow-left');
-                tooltip.classList.remove('tooltip-below');
-                return;
-            }
-
-            // Reset inline styles and remove below class temporarily to measure standard position
-            tooltip.style.transform = '';
-            tooltip.style.removeProperty('--arrow-left');
-            tooltip.classList.remove('tooltip-below');
-
-            let rect = tooltip.getBoundingClientRect();
-            
-            // If tooltip overflows top of screen, flip it below the trigger icon
-            if (rect.top < 10) {
-                tooltip.classList.add('tooltip-below');
-                // Re-measure bounding box for horizontal alignment checks
-                rect = tooltip.getBoundingClientRect();
-            }
-
-            const viewportWidth = window.innerWidth;
-            let offset = 0;
-            if (rect.left < 10) {
-                offset = 10 - rect.left;
-            } else if (rect.right > viewportWidth - 10) {
-                offset = (viewportWidth - 10) - rect.right;
-            }
-
-            if (offset !== 0) {
-                const isMobile = window.innerWidth < 768;
-                const defaultTranslateX = isMobile ? '-40%' : '-50%';
-                const defaultArrowLeft = isMobile ? '40%' : '50%';
                 
-                tooltip.style.transform = `translateX(calc(${defaultTranslateX} + ${offset}px)) translateY(0)`;
-                tooltip.style.setProperty('--arrow-left', `calc(${defaultArrowLeft} - ${offset}px)`);
-            } else {
-                const isMobile = window.innerWidth < 768;
-                const defaultTranslateX = isMobile ? '-40%' : '-50%';
-                tooltip.style.transform = `translateX(${defaultTranslateX}) translateY(0)`;
+                // Update Complexity buttons (.complexity-btn) active state
+                const complexityBtns = document.querySelectorAll('.complexity-btn');
+                complexityBtns.forEach(btn => {
+                    if (btn.getAttribute('data-complexity') === state.complexity) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Update inner circle label depending on the restored mode
+                if (document.getElementById('inner-circle-label')) {
+                    document.getElementById('inner-circle-label').textContent = 
+                        state.currentMode === 'cc' ? 'CC Balance' : 'Principal';
+                }
+                
+                // Update display status of conditional sections
+                if (els.containers.pitiSection) {
+                    els.containers.pitiSection.style.display = els.inputs.pitiToggle.checked ? 'block' : 'none';
+                }
+                if (els.containers.oppCostSection) {
+                    els.containers.oppCostSection.style.display = els.inputs.oppCostToggle.checked ? 'block' : 'none';
+                }
+                if (els.containers.rateShockSection) {
+                    els.containers.rateShockSection.style.display = (els.inputs.rateShockToggle && els.inputs.rateShockToggle.checked) ? 'block' : 'none';
+                }
+                
+                syncLabelButtons();
+            } catch (err) {
+                console.error("Error loading settings from localStorage:", err);
             }
         };
 
@@ -3873,13 +2577,11 @@
                 tip.addEventListener('mouseenter', () => {
                     const parent = getParentContainer(tip);
                     if (parent) parent.classList.add('has-active-tooltip');
-                    adjustTooltip(tip, true);
                 });
 
                 tip.addEventListener('mouseleave', () => {
                     const parent = getParentContainer(tip);
                     if (parent) parent.classList.remove('has-active-tooltip');
-                    adjustTooltip(tip, false);
                 });
 
                 tip.addEventListener('touchstart', () => {
@@ -3888,13 +2590,11 @@
                         activeTip.classList.remove('touch-active');
                         const oldParent = getParentContainer(activeTip);
                         if (oldParent) oldParent.classList.remove('has-active-tooltip');
-                        adjustTooltip(activeTip, false);
                     }
                     tip.classList.add('touch-active');
                     const newParent = getParentContainer(tip);
                     if (newParent) newParent.classList.add('has-active-tooltip');
                     activeTip = tip;
-                    adjustTooltip(tip, true);
                 }, { passive: true });
 
                 tip.addEventListener('touchend', () => {
@@ -3902,7 +2602,6 @@
                         tip.classList.remove('touch-active');
                         const parent = getParentContainer(tip);
                         if (parent) parent.classList.remove('has-active-tooltip');
-                        adjustTooltip(tip, false);
                         if (activeTip === tip) activeTip = null;
                     }, 1200);
                 }, { passive: true });
@@ -3913,7 +2612,6 @@
                     activeTip.classList.remove('touch-active');
                     const parent = getParentContainer(activeTip);
                     if (parent) parent.classList.remove('has-active-tooltip');
-                    adjustTooltip(activeTip, false);
                     activeTip = null;
                 }
             }, { passive: true });
@@ -4101,7 +2799,7 @@
                         <span>Province:</span><strong>${inputs.province === 'QC' ? 'Quebec (5%)' : 'Ontario (3%)'}</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span>Monthly Surplus Payment:</span><strong>${formatCurrency(inputs.extraPayment)}/Month</strong>
+                        <span>Monthly Surplus Payment:</span><strong>${formatCurrency(inputs.extraPayment)}/mo</strong>
                     </div>
                 `;
             }
@@ -4179,7 +2877,7 @@
                                     </div>
                                 ` : `
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span>Daily Fee to the Bank:</span><strong>${dailyVampire}</strong>
+                                        <span>Daily Interest Drain:</span><strong>${dailyVampire}</strong>
                                     </div>
                                 `}
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
@@ -4456,10 +3154,10 @@
             complexityBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     complexityBtns.forEach(b => b.classList.remove('active'));
-                    e.currentTarget.classList.add('active');
-                    state.complexity = e.currentTarget.getAttribute('data-complexity');
+                    e.target.classList.add('active');
+                    state.complexity = e.target.getAttribute('data-complexity');
                     
-                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
+                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
                     
                     calculate();
                     saveSettings();
@@ -4467,69 +3165,37 @@
             });
         };
 
-        const setupBankWagesToggle = () => {
-            const container = document.getElementById('bankWagesToggle');
-            if (!container) return;
-            const buttons = container.querySelectorAll('.wage-toggle-btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const view = e.currentTarget.getAttribute('data-view');
-                    if (state.bankWagesView === view) return;
-                    
-                    state.bankWagesView = view;
-                    buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === view));
-                    
-                    if (window.lastActData) {
-                        renderBankWages(window.lastActData);
-                    }
-                    saveSettings();
-                });
-            });
-        };
-
         els.masterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const targetMode = e.currentTarget.getAttribute('data-mode');
+                const targetMode = e.target.getAttribute('data-mode');
                 if (state.currentMode === targetMode) return;
                 
-                // Save current state of old mode inputs before switching
-                saveSettings();
-                
                 els.masterBtns.forEach(b => b.classList.remove('active'));
-                e.currentTarget.classList.add('active');
+                e.target.classList.add('active');
                 state.currentMode = targetMode;
                 
-                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
+                document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
                 
                 if (state.currentMode === 'cc') {
-                    const activeProfile = state.profiles[state.activeProfileId];
-                    const savedRate = activeProfile && activeProfile.inputs ? activeProfile.inputs.ccRate : undefined;
-                    const savedExtra = activeProfile && activeProfile.inputs ? activeProfile.inputs.ccExtra : undefined;
-                    
-                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 19.99;
-                    els.inputs.extra.value = savedExtra !== undefined ? savedExtra : 0;
+                    els.inputs.rate.value = 19.99;
+                    els.inputs.extra.value = 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'CC Balance';
                 } else {
-                    const activeProfile = state.profiles[state.activeProfileId];
-                    const savedRate = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageRate : undefined;
-                    const savedExtra = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageExtra : undefined;
-                    
-                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 2.62;
-                    els.inputs.extra.value = savedExtra !== undefined ? savedExtra : 0;
+                    els.inputs.rate.value = 2.62;
+                    els.inputs.extra.value = 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'Principal';
                 }
                 
-                updateSubmitButtonCTA();
                 calculate();
                 saveSettings();
             });
         });
 
-        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim(); syncCheckboxARIALabels(); calculate(); saveSettings(); });
+        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`; calculate(); saveSettings(); });
         
-        els.inputs.pitiToggle.addEventListener('change', (e) => { els.containers.pitiSection.style.display = e.target.checked ? 'block' : 'none'; syncCheckboxARIALabels(); calculate(); saveSettings(); });
-        els.inputs.oppCostToggle.addEventListener('change', (e) => { els.containers.oppCostSection.style.display = e.target.checked ? 'block' : 'none'; syncCheckboxARIALabels(); calculate(); saveSettings(); });
-        els.inputs.rateShockToggle.addEventListener('change', (e) => { syncCheckboxARIALabels(); calculate(); saveSettings(); });
+        els.inputs.pitiToggle.addEventListener('change', (e) => { els.containers.pitiSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
+        els.inputs.oppCostToggle.addEventListener('change', (e) => { els.containers.oppCostSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
+        els.inputs.rateShockToggle.addEventListener('change', (e) => { calculate(); saveSettings(); });
         
         // Bidirectional synchronization between up-top Region select and in-calculator Compounding select
         els.inputs.countrySelect.addEventListener('change', (e) => {
@@ -4557,129 +3223,24 @@
             saveSettings();
         });
         
-        const resetApplicationData = () => {
+        document.getElementById('clearBtn').addEventListener('click', () => {
             try {
                 localStorage.removeItem('mtg_calculator_settings');
             } catch (err) {
                 console.error("Error clearing settings from localStorage:", err);
             }
             els.form.reset();
-            els.inputs.rate.value = '2.62';
-            els.inputs.extra.value = '0';
+            // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-            const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-            els.inputs.date.value = prefilledDate;
-            els.inputs.countrySelect.value = 'semi';
+            els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+            els.inputs.countrySelect.value = 'semi'; // Reset up-top country select to Canada
             state.labelFormat = 'date';
-            
-            // Sync Date format button active states
             document.querySelectorAll('.label-format-btn').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-format') === 'date');
             });
-
-            // Set state parameters back to defaults
-            state.currentMode = 'mortgage';
-            state.complexity = 'simple';
-            state.isDark = false;
-            state.compareModeActive = false;
-            state.comparisonProfileId = null;
             state.termRates = {};
             state.customizedYears = {};
-            state.bankWagesView = 'wages';
-
-            const defaultId = 'profile-default';
-            state.profiles = {};
-            state.profiles[defaultId] = {
-                id: defaultId,
-                name: "30-Year Baseline",
-                currentMode: 'mortgage',
-                complexity: 'simple',
-                isDark: false,
-                termRates: {},
-                customizedYears: {},
-                bankWagesView: 'wages',
-                inputs: {
-                    homePrice: "800000",
-                    downPayment: "160000",
-                    ccBalance: "15000",
-                    province: "ON",
-                    rate: "2.62",
-                    amortization: "30",
-                    term: "5",
-                    compounding: "semi",
-                    countrySelect: "semi",
-                    frequency: "monthly",
-                    pitiToggle: false,
-                    tax: "4000",
-                    ins: "1000",
-                    hoa: "0",
-                    pmi: "0.5",
-                    oppCostToggle: false,
-                    investRate: "7.0",
-                    extra: "0",
-                    date: prefilledDate,
-                    rateShockToggle: false,
-                    mortgageRate: "2.62",
-                    mortgageExtra: "0",
-                    ccRate: "19.99",
-                    ccExtra: "0"
-                }
-            };
-            state.activeProfileId = defaultId;
-
-            // Slide closed sandbox sidebars
-            const closeBtn = document.getElementById('closeSidebarBtn');
-            if (closeBtn) {
-                closeBtn.click();
-            } else {
-                const sidebar = document.getElementById('scenarioSidebar');
-                if (sidebar) sidebar.classList.remove('active');
-                const overlay = document.getElementById('sidebarOverlay');
-                if (overlay) overlay.classList.remove('active');
-            }
-
-            // Reset bento grid draggable order back to default visual structure
-            const container = document.getElementById('draggable-charts-container');
-            if (container) {
-                const order = ['chart3', 'chart', 'chart4', 'chart2', 'chart11', 'chart6'];
-                const wrappers = Array.from(container.children);
-                const wrapperMap = {};
-                wrappers.forEach(wrapper => {
-                    const chartDiv = wrapper.querySelector('.plotly-container');
-                    if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                });
-                order.forEach(id => {
-                    if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
-                });
-            }
-            
-            const stratContainer = document.getElementById('draggable-strategy-container');
-            if (stratContainer) {
-                const order = ['chart9', 'chart12'];
-                const wrappers = Array.from(stratContainer.children);
-                const wrapperMap = {};
-                wrappers.forEach(wrapper => {
-                    const chartDiv = wrapper.querySelector('.plotly-container');
-                    if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
-                });
-                order.forEach(id => {
-                    if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
-                });
-            }
-
-            // Sync visual button tabs, body classes, country flags, and calculate results
-            loadSettings();
             calculate();
-        };
-
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            const confirmWipe = confirm(
-                "⚠️ WARNING: Reset Sidebar Form\n\nAre you sure you want to clear all customized data, calculations, and restore the calculator to default start choices?"
-            );
-            if (confirmWipe) {
-                resetApplicationData();
-                alert("Calculator successfully reset to system defaults! 🎉");
-            }
         });
 
         // Table label format selectors (DATE vs PERIOD)
@@ -4796,19 +3357,11 @@
             });
 
             dropdown.addEventListener('click', (e) => {
-                const countryDropdown = document.getElementById('country-dropdown');
-                if (countryDropdown && !countryDropdown.contains(e.target)) {
-                    countryDropdown.classList.remove('active');
-                }
                 e.stopPropagation();
             });
 
             document.addEventListener('click', () => {
                 dropdown.classList.remove('active');
-                const countryDropdown = document.getElementById('country-dropdown');
-                if (countryDropdown) {
-                    countryDropdown.classList.remove('active');
-                }
             });
 
             // Open Sync & Portability Modal
@@ -4851,293 +3404,68 @@
                 );
                 
                 if (confirmWipe) {
-                    resetApplicationData();
+                    try {
+                        localStorage.removeItem('mtg_calculator_settings');
+                    } catch (err) {
+                        console.error("Error clearing settings from localStorage:", err);
+                    }
+                    els.form.reset();
+                    // Re-initialize default start date (first day of the next calendar month) to prevent empty date fields on reset
+                    const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
+                    els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
+                    els.inputs.countrySelect.value = 'semi'; // Reset to Canada
+                    state.labelFormat = 'date';
+                    document.querySelectorAll('.label-format-btn').forEach(b => {
+                        b.classList.toggle('active', b.getAttribute('data-format') === 'date');
+                    });
+                    state.termRates = {};
+                    state.customizedYears = {};
+                    
+                    // Reset bento grid draggable order back to default visual structure
+                    const container = document.getElementById('draggable-charts-container');
+                    if (container) {
+                        const order = ['chart3', 'chart', 'chart4', 'chart2', 'chart11', 'chart6'];
+                        const wrappers = Array.from(container.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        order.forEach(id => {
+                            if (wrapperMap[id]) container.appendChild(wrapperMap[id]);
+                        });
+                    }
+                    
+                    const stratContainer = document.getElementById('draggable-strategy-container');
+                    if (stratContainer) {
+                        const order = ['chart9', 'chart12'];
+                        const wrappers = Array.from(stratContainer.children);
+                        const wrapperMap = {};
+                        wrappers.forEach(wrapper => {
+                            const chartDiv = wrapper.querySelector('.plotly-container');
+                            if (chartDiv && chartDiv.id) wrapperMap[chartDiv.id] = wrapper;
+                        });
+                        order.forEach(id => {
+                            if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
+                        });
+                    }
+
+                    // Reset values to defaults
+                    state.currentMode = 'mortgage';
+                    state.complexity = 'simple';
+                    state.isDark = false;
+                    
+                    document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
+                    
+                    // Reset inputs
+                    els.inputs.rate.value = 2.62;
+                    els.inputs.extra.value = 0;
+                    
+                    loadSettings(); // fallback restore
+                    calculate();
+                    
                     alert("Calculator successfully reset to system defaults! 🎉");
                 }
-            });
-        };
-
-        /*
-         * MULTI-SCENARIO SANDBOX (PROFILE MANAGER) CONTROLLER 📂
-         * Connects folder trigger buttons, manages sliding panels, handles cloning/creation,
-         * coordinates inline renaming, and implements comparison toggles.
-         */
-        const setupScenarioSandbox = () => {
-            const trigger = document.getElementById('sandboxTrigger');
-            const sidebar = document.getElementById('scenarioSidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const closeBtn = document.getElementById('closeSidebarBtn');
-            const createBtn = document.getElementById('createProfileBtn');
-            const newNameInput = document.getElementById('newProfileName');
-
-            let previouslyFocusedElement = null;
-
-            const trapFocus = (e) => {
-                if (e.key === 'Tab') {
-                    const focusables = Array.from(sidebar.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])'))
-                        .filter(el => !el.disabled && el.offsetWidth > 0 && el.offsetHeight > 0);
-                    
-                    if (focusables.length === 0) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    const first = focusables[0];
-                    const last = focusables[focusables.length - 1];
-                    
-                    if (e.shiftKey) {
-                        if (document.activeElement === first) {
-                            last.focus();
-                            e.preventDefault();
-                        }
-                    } else {
-                        if (document.activeElement === last) {
-                            first.focus();
-                            e.preventDefault();
-                        }
-                    }
-                } else if (e.key === 'Escape') {
-                    closeSidebar();
-                }
-            };
-
-            const openSidebar = () => {
-                previouslyFocusedElement = document.activeElement;
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-                renderSandboxList();
-                document.addEventListener('keydown', trapFocus);
-                setTimeout(() => {
-                    const nameInput = document.getElementById('newProfileName');
-                    if (nameInput) nameInput.focus();
-                }, 100);
-            };
-
-            const closeSidebar = () => {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.removeEventListener('keydown', trapFocus);
-                if (previouslyFocusedElement) {
-                    previouslyFocusedElement.focus();
-                }
-            };
-
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                saveSettings();
-                openSidebar();
-            });
-
-            closeBtn.addEventListener('click', () => {
-                closeSidebar();
-            });
-
-            overlay.addEventListener('click', () => {
-                closeSidebar();
-            });
-
-            createBtn.addEventListener('click', () => {
-                saveSettings(); // Save current active inputs first
-                const name = newNameInput.value.trim() || `Scenario ${Object.keys(state.profiles).length + 1}`;
-                const newId = 'profile-' + Date.now();
-                
-                const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
-                const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
-
-                const defaultInputs = {
-                    homePrice: "800000",
-                    downPayment: "160000",
-                    ccBalance: "15000",
-                    province: "ON",
-                    rate: "2.62",
-                    amortization: "30",
-                    term: "5",
-                    compounding: "semi",
-                    countrySelect: "semi",
-                    frequency: "monthly",
-                    pitiToggle: false,
-                    tax: "4000",
-                    ins: "1000",
-                    hoa: "0",
-                    pmi: "0.5",
-                    oppCostToggle: false,
-                    investRate: "7.0",
-                    extra: "0",
-                    date: prefilledDate,
-                    rateShockToggle: false
-                };
-
-                state.profiles[newId] = {
-                    id: newId,
-                    name: name,
-                    currentMode: state.currentMode,
-                    complexity: state.complexity,
-                    isDark: state.isDark,
-                    termRates: {},
-                    customizedYears: {},
-                    inputs: defaultInputs
-                };
-
-                state.activeProfileId = newId;
-                newNameInput.value = '';
-                
-                // Persist the new active profile ID and new profiles registry to localStorage
-                saveSettings(true);
-
-                loadSettings();
-                calculate();
-                showFeedback(`Scenario "${name}" Created Successfully! 🎉`);
-            });
-
-            sidebar.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        };
-
-        const renderSandboxList = () => {
-            const container = document.getElementById('profilesScrollContainer');
-            if (!container) return;
-            container.innerHTML = '';
-
-            Object.values(state.profiles).forEach(p => {
-                const isSelected = p.id === state.activeProfileId;
-                const isCompare = p.id === state.comparisonProfileId && state.compareModeActive;
-
-                const card = document.createElement('div');
-                card.className = `profile-card ${isSelected ? 'active active-' + (p.currentMode || 'mortgage') : ''}`;
-                card.setAttribute('data-id', p.id);
-
-                const modeLabel = p.currentMode === 'cc' ? 'Credit Card' : 'Mortgage';
-                const tagComp = p.complexity === 'advanced' ? 'Advanced' : 'Simple';
-                
-                card.innerHTML = `
-                    <div class="profile-card-header">
-                        <h4 class="profile-card-title" id="title-text-${p.id}">${p.name}</h4>
-                        <div class="profile-card-actions">
-                            <button type="button" class="profile-btn clone-btn" title="Clone Scenario" data-id="${p.id}">📋</button>
-                            <button type="button" class="profile-btn delete-btn" title="Delete Scenario" data-id="${p.id}" style="${Object.keys(state.profiles).length <= 1 ? 'display:none' : ''}">🗑️</button>
-                        </div>
-                    </div>
-                    <div class="profile-card-body">
-                        <div class="profile-card-tags">
-                            <span class="profile-tag">${modeLabel}</span>
-                            <span class="profile-tag">${tagComp}</span>
-                        </div>
-                        <label class="compare-toggle-label" data-id="${p.id}">
-                            <input type="checkbox" role="switch" aria-checked="${isCompare ? 'true' : 'false'}" class="compare-checkbox" data-id="${p.id}" ${isCompare ? 'checked' : ''} ${isSelected ? 'disabled style="opacity:0.5"' : ''}>
-                            <span>COMPARE</span>
-                        </label>
-                    </div>
-                `;
-
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.profile-card-actions') || e.target.closest('.compare-toggle-label')) {
-                        return;
-                    }
-                    
-                    const titleText = document.getElementById(`title-text-${p.id}`);
-                    if (e.detail === 2) {
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.value = p.name;
-                        input.addEventListener('blur', () => {
-                            const newName = input.value.trim() || p.name;
-                            p.name = newName;
-                            titleText.textContent = newName;
-                            saveSettings();
-                        });
-                        input.addEventListener('keydown', (evt) => {
-                            if (evt.key === 'Enter') {
-                                input.blur();
-                            }
-                        });
-                        titleText.innerHTML = '';
-                        titleText.appendChild(input);
-                        input.focus();
-                        return;
-                    }
-
-                    saveSettings(); // Save old profile form inputs first
-                    state.activeProfileId = p.id;
-                    
-                    if (state.comparisonProfileId === p.id) {
-                        state.comparisonProfileId = null;
-                        state.compareModeActive = false;
-                    }
-
-                    // Save the activeProfileId update directly to localStorage so loadSettings() reads the correct active ID!
-                    saveSettings(true);
-
-                    loadSettings(); // Load new profile inputs into DOM
-                    calculate(); // Recalculate (which will safely auto-save)
-                });
-
-                card.querySelector('.clone-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const newId = 'profile-' + Date.now();
-                    state.profiles[newId] = JSON.parse(JSON.stringify(p));
-                    state.profiles[newId].id = newId;
-                    state.profiles[newId].name = `${p.name} (Copy)`;
-                    
-                    saveSettings();
-                    loadSettings();
-                    calculate();
-                });
-
-                const delBtn = card.querySelector('.delete-btn');
-                if (delBtn) {
-                    delBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (Object.keys(state.profiles).length <= 1) return;
-                        
-                        const confirmDel = confirm(`Are you sure you want to delete scenario "${p.name}"?`);
-                        if (confirmDel) {
-                            const wasActive = state.activeProfileId === p.id;
-                            delete state.profiles[p.id];
-                            
-                            if (wasActive) {
-                                state.activeProfileId = Object.keys(state.profiles)[0];
-                                
-                                // Save the updated activeProfileId and profiles registry to localStorage so loadSettings() reads it!
-                                saveSettings(true);
-
-                                loadSettings(); // Switch active profile in DOM
-                            } else {
-                                saveSettings(); // Safe to save registry structure deletion
-                            }
-                            
-                            if (state.comparisonProfileId === p.id) {
-                                state.comparisonProfileId = null;
-                                state.compareModeActive = false;
-                            }
-
-                            calculate();
-                        }
-                    });
-                }
-
-                const compCheck = card.querySelector('.compare-checkbox');
-                compCheck.addEventListener('change', (e) => {
-                    e.stopPropagation();
-                    if (e.target.checked) {
-                        state.comparisonProfileId = p.id;
-                        state.compareModeActive = true;
-                        
-                        document.querySelectorAll('.compare-checkbox').forEach(cb => {
-                            if (cb.getAttribute('data-id') !== p.id) {
-                                cb.checked = false;
-                            }
-                        });
-                    } else {
-                        state.comparisonProfileId = null;
-                        state.compareModeActive = false;
-                    }
-                    saveSettings();
-                    calculate();
-                    renderSandboxList();
-                });
-
-                container.appendChild(card);
             });
         };
 
@@ -5305,11 +3633,8 @@
                         }
                     }
 
-                    // Validate settings signature keys (supports version 1 flat format and version 2 multi-profile format)
-                    const isValidV2 = parsedSettings && parsedSettings.profiles && typeof parsedSettings.profiles === 'object' && parsedSettings.activeProfileId;
-                    const isValidV1 = parsedSettings && parsedSettings.currentMode && parsedSettings.inputs && typeof parsedSettings.inputs === 'object';
-                    
-                    if (!isValidV2 && !isValidV1) {
+                    // Validate settings signature keys
+                    if (!parsedSettings || !parsedSettings.currentMode || !parsedSettings.inputs) {
                         showFeedback("Invalid Strategy Blueprint file structure!", true);
                         return;
                     }
@@ -5335,17 +3660,17 @@
                 const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
                 els.inputs.date.value = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
             }
-            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
+            document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
             
             setupTouchTooltips(); 
             setupDragAndDrop();
             setupShareFunctionality();
             setupComplexityToggle();
-            setupBankWagesToggle();
             setupCustomDropdown();
             setupBlueprintSync();
             setupSettingsMenu();
-            setupScenarioSandbox();
+
+
 
             calculate();
             
@@ -5353,24 +3678,5 @@
             gsap.from(".gsap-slide-up", { y: 40, opacity: 0, duration: 0.8, stagger: 0.1, ease: "back.out(1.5)" });
         });
     </script>
-
-    <!-- Scenario Sandbox Sidebar & Backdrop -->
-    <div id="scenarioSidebar" class="scenario-sidebar">
-        <div class="sidebar-header">
-            <h3><span>📂</span> Scenario Sandbox</h3>
-            <button type="button" class="sidebar-close-btn" id="closeSidebarBtn" title="Close Panel">&times;</button>
-        </div>
-        <div class="sidebar-content" style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;">
-            <div class="create-profile-group">
-                <input type="text" id="newProfileName" placeholder="New Scenario Name..." autocomplete="off">
-                <button type="button" class="squishy-btn primary-btn create-profile-btn" id="createProfileBtn" title="Save Current Scenario">+</button>
-            </div>
-            
-            <div id="profilesScrollContainer" class="profiles-list">
-                <!-- Profile items will be injected dynamically -->
-            </div>
-        </div>
-    </div>
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# 📊 Debt Strategy Engine — True Mortgage v2
+# 📊 Debt Elimination Engine — True Mortgage v2
 
 An elite, high-fidelity client-side financial forecasting dashboard engineered to model complex debt amortization, property holding costs, and accelerated payoff strategies. From standard home purchase scenarios to complex revolving credit card debt, this application delivers institutional-grade calculations wrapped in a premium, highly responsive user interface.
 
