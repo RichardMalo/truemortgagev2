@@ -1961,7 +1961,8 @@
             colors: {
                 principal: '#2563eb', interest: '#ef4444', tax: '#f59e0b',
                 ins: '#8b5cf6', hoa: '#14b8a6', pmi: '#ec4899',
-                extra: '#10b981', balance: '#64748b', thresholdRed: '#ef4444', investLine: '#8b5cf6'
+                extra: '#10b981', balance: '#64748b', thresholdRed: '#ef4444', investLine: '#8b5cf6',
+                termEnd: '#f97316'
             }
         };
 
@@ -2338,7 +2339,7 @@
                 termX = baseData.schedule[0].year + inputs.termYears;
             }
             
-            const termLine = termX ? { type: 'line', x0: termX, y0: 0, x1: termX, y1: 1, xref: 'x', yref: 'paper', line: { color: CONFIG.colors.interest, width: 2, dash: 'dot' } } : null;
+            const termLine = termX ? { type: 'line', x0: termX, y0: 0, x1: termX, y1: 1, xref: 'x', yref: 'paper', line: { color: CONFIG.colors.termEnd || '#f97316', width: 2, dash: 'dot' } } : null;
 
             // Define the payoff vertical line for early payoff visual aid
             const payoffX = (hasStrat && actualData.schedule.length > 0)
@@ -2397,8 +2398,30 @@
                 
                 const l3 = getBaseLayout('Debt Balance Over Time', 'Year', '$');
                 const shapes3 = [];
-                if (termLine) shapes3.push(termLine);
-                if (payoffLine) shapes3.push(payoffLine);
+                if (termLine) {
+                    shapes3.push(termLine);
+                    t3.push({
+                        x: [null],
+                        y: [null],
+                        name: 'Term End',
+                        type: 'scatter',
+                        mode: 'lines',
+                        line: { color: CONFIG.colors.termEnd || '#f97316', width: 2, dash: 'dot' },
+                        showlegend: true
+                    });
+                }
+                if (payoffLine) {
+                    shapes3.push(payoffLine);
+                    t3.push({
+                        x: [null],
+                        y: [null],
+                        name: 'Debt Free Year',
+                        type: 'scatter',
+                        mode: 'lines',
+                        line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' },
+                        showlegend: true
+                    });
+                }
                 if (shapes3.length > 0) l3.shapes = shapes3;
                 Plotly.react('chart3', t3, l3, PLOT_CONFIG);
             }
