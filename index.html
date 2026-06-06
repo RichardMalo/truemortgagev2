@@ -2489,7 +2489,18 @@
                         }
 
                         const lOpp = getBaseLayout('Projection: Pay Debt vs Invest', 'Year', 'Net Worth ($)');
-                        if (payoffLine) lOpp.shapes = [payoffLine];
+                        if (payoffLine) {
+                            lOpp.shapes = [payoffLine];
+                            tOpp.push({
+                                x: [null],
+                                y: [null],
+                                name: 'Debt Free Year',
+                                type: 'scatter',
+                                mode: 'lines',
+                                line: { color: CONFIG.colors.interest || '#ef4444', width: 2, dash: 'dot' },
+                                showlegend: true
+                            });
+                        }
                         Plotly.react('chartOppCost', tOpp, lOpp, PLOT_CONFIG);
                     }
                 } else {
