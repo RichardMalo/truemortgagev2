@@ -336,6 +336,41 @@
         .plotly-container { width: 100%; height: 100%; min-height: 350px; pointer-events: auto; }
         .modebar { display: none !important; }
 
+        /* Enlarge/Shrink Chart Feature */
+        .chart-expand-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s var(--spring-easing);
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            padding: 0;
+            line-height: 1;
+        }
+        .chart-expand-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--card-bg);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+        .chart-wrapper.expanded {
+            grid-column: 1 / -1 !important;
+            min-height: 520px !important;
+        }
+
         .table-responsive { width: 100%; overflow-x: auto; max-height: 500px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 15px; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-variant-numeric: tabular-nums; font-size: 0.9rem; }
@@ -3859,6 +3894,52 @@
             }
         };
 
+        const setupChartExpandButtons = () => {
+            const container = document.getElementById('draggable-charts-container');
+            if (!container) return;
+            const wrappers = container.querySelectorAll('.chart-wrapper');
+            wrappers.forEach(wrapper => {
+                if (wrapper.querySelector('.chart-expand-btn')) return;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'chart-expand-btn';
+                btn.innerHTML = '+';
+                btn.title = 'Enlarge Chart';
+                
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    const isExpanded = wrapper.classList.contains('expanded');
+                    if (isExpanded) {
+                        wrapper.classList.remove('expanded');
+                        btn.innerHTML = '+';
+                        btn.title = 'Enlarge Chart';
+                    } else {
+                        wrapper.classList.add('expanded');
+                        btn.innerHTML = '−';
+                        btn.title = 'Shrink Chart';
+                    }
+                    
+                    const chartDiv = wrapper.querySelector('.plotly-container');
+                    if (chartDiv) {
+                        try {
+                            Plotly.Plots.resize(chartDiv);
+                        } catch (err) {
+                            console.warn(`Plotly resize failed:`, err);
+                        }
+                        setTimeout(() => {
+                            try {
+                                Plotly.Plots.resize(chartDiv);
+                            } catch (err) {}
+                        }, 150);
+                    }
+                });
+                
+                wrapper.appendChild(btn);
+            });
+        };
+
         const setupTouchTooltips = () => {
             const tips = document.querySelectorAll('.help-tip');
             let activeTip = null;
@@ -4001,8 +4082,8 @@
             const handleCardClick = (e) => {
                 const card = e.currentTarget;
                 
-                // Exclude clicks intended to interact with Plotly charts or modebars
-                if (e.target.closest('.plotly-container') || e.target.closest('.modebar')) {
+                // Exclude clicks intended to interact with Plotly charts, modebars, or expand buttons
+                if (e.target.closest('.chart-expand-btn') || e.target.closest('.plotly-container') || e.target.closest('.modebar')) {
                     return;
                 }
 
@@ -4664,6 +4745,19 @@
                 });
                 order.forEach(id => {
                     if (wrapperMap[id]) stratContainer.appendChild(wrapperMap[id]);
+                });
+            }
+
+            // Collapse any expanded chart wrappers in Visual Analysis
+            if (container) {
+                const expandedWrappers = container.querySelectorAll('.chart-wrapper.expanded');
+                expandedWrappers.forEach(w => {
+                    w.classList.remove('expanded');
+                    const btn = w.querySelector('.chart-expand-btn');
+                    if (btn) {
+                        btn.innerHTML = '+';
+                        btn.title = 'Enlarge Chart';
+                    }
                 });
             }
 
@@ -5337,6 +5431,7 @@
             }
             document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
             
+            setupChartExpandButtons();
             setupTouchTooltips(); 
             setupDragAndDrop();
             setupShareFunctionality();
