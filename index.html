@@ -2313,13 +2313,19 @@
 
         const getBaseLayout = (title, xTitle, yTitle) => {
             const c = state.isDark ? '#f8fafc' : '#1e293b', g = state.isDark ? '#334155' : '#e2e8f0';
+            const isCurrency = yTitle && (yTitle.includes('$') || yTitle === '$');
+            const yaxisConfig = { title: yTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true };
+            if (isCurrency) {
+                yaxisConfig.tickformat = '$,.0f';
+            }
             return { 
                 title: { text: title, font: { color: c, size: 16, weight: 800 }, y: 0.98 }, 
                 paper_bgcolor: 'transparent', plot_bgcolor: 'transparent', font: { color: c, family: 'Inter, sans-serif' }, 
                 xaxis: { title: xTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
-                yaxis: { title: yTitle, gridcolor: g, showgrid: true, zeroline: false, fixedrange: true }, 
+                yaxis: yaxisConfig, 
                 margin: { t: 50, r: 10, l: 45, b: 80 },
                 legend: { orientation: 'h', y: -0.18, x: 0.5, xanchor: 'center', yanchor: 'top' },
+                hovermode: 'x',
                 autosize: true, dragmode: false 
             };
         };
