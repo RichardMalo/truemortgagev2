@@ -393,12 +393,42 @@
             border-color: var(--primary-color);
             box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
         }
-        .wage-circle-value {
+        .wage-circle-value,
+        .wage-circle-default-val {
             font-family: 'Inter', sans-serif;
             font-weight: 800;
             color: var(--text-color);
             text-align: center;
             line-height: 1.2;
+        }
+        .wage-circle-hover-val {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.15;
+            font-size: 0.78em;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            height: 100%;
+        }
+        .wage-circle-hover-val span {
+            font-weight: 700;
+        }
+        .wage-circle-hover-val .breakdown-rent {
+            font-weight: 800;
+            font-size: 1.05em;
+        }
+        .wage-circle-hover-val .breakdown-tax,
+        .wage-circle-hover-val .breakdown-ins {
+            opacity: 0.85;
+            font-size: 0.9em;
+        }
+        .wage-circle:hover .wage-circle-hover-val {
+            display: flex;
+        }
+        .wage-circle:hover .wage-circle-default-val {
+            display: none;
         }
         .wage-circle-year {
             font-size: 0.85rem;
@@ -2959,7 +2989,14 @@
 
                 if (isRentTaxIns) {
                     const rentAlone = Math.ceil(interest / 12);
-                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
+                    circle.innerHTML = `
+                        <span class="wage-circle-default-val">${formatCurrency(displayVal)}</span>
+                        <div class="wage-circle-hover-val">
+                            <span class="breakdown-rent">${formatCurrency(rentAlone)}</span>
+                            <span class="breakdown-tax">+${formatCurrency(Math.ceil(annualTax/12))}</span>
+                            <span class="breakdown-ins">+${formatCurrency(Math.ceil(annualIns/12))}</span>
+                        </div>
+                    `;
                     circle.title = `Year: ${yr}\nRent + Tax & Insurance: ${formatCurrency(displayVal)}/Month\n(Rent: ${formatCurrency(rentAlone)} + Tax: ${formatCurrency(Math.ceil(annualTax/12))} + Insurance: ${formatCurrency(Math.ceil(annualIns/12))})`;
                 } else if (isRent) {
                     circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
