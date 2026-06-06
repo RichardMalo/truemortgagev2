@@ -3100,6 +3100,24 @@
             if (els.containers.pitiSection) {
                 els.containers.pitiSection.style.display = inputs.usePiti ? 'block' : 'none';
             }
+            
+            // Rent + Tax & Insurance toggle visibility depends on Taxes & Insurance (PITI) toggle
+            const rentTaxInsBtn = document.querySelector('.wage-toggle-btn[data-view="rent-tax-ins"]');
+            if (rentTaxInsBtn) {
+                if (inputs.usePiti) {
+                    rentTaxInsBtn.style.display = '';
+                } else {
+                    rentTaxInsBtn.style.display = 'none';
+                    if (state.bankWagesView === 'rent-tax-ins') {
+                        state.bankWagesView = 'rent';
+                        const container = document.getElementById('bankWagesToggle');
+                        if (container) {
+                            const buttons = container.querySelectorAll('.wage-toggle-btn');
+                            buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === state.bankWagesView));
+                        }
+                    }
+                }
+            }
             if (els.containers.oppCostSection) {
                 els.containers.oppCostSection.style.display = inputs.useOppCost ? 'block' : 'none';
             }
