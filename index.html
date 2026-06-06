@@ -1751,6 +1751,7 @@
                             <div class="wage-toggle-selector" id="bankWagesToggle">
                                 <button class="wage-toggle-btn active" data-view="wages">Bank Wages</button>
                                 <button class="wage-toggle-btn" data-view="rent">Rent Equivalent</button>
+                                <button class="wage-toggle-btn" data-view="rent-tax-ins">Rent + Tax & Insurance</button>
                             </div>
                         </div>
                         <div class="bank-wages-container" id="bankWagesCirclesContainer">
@@ -2854,16 +2855,25 @@
             const titleEl = document.getElementById('bankWagesTitleText');
             const tooltipEl = document.getElementById('bankWagesTooltip');
             const isRent = (state.bankWagesView === 'rent');
+            const isRentTaxIns = (state.bankWagesView === 'rent-tax-ins');
 
             if (titleEl) {
-                titleEl.textContent = isRent 
-                    ? "How much does the interest represent if it was your rent per month" 
-                    : "How much do you pay towards the banks wages per year";
+                if (isRentTaxIns) {
+                    titleEl.textContent = "How much does the interest + carrying costs represent if it was your rent per month";
+                } else if (isRent) {
+                    titleEl.textContent = "How much does the interest represent if it was your rent per month";
+                } else {
+                    titleEl.textContent = "How much do you pay towards the banks wages per year";
+                }
             }
             if (tooltipEl) {
-                tooltipEl.textContent = isRent
-                    ? "Annual interest payments averaged into a monthly rent equivalent: (Annual Interest / 12), rounded up. Note: Does not include property taxes, home insurance, HOA fees, or operational holding costs. For estimation purposes only."
-                    : "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.";
+                if (isRentTaxIns) {
+                    tooltipEl.textContent = "Annual interest payments plus property tax and home insurance averaged into a monthly rent equivalent: ((Annual Interest / 12) rounded up) + (Annual Property Tax / 12) + (Annual Home Insurance / 12), rounded up. For estimation purposes only.";
+                } else if (isRent) {
+                    tooltipEl.textContent = "Annual interest payments averaged into a monthly rent equivalent: (Annual Interest / 12), rounded up. Note: Does not include property taxes, home insurance, HOA fees, or operational holding costs. For estimation purposes only.";
+                } else {
+                    tooltipEl.textContent = "Annual interest payments visualized as wages paid to the bank. Circles shrink over time as you build equity. Note: Calculations are close estimations; bank calculations may vary due to proprietary interest formulas and rounding conventions.";
+                }
             }
 
             const schedule = actData.schedule;
@@ -2900,15 +2910,28 @@
                 yearlyData[firstYear].interest = filledInterest;
             }
 
-            // Find max interest to scale circle sizes
-            let maxInterest = 0;
+            const annualTax = els.inputs.tax ? (parseFloat(els.inputs.tax.value) || 0) : 0;
+            const annualIns = els.inputs.ins ? (parseFloat(els.inputs.ins.value) || 0) : 0;
+
+            // Compute display values for each year and track the maximum to scale circle sizes
+            const displayValues = {};
+            let maxDisplayVal = 0;
             for (const yr of years) {
-                if (yearlyData[yr].interest > maxInterest) {
-                    maxInterest = yearlyData[yr].interest;
+                const interest = yearlyData[yr].interest;
+                let val = interest;
+                if (isRentTaxIns) {
+                    const rentAlone = Math.ceil(interest / 12);
+                    val = Math.ceil(rentAlone + (annualTax / 12) + (annualIns / 12));
+                } else if (isRent) {
+                    val = Math.ceil(interest / 12);
+                }
+                displayValues[yr] = val;
+                if (val > maxDisplayVal) {
+                    maxDisplayVal = val;
                 }
             }
 
-            if (maxInterest <= 0) maxInterest = 1;
+            if (maxDisplayVal <= 0) maxDisplayVal = 1;
 
             const isMobile = window.innerWidth <= 768;
             const minSize = isMobile ? 35 : 55; // pixels
@@ -2916,8 +2939,9 @@
 
             years.forEach(yr => {
                 const interest = yearlyData[yr].interest;
-                // Calculate size proportional to interest
-                const ratio = interest / maxInterest;
+                const displayVal = displayValues[yr];
+                // Calculate size proportional to the displayed value
+                const ratio = displayVal / maxDisplayVal;
                 // Using sqrt scaling for visual area mapping
                 const size = minSize + (maxSize - minSize) * Math.sqrt(ratio);
                 
@@ -2933,13 +2957,16 @@
                 const fontSize = Math.max(0.68, 0.95 * (size / maxSize));
                 circle.style.fontSize = `${fontSize}rem`;
 
-                if (isRent) {
-                    const monthlyAverage = Math.ceil(interest / 12);
-                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(monthlyAverage)}</span>`;
-                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(monthlyAverage)}/Month`;
+                if (isRentTaxIns) {
+                    const rentAlone = Math.ceil(interest / 12);
+                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
+                    circle.title = `Year: ${yr}\nRent + Tax & Insurance: ${formatCurrency(displayVal)}/Month\n(Rent: ${formatCurrency(rentAlone)} + Tax: ${formatCurrency(Math.ceil(annualTax/12))} + Insurance: ${formatCurrency(Math.ceil(annualIns/12))})`;
+                } else if (isRent) {
+                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
+                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(displayVal)}/Month`;
                 } else {
-                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(interest)}</span>`;
-                    circle.title = `Year: ${yr}\nInterest: ${formatCurrency(interest)}`;
+                    circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(displayVal)}</span>`;
+                    circle.title = `Year: ${yr}\nInterest: ${formatCurrency(displayVal)}`;
                 }
 
                 const yearLbl = document.createElement('div');
@@ -3386,7 +3413,7 @@
                     isDark: profile.isDark !== false,
                     termRates: typeof profile.termRates === 'object' ? profile.termRates : {},
                     customizedYears: typeof profile.customizedYears === 'object' ? profile.customizedYears : {},
-                    bankWagesView: profile.bankWagesView === 'rent' ? 'rent' : 'wages',
+                    bankWagesView: ['rent', 'rent-tax-ins'].includes(profile.bankWagesView) ? profile.bankWagesView : 'wages',
                     inputs: {}
                 };
                 
@@ -3601,7 +3628,7 @@
                     state.isDark = settings.isDark !== false;
                     state.complexity = settings.complexity === 'advanced' ? 'advanced' : 'simple';
                     state.labelFormat = settings.labelFormat === 'age' ? 'age' : 'date';
-                    state.bankWagesView = settings.bankWagesView === 'rent' ? 'rent' : 'wages';
+                    state.bankWagesView = ['rent', 'rent-tax-ins'].includes(settings.bankWagesView) ? settings.bankWagesView : 'wages';
                 }
             } catch (err) {
                 console.warn("State engine hydration halted safely. Running emergency reset:", err.message || err);
