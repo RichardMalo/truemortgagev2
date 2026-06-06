@@ -729,6 +729,12 @@
             object-fit: cover;
             border-radius: 2px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, filter 0.3s ease;
+        }
+        body.dark-mode .flag-icon {
+            border-color: rgba(255, 255, 255, 0.15);
+            filter: brightness(0.95) contrast(1.05);
         }
         .dropdown-trigger .chevron {
             font-size: 0.65rem;
@@ -1422,7 +1428,7 @@
                                 <div class="mode-toggle squishy-interactive" style="background: none; padding: 0; box-shadow: none; border-radius: 0; width: auto; display: flex; align-items: center; gap: 8px;">
                                     <label for="mode-switch" style="font-weight: 600; font-size: 0.85rem; cursor: pointer;">Dark Mode</label>
                                     <label class="switch">
-                                        <input type="checkbox" id="mode-switch" checked>
+                                        <input type="checkbox" id="mode-switch" role="switch" aria-checked="true" checked>
                                         <span class="slider"></span>
                                     </label>
                                 </div>
@@ -1539,7 +1545,7 @@
                             </h3>
                             <div class="toggle-wrapper" title="Compare paying off vs investing">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="oppCostToggle">
+                                    <input type="checkbox" id="oppCostToggle" role="switch" aria-checked="false">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1562,7 +1568,7 @@
                             </h3>
                             <div class="toggle-wrapper" title="Include Escrow (PITI)">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="includePitiToggle">
+                                    <input type="checkbox" id="includePitiToggle" role="switch" aria-checked="false">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1599,7 +1605,7 @@
                             </h3>
                             <div class="toggle-wrapper" title="Simulate refinancing shocks">
                                 <label class="switch small-switch">
-                                    <input type="checkbox" id="rateShockToggle">
+                                    <input type="checkbox" id="rateShockToggle" role="switch" aria-checked="false">
                                     <span class="slider"></span>
                                 </label>
                             </div>
@@ -1638,7 +1644,7 @@
                                 
                                 <circle cx="50" cy="50" r="20" fill="#3b82f6"></circle>
                                 
-                                <text id="svg-inner-principal" x="50" y="42" text-anchor="middle" font-size="5.5" font-weight="800" fill="black">$0</text>
+                                <text id="svg-inner-principal" x="50" y="42" text-anchor="middle" font-size="5.5" font-weight="800" fill="white">$0</text>
                                 <text x="50" y="50" text-anchor="middle" font-size="7" font-weight="800" fill="white">+</text>
                                 <text id="svg-inner-markup" x="50" y="58" text-anchor="middle" font-size="5.5" font-weight="800" fill="white">$0</text>
                             </svg>
@@ -2310,6 +2316,14 @@
             el.setAttribute('data-val', val);
             let obj = { v: current };
             gsap.to(obj, { v: val, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = isCurr ? (decimal ? formatDecimal(obj.v) : formatCurrency(obj.v)) : Math.round(obj.v); } });
+        };
+
+        const syncCheckboxARIALabels = () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.setAttribute('role', 'switch');
+                cb.setAttribute('aria-checked', cb.checked ? 'true' : 'false');
+            });
         };
 
         const getBaseLayout = (title, xTitle, yTitle) => {
@@ -3713,6 +3727,7 @@
             if (typeof renderSandboxList === 'function') {
                 renderSandboxList();
             }
+            syncCheckboxARIALabels();
         };
 
         const adjustTooltip = (tip, active) => {
@@ -4428,11 +4443,11 @@
             });
         });
 
-        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim(); calculate(); saveSettings(); });
+        els.modeSwitch.addEventListener('change', (e) => { state.isDark = e.target.checked; document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim(); syncCheckboxARIALabels(); calculate(); saveSettings(); });
         
-        els.inputs.pitiToggle.addEventListener('change', (e) => { els.containers.pitiSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
-        els.inputs.oppCostToggle.addEventListener('change', (e) => { els.containers.oppCostSection.style.display = e.target.checked ? 'block' : 'none'; calculate(); saveSettings(); });
-        els.inputs.rateShockToggle.addEventListener('change', (e) => { calculate(); saveSettings(); });
+        els.inputs.pitiToggle.addEventListener('change', (e) => { els.containers.pitiSection.style.display = e.target.checked ? 'block' : 'none'; syncCheckboxARIALabels(); calculate(); saveSettings(); });
+        els.inputs.oppCostToggle.addEventListener('change', (e) => { els.containers.oppCostSection.style.display = e.target.checked ? 'block' : 'none'; syncCheckboxARIALabels(); calculate(); saveSettings(); });
+        els.inputs.rateShockToggle.addEventListener('change', (e) => { syncCheckboxARIALabels(); calculate(); saveSettings(); });
         
         // Bidirectional synchronization between up-top Region select and in-calculator Compounding select
         els.inputs.countrySelect.addEventListener('change', (e) => {
@@ -4531,10 +4546,15 @@
             state.activeProfileId = defaultId;
 
             // Slide closed sandbox sidebars
-            const sidebar = document.getElementById('scenarioSidebar');
-            if (sidebar) sidebar.classList.remove('active');
-            const overlay = document.getElementById('sidebarOverlay');
-            if (overlay) overlay.classList.remove('active');
+            const closeBtn = document.getElementById('closeSidebarBtn');
+            if (closeBtn) {
+                closeBtn.click();
+            } else {
+                const sidebar = document.getElementById('scenarioSidebar');
+                if (sidebar) sidebar.classList.remove('active');
+                const overlay = document.getElementById('sidebarOverlay');
+                if (overlay) overlay.classList.remove('active');
+            }
 
             // Reset bento grid draggable order back to default visual structure
             const container = document.getElementById('draggable-charts-container');
@@ -4768,23 +4788,70 @@
             const createBtn = document.getElementById('createProfileBtn');
             const newNameInput = document.getElementById('newProfileName');
 
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                saveSettings();
-                
+            let previouslyFocusedElement = null;
+
+            const trapFocus = (e) => {
+                if (e.key === 'Tab') {
+                    const focusables = Array.from(sidebar.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+                        .filter(el => !el.disabled && el.offsetWidth > 0 && el.offsetHeight > 0);
+                    
+                    if (focusables.length === 0) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    const first = focusables[0];
+                    const last = focusables[focusables.length - 1];
+                    
+                    if (e.shiftKey) {
+                        if (document.activeElement === first) {
+                            last.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === last) {
+                            first.focus();
+                            e.preventDefault();
+                        }
+                    }
+                } else if (e.key === 'Escape') {
+                    closeSidebar();
+                }
+            };
+
+            const openSidebar = () => {
+                previouslyFocusedElement = document.activeElement;
                 sidebar.classList.add('active');
                 overlay.classList.add('active');
                 renderSandboxList();
+                document.addEventListener('keydown', trapFocus);
+                setTimeout(() => {
+                    const nameInput = document.getElementById('newProfileName');
+                    if (nameInput) nameInput.focus();
+                }, 100);
+            };
+
+            const closeSidebar = () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.removeEventListener('keydown', trapFocus);
+                if (previouslyFocusedElement) {
+                    previouslyFocusedElement.focus();
+                }
+            };
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                saveSettings();
+                openSidebar();
             });
 
             closeBtn.addEventListener('click', () => {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
+                closeSidebar();
             });
 
             overlay.addEventListener('click', () => {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
+                closeSidebar();
             });
 
             createBtn.addEventListener('click', () => {
@@ -4875,7 +4942,7 @@
                             <span class="profile-tag">${tagComp}</span>
                         </div>
                         <label class="compare-toggle-label" data-id="${p.id}">
-                            <input type="checkbox" class="compare-checkbox" data-id="${p.id}" ${isCompare ? 'checked' : ''} ${isSelected ? 'disabled style="opacity:0.5"' : ''}>
+                            <input type="checkbox" role="switch" aria-checked="${isCompare ? 'true' : 'false'}" class="compare-checkbox" data-id="${p.id}" ${isCompare ? 'checked' : ''} ${isSelected ? 'disabled style="opacity:0.5"' : ''}>
                             <span>COMPARE</span>
                         </label>
                     </div>
