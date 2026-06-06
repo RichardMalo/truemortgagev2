@@ -1477,7 +1477,7 @@
                                 <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.00" min="0">
                             </div>
                             <div class="input-group mortgage-only">
-                                <label>Amortization (Yrs) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments. Note: Lender formulas and payment frequencies can affect the exact payoff timeline.</span></span></label>
+                                <label>Amortization (Years) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments. Note: Lender formulas and payment frequencies can affect the exact payoff timeline.</span></span></label>
                                 <input type="number" id="amortization" inputmode="decimal" value="25" step="any" min="0.1">
                             </div>
                             <div class="input-group cc-only advanced-only">
@@ -1491,7 +1491,7 @@
 
                         <div class="input-group-row mortgage-only advanced-only">
                             <div class="input-group">
-                                <label>Term Length (Yrs) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields. Note: Local regulations may restrict term lengths or mandate specific renewal conditions.</span></span></label>
+                                <label>Term Length (Years) <span class="help-tip">?<span class="tooltip-text">The duration of your active interest rate contract. Upon expiration, the remaining balance must be renegotiated or renewed at prevailing market yields. Note: Local regulations may restrict term lengths or mandate specific renewal conditions.</span></span></label>
                                 <input type="number" id="term" inputmode="decimal" value="5" step="any" min="0.1">
                             </div>
                             <div class="input-group">
@@ -1511,8 +1511,8 @@
                                 <label>Payment Frequency <span class="help-tip">?<span class="tooltip-text">Accelerated schedules divide standard monthly distributions into halves or quarters, non-disruptively forcing an extra full monthly installment against principal per calendar year. Note: Banks may calculate accelerated payments using slightly different formulas (e.g. dividing monthly payment by 2 vs. 26 bi-weekly periods).</span></span></label>
                                 <select id="paymentFrequency" class="custom-select">
                                     <option value="monthly">Monthly</option>
-                                    <option value="semi-monthly">Semi-Monthly (24/yr)</option>
-                                    <option value="bi-weekly">Bi-Weekly (26/yr)</option>
+                                    <option value="semi-monthly">Semi-Monthly (24/Year)</option>
+                                    <option value="bi-weekly">Bi-Weekly (26/Year)</option>
                                     <option value="accelerated-biweekly">Accelerated Bi-Weekly</option>
                                 </select>
                             </div>
@@ -1553,7 +1553,7 @@
                         <div id="oppCostSection" class="advanced-only" style="display: none; margin-top: 15px;">
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>Expected Investment Return (%/yr)</label>
+                                    <label>Expected Investment Return (%/Year)</label>
                                     <input type="number" id="investRate" inputmode="decimal" value="7.0" step="0.1">
                                 </div>
                             </div>
@@ -1576,21 +1576,21 @@
                         <div id="pitiSection" style="display: none; margin-top: 15px;">
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>Property Tax (%/yr)</label>
-                                    <input type="number" id="propertyTax" inputmode="decimal" value="1.2" step="0.01" min="0">
+                                    <label>Property Tax ($/Year)</label>
+                                    <input type="number" id="propertyTax" inputmode="decimal" value="4000" step="100" min="0">
                                 </div>
                                 <div class="input-group">
-                                    <label>Home Insurance ($/yr)</label>
+                                    <label>Home Insurance ($/Year)</label>
                                     <input type="number" id="homeInsurance" inputmode="decimal" value="1200" step="50" min="0">
                                 </div>
                             </div>
                             <div class="input-group-row">
                                 <div class="input-group">
-                                    <label>HOA Fees ($/mo)</label>
+                                    <label>HOA Fees ($/Month)</label>
                                     <input type="number" id="hoaFees" inputmode="decimal" value="0" step="10" min="0">
                                 </div>
                                 <div class="input-group">
-                                    <label>PMI (%/yr) <span class="inline-tooltip-text">(Drops at 80% LTV)</span></label>
+                                    <label>PMI (%/Year) <span class="inline-tooltip-text">(Drops at 80% LTV)</span></label>
                                     <input type="number" id="pmiRate" inputmode="decimal" value="0.5" step="0.01" min="0">
                                 </div>
                             </div>
@@ -1683,7 +1683,7 @@
                         </div>
                         <div class="stat-box squishy-interactive">
                             <label>Actual Payoff Time</label>
-                            <div class="kinetic-text" id="paidOffIn">0 yrs</div>
+                            <div class="kinetic-text" id="paidOffIn">0 Years</div>
                         </div>
                         <div class="stat-box highlight-box squishy-interactive">
                             <label>Interest Saved <span class="inline-tooltip-text">(vs Minimums)</span></label>
@@ -1694,7 +1694,7 @@
                     <div class="circles-container">
                         <div class="circle-wrapper squishy-interactive mortgage-only advanced-only">
                             <div class="true-payment-circle" id="monthlyPaymentCircle"></div>
-                            <span>Periodic Payment Comp <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in installment ratios. Over time, reducing the principal shrinks the interest wedge. Note: Commercial bank schedules may vary slightly due to interest rounding routines.</span></span></span>
+                            <span>Periodic Payment Composition <span class="help-tip">?<span class="tooltip-text">Tracks structural shifts in installment ratios. Over time, reducing the principal shrinks the interest wedge. Note: Commercial bank schedules may vary slightly due to interest rounding routines.</span></span></span>
                         </div>
                         <div class="circle-wrapper squishy-interactive">
                             <div class="payment-breakdown-circle" id="paymentBreakdownCircle"></div>
@@ -2174,7 +2174,7 @@
             else if(freq === 'bi-weekly') { perYear = 26; perPI = (basePI * 12) / 26; }
             else { perYear = 26; perPI = basePI / 2; } // Accelerated Bi-Weekly (forces standard monthly half-payment 26 times/yr)
 
-            const pTax = (inputs.homePrice * (inputs.taxRate / 100)) / perYear;
+            const pTax = inputs.taxRate / perYear;
             const pIns = inputs.insRate / perYear;
             const pHOA = (inputs.hoaRate * 12) / perYear;
             const pmiDrop = inputs.homePrice * 0.80; 
@@ -2396,15 +2396,15 @@
             }
 
             if(document.getElementById('chart3')) {
-                const t3 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.balance), name: 'Bal (Baseline)', type: 'scatter', fill: 'tozeroy', line: { color: CONFIG.colors.principal } }];
-                if(hasStrat) t3.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.balance), name: 'Bal (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
+                const t3 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.balance), name: 'Balance (Baseline)', type: 'scatter', fill: 'tozeroy', line: { color: CONFIG.colors.principal } }];
+                if(hasStrat) t3.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.balance), name: 'Balance (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
                 
                 if (compData && compData.schedule) {
                     const compName = (state.profiles[state.comparisonProfileId] && state.profiles[state.comparisonProfileId].name) || 'Comparison';
                     t3.push({
                         x: compData.schedule.map(d=>d[xKey]),
                         y: compData.schedule.map(d=>d.balance),
-                        name: `${compName} (Compare)`,
+                        name: `${compName} (Comparison)`,
                         type: 'scatter',
                         line: { color: '#a855f7', width: 2.5, dash: 'dash' }
                     });
@@ -2442,7 +2442,7 @@
 
             if(state.currentMode === 'mortgage' && document.getElementById('chart4')) {
                 const pAmt = actualData.schedule.length ? (actualData.schedule[0].balance + actualData.schedule[0].principal) : 0;
-                const t4 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Std)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
+                const t4 = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Standard)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
                 if(hasStrat) t4.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>pAmt - d.balance), name: 'Equity (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra } });
                 Plotly.react('chart4', t4, getBaseLayout('Equity Build-Up', 'Year', '$'), PLOT_CONFIG);
             }
@@ -2464,7 +2464,7 @@
             }
 
             if(document.getElementById('chart6')) {
-                Plotly.react('chart6', [ {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.interest), name: 'Int Portion', type: 'scatter', fill: 'tozeroy', line: {color: CONFIG.colors.interest}}, {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.principal), name: 'Prin Portion', type: 'scatter', fill: 'tonexty', line: {color: CONFIG.colors.principal}} ], getBaseLayout('Payment Comp.', 'Year', '$'), PLOT_CONFIG);
+                Plotly.react('chart6', [ {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.interest), name: 'Interest Portion', type: 'scatter', fill: 'tozeroy', line: {color: CONFIG.colors.interest}}, {x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.principal), name: 'Principal Portion', type: 'scatter', fill: 'tonexty', line: {color: CONFIG.colors.principal}} ], getBaseLayout('Payment Composition', 'Year', '$'), PLOT_CONFIG);
             }
 
             if(document.getElementById('chart')) {
@@ -2482,7 +2482,7 @@
                 if (inputs.usePiti && state.currentMode === 'mortgage') {
                     els.containers.ltv.style.display = 'block';
                     if(document.getElementById('chartLTV')) {
-                        const tLTV = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.ltv), name: 'LTV (Std)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
+                        const tLTV = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.ltv), name: 'LTV (Standard)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
                         if(hasStrat) tLTV.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.ltv), name: 'LTV (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
                         const lLTV = getBaseLayout('LTV & PMI Drop', 'Year', 'LTV (%)'); lLTV.yaxis.range = [0, Math.max(105, actualData.schedule[0]?.ltv || 100)]; lLTV.shapes = [ termLine, { type: 'line', x0: 0, y0: 80, x1: 1, y1: 80, xref: 'paper', yref: 'y', line: { color: CONFIG.colors.thresholdRed, width: 2, dash: 'dash' } } ];
                         Plotly.react('chartLTV', tLTV, lLTV, PLOT_CONFIG);
@@ -2557,7 +2557,7 @@
                     }
                     if(document.getElementById('chart12')) {
                         const yBase = (baseData.summary.periodsToPayoff / baseData.summary.periodsPerYear).toFixed(1), yExt = (actualData.summary.periodsToPayoff / actualData.summary.periodsPerYear).toFixed(1);
-                        Plotly.react('chart12', [{ x: ['Baseline', 'Actual'], y: [yBase, yExt], type: 'bar', text: [yBase + ' Yrs', yExt + ' Yrs'], textposition: 'auto', marker: { color: [CONFIG.colors.principal, CONFIG.colors.extra] } }], getBaseLayout('Time to Pay Off', '', 'Years'), PLOT_CONFIG);
+                        Plotly.react('chart12', [{ x: ['Baseline', 'Actual'], y: [yBase, yExt], type: 'bar', text: [yBase + ' Years', yExt + ' Years'], textposition: 'auto', marker: { color: [CONFIG.colors.principal, CONFIG.colors.extra] } }], getBaseLayout('Time to Pay Off', '', 'Years'), PLOT_CONFIG);
                     }
                 }
 
@@ -2618,9 +2618,9 @@
             const yrs = Math.floor(totalYears);
             const mos = Math.round((totalYears - yrs) * 12);
             if (yrs > 0) {
-                return `${yrs} Yr${yrs > 1 ? 's' : ''}${mos > 0 ? `, ${mos} Mo${mos > 1 ? 's' : ''}` : ''}`;
+                return `${yrs} Year${yrs > 1 ? 's' : ''}${mos > 0 ? `, ${mos} Month${mos > 1 ? 's' : ''}` : ''}`;
             }
-            return `${mos} Mo${mos > 1 ? 's' : ''}`;
+            return `${mos} Month${mos > 1 ? 's' : ''}`;
         };
 
         const calculateMilestones = (baseData, actData, inputs) => {
@@ -2675,7 +2675,7 @@
                     targetDate = row.dateLabel;
                     targetPeriod = `Month ${row.period}`;
                     const pmiAmt = (startingPrincipal * (inputs.pmiRate / 100)) / perYear;
-                    const savingsStr = inputs.usePiti && inputs.pmiRate > 0 ? ` saves you ${formatCurrency(pmiAmt)}/mo` : '';
+                    const savingsStr = inputs.usePiti && inputs.pmiRate > 0 ? ` saves you ${formatCurrency(pmiAmt)}/Month` : '';
                     soWhat = `Your Loan-to-Value (LTV) ratio drops to 80%, allowing you to cancel PMI. You shed the mandatory lender insurance tax and keep more cash flow${savingsStr}!`;
                     isAchieved = true;
                     
@@ -2936,7 +2936,7 @@
                 if (isRent) {
                     const monthlyAverage = Math.ceil(interest / 12);
                     circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(monthlyAverage)}</span>`;
-                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(monthlyAverage)}/mo`;
+                    circle.title = `Year: ${yr}\nRent Equivalent: ${formatCurrency(monthlyAverage)}/Month`;
                 } else {
                     circle.innerHTML = `<span class="wage-circle-value">${formatCurrency(interest)}</span>`;
                     circle.title = `Year: ${yr}\nInterest: ${formatCurrency(interest)}`;
@@ -3119,7 +3119,7 @@
 
             let yrs_paid = Math.floor(actData.summary.periodsToPayoff / actData.summary.periodsPerYear);
             let rem_paid = actData.summary.periodsToPayoff % actData.summary.periodsPerYear;
-            updateKineticText(els.results.paidOffIn, `${yrs_paid} yrs, ${rem_paid} ${isMortgage && inputs.frequency.includes('bi') ? 'pds' : 'mos'}`, false);
+            updateKineticText(els.results.paidOffIn, `${yrs_paid} Years, ${rem_paid} ${isMortgage && inputs.frequency.includes('bi') ? 'Periods' : 'Months'}`, false);
             
             if (isMortgage) {
                 const termPer = Math.ceil(inputs.termYears * actData.summary.periodsPerYear);
@@ -3363,7 +3363,7 @@
                     countrySelect: "semi",
                     frequency: "monthly",
                     pitiToggle: false,
-                    tax: "0.5",
+                    tax: "4000",
                     ins: "1000",
                     hoa: "0",
                     pmi: "0.5",
@@ -3482,7 +3482,7 @@
                         countrySelect: "semi",
                         frequency: "monthly",
                         pitiToggle: false,
-                        tax: "0.5",
+                        tax: "4000",
                         ins: "1000",
                         hoa: "0",
                         pmi: "0.5",
@@ -4019,7 +4019,7 @@
                         <span>Province:</span><strong>${inputs.province === 'QC' ? 'Quebec (5%)' : 'Ontario (3%)'}</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span>Monthly Surplus Payment:</span><strong>${formatCurrency(inputs.extraPayment)}/mo</strong>
+                        <span>Monthly Surplus Payment:</span><strong>${formatCurrency(inputs.extraPayment)}/Month</strong>
                     </div>
                 `;
             }
@@ -4528,7 +4528,7 @@
                     countrySelect: "semi",
                     frequency: "monthly",
                     pitiToggle: false,
-                    tax: "0.5",
+                    tax: "4000",
                     ins: "1000",
                     hoa: "0",
                     pmi: "0.5",
@@ -4874,7 +4874,7 @@
                     countrySelect: "semi",
                     frequency: "monthly",
                     pitiToggle: false,
-                    tax: "0.5",
+                    tax: "4000",
                     ins: "1000",
                     hoa: "0",
                     pmi: "0.5",
