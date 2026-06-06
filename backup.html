@@ -1868,7 +1868,7 @@
                     if(document.getElementById('chartLTV')) {
                         const tLTV = [{ x: baseData.schedule.map(d=>d[xKey]), y: baseData.schedule.map(d=>d.ltv), name: 'LTV (Std)', type: 'scatter', line: { color: CONFIG.colors.principal } }];
                         if(hasStrat) tLTV.push({ x: actualData.schedule.map(d=>d[xKey]), y: actualData.schedule.map(d=>d.ltv), name: 'LTV (Actual)', type: 'scatter', line: { color: CONFIG.colors.extra, width: 3 } });
-                        const lLTV = getBaseLayout('LTV & PMI Drop', 'Year', 'LTV (%)'); lLTV.yaxis.range = [0, Math.max(105, actualData.schedule[0]?.ltv || 100)]; lLTV.shapes = [ termLine, { type: 'line', x0: 0, y0: 80, x1: 1, y1: 80, xref: 'paper', yref: 'y', line: { color: CONFIG.colors.thresholdRed, width: 2, dash: 'dash' } } ];
+                        const lLTV = getBaseLayout('LTV (Loan To Value) & PMI (Private Mortgage Insurance) Drop', 'Year', 'LTV (%)'); lLTV.yaxis.range = [0, Math.max(105, actualData.schedule[0]?.ltv || 100)]; lLTV.shapes = [ termLine, { type: 'line', x0: 0, y0: 80, x1: 1, y1: 80, xref: 'paper', yref: 'y', line: { color: CONFIG.colors.thresholdRed, width: 2, dash: 'dash' } } ];
                         Plotly.react('chartLTV', tLTV, lLTV, PLOT_CONFIG);
                     }
                 } else {
