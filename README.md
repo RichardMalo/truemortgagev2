@@ -48,7 +48,7 @@ The engine dynamically adapts to regional banking regulations using an intuitive
 * **Unified Deep Cleanse Reset:** Prompts confirmation and executes a thorough cleanse across both the sidebar Reset button and settings menu. Wipes localStorage caches, restores bento draggable visual blocks to their default sequence, resets all inputs to mortgage baselines, and visually synchronizes all button selectors (tabs) back to Simple and Mortgage mode configurations instantly.
 
 ### 🔑 Secure Sync & Portability (JSON Backups)
-* **JSON Strategy Blueprints:** Export and import your customized debt strategies as standard JSON files to back up your custom scenarios. All data remains 100% private in local storage.
+* **JSON Debt Elimination Blueprints:** Export and import your customized debt elimination strategies as standard JSON files to back up your custom scenarios. All data remains 100% private in local storage.
 * **PBKDF2 & AES-GCM 256-bit Encryption:** Protect sensitive financial details by choosing to encrypt files with a custom passcode before downloading. Key derivation (SHA-256, 100,000 iterations) and symmetric encryption are executed fully client-side using browser-native Web Crypto APIs.
 * **Premium Drag-and-Drop Dropzone:** Styled with interactive hover and drag transitions, making importing backups extremely intuitive and visual.
 
