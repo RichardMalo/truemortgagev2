@@ -1504,7 +1504,7 @@
                         <div class="input-group-row">
                             <div class="input-group">
                                 <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially. Note: Real APR may include lender fees not captured here. Bank calculations may vary slightly due to daily interest accrual conventions.</span></span></label>
-                                <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.00" min="0">
+                                <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.39" min="0">
                             </div>
                             <div class="input-group mortgage-only">
                                 <label>Amortization (Years) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments. Note: Lender formulas and payment frequencies can affect the exact payoff timeline.</span></span></label>
@@ -3438,7 +3438,7 @@
                     downPayment: "160000",
                     ccBalance: "15000",
                     province: "ON",
-                    rate: "2.62",
+                    rate: "4.39",
                     amortization: "30",
                     term: "5",
                     compounding: "semi",
@@ -3454,7 +3454,7 @@
                     extra: "0",
                     date: prefilledDate,
                     rateShockToggle: false,
-                    mortgageRate: "2.62",
+                    mortgageRate: "4.39",
                     mortgageExtra: "0",
                     ccRate: "19.99",
                     ccExtra: "0"
@@ -3508,7 +3508,7 @@
 
                 // Set default mode-specific rates if missing from old schemas
                 if (sourceInputs.mortgageRate === undefined) {
-                    sourceInputs.mortgageRate = (sanitized.currentMode !== 'cc') ? (sourceInputs.rate || "2.62") : "2.62";
+                    sourceInputs.mortgageRate = (sanitized.currentMode !== 'cc') ? (sourceInputs.rate || "4.39") : "4.39";
                 }
                 if (sourceInputs.mortgageExtra === undefined) {
                     sourceInputs.mortgageExtra = (sanitized.currentMode !== 'cc') ? (sourceInputs.extra || "0") : "0";
@@ -3557,7 +3557,7 @@
                         downPayment: "160000",
                         ccBalance: "15000",
                         province: "ON",
-                        rate: "2.62",
+                        rate: "4.39",
                         amortization: "30",
                         term: "5",
                         compounding: "semi",
@@ -3573,7 +3573,7 @@
                         extra: "0",
                         date: prefilledDate,
                         rateShockToggle: false,
-                        mortgageRate: "2.62",
+                        mortgageRate: "4.39",
                         mortgageExtra: "0",
                         ccRate: "19.99",
                         ccExtra: "0"
@@ -4514,7 +4514,7 @@
                     const savedRate = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageRate : undefined;
                     const savedExtra = activeProfile && activeProfile.inputs ? activeProfile.inputs.mortgageExtra : undefined;
                     
-                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 2.62;
+                    els.inputs.rate.value = savedRate !== undefined ? savedRate : 4.39;
                     els.inputs.extra.value = savedExtra !== undefined ? savedExtra : 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'Principal';
                 }
@@ -4564,7 +4564,7 @@
                 console.error("Error clearing settings from localStorage:", err);
             }
             els.form.reset();
-            els.inputs.rate.value = '2.62';
+            els.inputs.rate.value = '4.39';
             els.inputs.extra.value = '0';
             const nextM = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1);
             const prefilledDate = `${nextM.getFullYear()}-${String(nextM.getMonth() + 1).padStart(2, '0')}-${String(nextM.getDate()).padStart(2, '0')}`;
@@ -4603,7 +4603,7 @@
                     downPayment: "160000",
                     ccBalance: "15000",
                     province: "ON",
-                    rate: "2.62",
+                    rate: "4.39",
                     amortization: "30",
                     term: "5",
                     compounding: "semi",
@@ -4619,7 +4619,7 @@
                     extra: "0",
                     date: prefilledDate,
                     rateShockToggle: false,
-                    mortgageRate: "2.62",
+                    mortgageRate: "4.39",
                     mortgageExtra: "0",
                     ccRate: "19.99",
                     ccExtra: "0"
@@ -4949,7 +4949,7 @@
                     downPayment: "160000",
                     ccBalance: "15000",
                     province: "ON",
-                    rate: "2.62",
+                    rate: "4.39",
                     amortization: "30",
                     term: "5",
                     compounding: "semi",

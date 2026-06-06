@@ -914,7 +914,7 @@
                         <div class="input-group-row">
                             <div class="input-group">
                                 <label>Interest Rate (APR %) <span class="help-tip">?<span class="tooltip-text">The Annual Percentage Rate charged by the lender. Fractional variations compound rapidly, scaling total lifetime borrowing friction exponentially.</span></span></label>
-                                <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.00" min="0">
+                                <input type="number" id="interestRate" inputmode="decimal" step="0.01" required value="4.39" min="0">
                             </div>
                             <div class="input-group mortgage-only">
                                 <label>Amortization (Yrs) <span class="help-tip">?<span class="tooltip-text">The contractual timeline required to completely eradicate the debt balance through baseline structured minimum installment payments.</span></span></label>
@@ -3181,7 +3181,7 @@
                     els.inputs.extra.value = 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'CC Balance';
                 } else {
-                    els.inputs.rate.value = 2.62;
+                    els.inputs.rate.value = 4.39;
                     els.inputs.extra.value = 0;
                     if(document.getElementById('inner-circle-label')) document.getElementById('inner-circle-label').textContent = 'Principal';
                 }
@@ -3458,7 +3458,7 @@
                     document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`;
                     
                     // Reset inputs
-                    els.inputs.rate.value = 2.62;
+                    els.inputs.rate.value = 4.39;
                     els.inputs.extra.value = 0;
                     
                     loadSettings(); // fallback restore
