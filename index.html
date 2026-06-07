@@ -372,6 +372,47 @@
         }
 
         .table-responsive { width: 100%; overflow-x: auto; max-height: 500px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 15px; -webkit-overflow-scrolling: touch; }
+        
+        /* Amortization Table Expansion Button */
+        .table-expand-btn {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s var(--spring-easing);
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            padding: 0;
+            line-height: 1;
+        }
+        .table-expand-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--card-bg);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+        @media (max-width: 768px) {
+            .table-expand-btn {
+                display: none;
+            }
+        }
+        @media (min-width: 769px) {
+            .table-responsive.expanded {
+                max-height: none;
+            }
+        }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-variant-numeric: tabular-nums; font-size: 0.9rem; }
         th { background-color: var(--input-bg); font-weight: 700; position: sticky; top: 0; z-index: 10; }
@@ -1849,7 +1890,8 @@
                     </div>
                 </div>
 
-                <div class="bento-card" style="margin-top: 24px;">
+                <div class="bento-card table-card" style="margin-top: 24px; position: relative;">
+                    <button type="button" class="table-expand-btn" id="table-expand-btn" title="Expand Table">+</button>
                     <h3 class="section-title">
                         Amortization Schedule
                         <span class="help-tip">?<span class="tooltip-text">A granular ledger mapping principal pay-down and interest decay curves. Note: Minor variances can occur based on how individual lenders round daily interest and process extra payments.</span></span>
@@ -3940,6 +3982,27 @@
             });
         };
 
+        const setupTableExpandButton = () => {
+            const btn = document.getElementById('table-expand-btn');
+            const tableResp = document.querySelector('.table-responsive');
+            if (!btn || !tableResp) return;
+
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const isExpanded = tableResp.classList.contains('expanded');
+                if (isExpanded) {
+                    tableResp.classList.remove('expanded');
+                    btn.innerHTML = '+';
+                    btn.title = 'Expand Table';
+                } else {
+                    tableResp.classList.add('expanded');
+                    btn.innerHTML = '−';
+                    btn.title = 'Shrink Table';
+                }
+            });
+        };
+
         const setupTouchTooltips = () => {
             const tips = document.querySelectorAll('.help-tip');
             let activeTip = null;
@@ -4761,6 +4824,17 @@
                 });
             }
 
+            // Collapse expanded table
+            const tableResp = document.querySelector('.table-responsive');
+            if (tableResp) {
+                tableResp.classList.remove('expanded');
+                const btn = document.getElementById('table-expand-btn');
+                if (btn) {
+                    btn.innerHTML = '+';
+                    btn.title = 'Expand Table';
+                }
+            }
+
             // Sync visual button tabs, body classes, country flags, and calculate results
             loadSettings();
             calculate();
@@ -5432,6 +5506,7 @@
             document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
             
             setupChartExpandButtons();
+            setupTableExpandButton();
             setupTouchTooltips(); 
             setupDragAndDrop();
             setupShareFunctionality();
