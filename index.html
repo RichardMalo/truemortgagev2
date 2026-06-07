@@ -355,10 +355,15 @@
             cursor: pointer;
             z-index: 1000;
             transition: all 0.2s var(--spring-easing);
-            user-select: none;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
             padding: 0;
             line-height: 1;
+            
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .chart-expand-btn:hover {
             border-color: var(--primary-color);
@@ -392,10 +397,15 @@
             cursor: pointer;
             z-index: 1000;
             transition: all 0.2s var(--spring-easing);
-            user-select: none;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
             padding: 0;
             line-height: 1;
+
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .table-expand-btn:hover {
             border-color: var(--primary-color);
@@ -3949,17 +3959,16 @@
                 btn.title = 'Enlarge Chart';
                 
                 btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     
-                    const isExpanded = wrapper.classList.contains('expanded');
+                    const isExpanded = wrapper.classList.toggle('expanded');
                     if (isExpanded) {
-                        wrapper.classList.remove('expanded');
-                        btn.innerHTML = '+';
-                        btn.title = 'Enlarge Chart';
-                    } else {
-                        wrapper.classList.add('expanded');
                         btn.innerHTML = '−';
                         btn.title = 'Shrink Chart';
+                    } else {
+                        btn.innerHTML = '+';
+                        btn.title = 'Enlarge Chart';
                     }
                     
                     const chartDiv = wrapper.querySelector('.plotly-container');
@@ -3976,6 +3985,11 @@
                         }, 150);
                     }
                 });
+
+                btn.addEventListener('dblclick', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
                 
                 wrapper.appendChild(btn);
             });
@@ -3986,19 +4000,24 @@
             const tableResp = document.querySelector('.table-responsive');
             if (!btn || !tableResp) return;
 
-            btn.addEventListener('click', (e) => {
+            const handleToggle = (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 
-                const isExpanded = tableResp.classList.contains('expanded');
+                const isExpanded = tableResp.classList.toggle('expanded');
                 if (isExpanded) {
-                    tableResp.classList.remove('expanded');
-                    btn.innerHTML = '+';
-                    btn.title = 'Expand Table';
-                } else {
-                    tableResp.classList.add('expanded');
                     btn.innerHTML = '−';
                     btn.title = 'Shrink Table';
+                } else {
+                    btn.innerHTML = '+';
+                    btn.title = 'Expand Table';
                 }
+            };
+
+            btn.addEventListener('click', handleToggle);
+            btn.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
             });
         };
 
