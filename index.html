@@ -1831,10 +1831,20 @@
                 </div>
 
                 <div class="bento-card">
-                    <h3 class="section-title">
-                        Visual Analysis
-                        <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards can be dragged to customize your layout. Calculations are close estimates; exact bank totals may vary due to custom formulas.</span></span>
-                    </h3>
+                    <div class="section-header-with-toggle" style="margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <h3 class="section-title" style="margin:0;">
+                            Visual Analysis
+                            <span class="help-tip">?<span class="tooltip-text">Algorithmic modeling tracking debt reduction trajectories. Note: Cards can be dragged to customize your layout. Calculations are close estimates; exact bank totals may vary due to custom formulas.</span></span>
+                        </h3>
+                        <div class="toggle-wrapper" style="gap: 10px; display: flex; align-items: center; flex-wrap: wrap;">
+                            <button type="button" id="expand-all-charts-btn" class="secondary-btn" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 700; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 4px; height: 32px; transition: all 0.3s var(--spring-easing); white-space: nowrap;">
+                                Expand All Charts +
+                            </button>
+                            <button type="button" id="collapse-all-charts-btn" class="secondary-btn" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 700; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 4px; height: 32px; transition: all 0.3s var(--spring-easing); white-space: nowrap;">
+                                Collapse All Charts −
+                            </button>
+                        </div>
+                    </div>
                     <div class="charts-grid" id="draggable-charts-container">
                         <div class="chart-wrapper chart-box squishy-interactive" draggable="true">
                             <div id="chart3" class="plotly-container"></div>
@@ -4064,6 +4074,57 @@
             });
         };
 
+        const setupExpandCollapseAllChartsButtons = () => {
+            const expandBtn = document.getElementById('expand-all-charts-btn');
+            const collapseBtn = document.getElementById('collapse-all-charts-btn');
+            const container = document.getElementById('draggable-charts-container');
+            if (!expandBtn || !collapseBtn || !container) return;
+
+            const updateCharts = (expand) => {
+                const wrappers = container.querySelectorAll('.chart-wrapper');
+                wrappers.forEach(wrapper => {
+                    const isCurrentlyExpanded = wrapper.classList.contains('expanded');
+                    if (expand !== isCurrentlyExpanded) {
+                        wrapper.classList.toggle('expanded', expand);
+                        const btn = wrapper.querySelector('.chart-expand-btn');
+                        if (btn) {
+                            btn.innerHTML = expand ? '−' : '+';
+                            btn.title = expand ? 'Shrink Chart' : 'Enlarge Chart';
+                        }
+                        const chartDiv = wrapper.querySelector('.plotly-container');
+                        if (chartDiv) {
+                            try {
+                                Plotly.Plots.resize(chartDiv);
+                            } catch (err) {
+                                console.warn(`Plotly resize failed:`, err);
+                            }
+                        }
+                    }
+                });
+                // Additional deferred resize check to ensure everything rendering correctly after transition/display shifts
+                setTimeout(() => {
+                    wrappers.forEach(wrapper => {
+                        const chartDiv = wrapper.querySelector('.plotly-container');
+                        if (chartDiv) {
+                            try {
+                                Plotly.Plots.resize(chartDiv);
+                            } catch (err) {}
+                        }
+                    });
+                }, 150);
+            };
+
+            expandBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                updateCharts(true);
+            });
+
+            collapseBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                updateCharts(false);
+            });
+        };
+
         const setupTouchTooltips = () => {
             const tips = document.querySelectorAll('.help-tip');
             let activeTip = null;
@@ -5533,6 +5594,7 @@
                 document.body.className = `mode-${state.currentMode} ${state.isDark ? 'dark-mode' : ''} complexity-${state.complexity}`.replace(/\s+/g, ' ').trim();
                 
                 setupChartExpandButtons();
+                setupExpandCollapseAllChartsButtons();
                 setupTableExpandButton();
                 setupTouchTooltips(); 
                 setupDragAndDrop();
